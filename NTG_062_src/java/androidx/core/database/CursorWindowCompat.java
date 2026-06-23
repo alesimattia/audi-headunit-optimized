@@ -1,0 +1,24 @@
+package androidx.core.database;
+
+import android.database.CursorWindow;
+import android.os.Build;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.os.BuildCompat;
+
+/* JADX INFO: loaded from: classes.dex */
+public final class CursorWindowCompat {
+    private CursorWindowCompat() {
+    }
+
+    @NonNull
+    public CursorWindow create(@Nullable String name, long windowSizeBytes) {
+        if (BuildCompat.isAtLeastP()) {
+            return new CursorWindow(name, windowSizeBytes);
+        }
+        if (Build.VERSION.SDK_INT >= 15) {
+            return new CursorWindow(name);
+        }
+        return new CursorWindow(false);
+    }
+}

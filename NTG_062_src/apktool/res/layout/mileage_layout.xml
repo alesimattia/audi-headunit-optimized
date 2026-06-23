@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_width="match_parent" android:layout_height="match_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:layout_gravity="center" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="match_parent">
+            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/icon_mileage" />
+            <TextView android:textSize="30.0px" android:textColor="#ffff" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="20.0px" android:text="@string/carinfo_mileage" />
+            <TextView android:textSize="30.0px" android:textColor="#ffff" android:id="@id/mileage" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0px" />
+        </LinearLayout>
+        <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginTop="30.0px">
+            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/icon_speed" />
+            <TextView android:textSize="30.0px" android:textColor="#ffff" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="20.0px" android:text="@string/carinfo_speed" />
+            <TextView android:textSize="30.0px" android:textColor="#ffff" android:id="@id/speed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0px" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

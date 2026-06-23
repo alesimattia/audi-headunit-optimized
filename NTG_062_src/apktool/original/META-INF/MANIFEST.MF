@@ -1,0 +1,1109 @@
+Manifest-Version: 1.0
+
+Name: AndroidManifest.xml
+SHA-256-Digest: jOu/b8HmJwSym+CoYI7SrecqVZVTHCcDuXTrUVeIxvw=
+
+Name: assets/a_map_auto_tip_0.png
+SHA-256-Digest: SK6FgUaOlB+Q30HBGjlkIvvAY8vIIefU4qzLDGZK0Rs=
+
+Name: assets/a_map_auto_tip_1.png
+SHA-256-Digest: O0XBQKQuFeN/IfFHWraZNeJp/g4h4S+97PShjKCak78=
+
+Name: assets/a_map_auto_tip_10.png
+SHA-256-Digest: wVUTQ3I3FZY+td1oK2w7s7pzbNJ+2w/QgV0nX73P8Pw=
+
+Name: assets/a_map_auto_tip_11.png
+SHA-256-Digest: 0xWeXdy+pVuaztcTGUKKpl0K/Ba/CcAnUV70ffRf/98=
+
+Name: assets/a_map_auto_tip_12.png
+SHA-256-Digest: MkM/E2UmdkmmboQBpQrWSuJvIV6OidivnK1neHHHsGY=
+
+Name: assets/a_map_auto_tip_13.png
+SHA-256-Digest: 14ijNpATNOiy7wYIAa7WBMvqy2uVZs89t9pl3ZxQQhk=
+
+Name: assets/a_map_auto_tip_14.png
+SHA-256-Digest: pSOFnpeZZtH7kIzwsKAKhPpD6U7Wc66nReLfArsjNdk=
+
+Name: assets/a_map_auto_tip_15.png
+SHA-256-Digest: QrXdLcYSyJiQXayGs40ERxKmo4DcE3r5RdC3FpSXu50=
+
+Name: assets/a_map_auto_tip_16.png
+SHA-256-Digest: 9N8o5jK/Kk10LNegprNnR90w3qg//HKHjZpFhC5i6bU=
+
+Name: assets/a_map_auto_tip_17.png
+SHA-256-Digest: YOaMjre65pMhxaXbrh+ZbwdAC93xxXxs1CXJk2sTDfA=
+
+Name: assets/a_map_auto_tip_18.png
+SHA-256-Digest: zR6Bq0Jf6x/bCNGeaMYZKYff9JHwV4jzu2lCDBt0h0s=
+
+Name: assets/a_map_auto_tip_19.png
+SHA-256-Digest: jyyCKoPkARFHPOn6UZ/2MvmajwM7LZ/oPDXY35NuNDc=
+
+Name: assets/a_map_auto_tip_2.png
+SHA-256-Digest: cYnS5S+QzZpDkSBg0+RoKyRnKdp7ZY8DQ2lgQ33U+ds=
+
+Name: assets/a_map_auto_tip_20.png
+SHA-256-Digest: Jpe5NWzVZq3KSwSqqv9Ta77mpukmYRK+kfwE2b5McKI=
+
+Name: assets/a_map_auto_tip_21.png
+SHA-256-Digest: C9DSinhUIqLhqVuF/DjgsTWrjNU6lSkN0Y5yvFNX+OE=
+
+Name: assets/a_map_auto_tip_22.png
+SHA-256-Digest: XHr9OvBgquAkwIfVAcA+joAFs+oAj6rYQtui4AlrKbQ=
+
+Name: assets/a_map_auto_tip_23.png
+SHA-256-Digest: MkM/E2UmdkmmboQBpQrWSuJvIV6OidivnK1neHHHsGY=
+
+Name: assets/a_map_auto_tip_24.png
+SHA-256-Digest: B7oCwvVn9aOV31NWX7kVeScio62TBaZtxq4HTV+/ePo=
+
+Name: assets/a_map_auto_tip_25.png
+SHA-256-Digest: +/kzdFkbDFrFwciLMTwHtk42n5TlKag11kCuHUBi6cE=
+
+Name: assets/a_map_auto_tip_26.png
+SHA-256-Digest: 2SoMb0XoFLnc+NxyZJkOFETS8Xjx8JUJA1hg473Z8rQ=
+
+Name: assets/a_map_auto_tip_27.png
+SHA-256-Digest: zR6Bq0Jf6x/bCNGeaMYZKYff9JHwV4jzu2lCDBt0h0s=
+
+Name: assets/a_map_auto_tip_28.png
+SHA-256-Digest: uNG+hmcuPU4MxlKmkJvmDwFw4F5S1yWLLcYEoBLLJik=
+
+Name: assets/a_map_auto_tip_3.png
+SHA-256-Digest: 36Vzf6K6P0X/WRz0vbgWOVFaU70t23PVyT56t7JdkGc=
+
+Name: assets/a_map_auto_tip_4.png
+SHA-256-Digest: xQkJ+uelU28TrvNVo35NfYvUIpVVyZa/XSeGFRXOmrM=
+
+Name: assets/a_map_auto_tip_5.png
+SHA-256-Digest: YXNY35GEIl5ScDm78N7JoooblAm3jREksIG5JJMkKe4=
+
+Name: assets/a_map_auto_tip_6.png
+SHA-256-Digest: 3Tw+y84UNHkI1rPFnW6rcC66U+w/qMAzdwZCeU5wcoM=
+
+Name: assets/a_map_auto_tip_7.png
+SHA-256-Digest: A8Jgbvwpm5DxRG7NnAR/pV8Up/qu+6rJtJMey/hcoA8=
+
+Name: assets/a_map_auto_tip_8.png
+SHA-256-Digest: 1ipXDAsNXgTQHydqJyk4kPmjicRmbtqyIPwFrKa0MJ0=
+
+Name: assets/a_map_auto_tip_9.png
+SHA-256-Digest: 7kY7b9Qo1B2hqI2+vyy1hRx7QTAqk4P8AsfvAqyyC84=
+
+Name: assets/component_config.json
+SHA-256-Digest: Jf0oj8iyeBjuBnudxYwYN/pHzSJBTFDCP/AYfg6NO+4=
+
+Name: assets/component_config_navi.json
+SHA-256-Digest: TDMra+3T4w++8c3l18oulSZagYFqfmCWEfzIPlZ1aMM=
+
+Name: assets/cross_tip_0.png
+SHA-256-Digest: SK6FgUaOlB+Q30HBGjlkIvvAY8vIIefU4qzLDGZK0Rs=
+
+Name: assets/cross_tip_1.png
+SHA-256-Digest: 7kY7b9Qo1B2hqI2+vyy1hRx7QTAqk4P8AsfvAqyyC84=
+
+Name: assets/cross_tip_10.png
+SHA-256-Digest: xQkJ+uelU28TrvNVo35NfYvUIpVVyZa/XSeGFRXOmrM=
+
+Name: assets/cross_tip_11.png
+SHA-256-Digest: yKTckeaKja7JOcIdtqNtkyUtePZ7XL+HagJNLEOLdgc=
+
+Name: assets/cross_tip_12.png
+SHA-256-Digest: 0Rs+2/8aL7rd8KaUeGVod0/3+R6gwRYl3I+2O492rY4=
+
+Name: assets/cross_tip_13.png
+SHA-256-Digest: Tzv7E+hsbNfJA8DIKGFNn6cjBQT2bqCauS5e43yna54=
+
+Name: assets/cross_tip_14.png
+SHA-256-Digest: bbO26gfDltRuEr5LNTNttlZCcUeh+YzWLtwbo7wA/j8=
+
+Name: assets/cross_tip_15.png
+SHA-256-Digest: 6+oHR8w8LaaszTUH+3MUD300K11hL7mT5GfbUVefGMw=
+
+Name: assets/cross_tip_16.png
+SHA-256-Digest: vwbn+WjgsbP91rWZkKNmbeBYb0d+D7yg6ChLj1cle8Y=
+
+Name: assets/cross_tip_17.png
+SHA-256-Digest: 5+vNS0FAxAsfngd3TMvpsfTCKb5Z87ePHjGhPzaSL1Y=
+
+Name: assets/cross_tip_18.png
+SHA-256-Digest: YOaMjre65pMhxaXbrh+ZbwdAC93xxXxs1CXJk2sTDfA=
+
+Name: assets/cross_tip_2.png
+SHA-256-Digest: cYnS5S+QzZpDkSBg0+RoKyRnKdp7ZY8DQ2lgQ33U+ds=
+
+Name: assets/cross_tip_20.png
+SHA-256-Digest: YXNY35GEIl5ScDm78N7JoooblAm3jREksIG5JJMkKe4=
+
+Name: assets/cross_tip_21.png
+SHA-256-Digest: Ih4G9cYsWD6n1SoDXNxYWGhFjSsKIDIEHTnVAmrphK0=
+
+Name: assets/cross_tip_22.png
+SHA-256-Digest: EgIISyLTf58k8BCdPaDTjVscv/i+6GtfbpkTXMpnw3s=
+
+Name: assets/cross_tip_23.png
+SHA-256-Digest: T8+SR1U0/VILYg8uRf9seXLoYJEgH+2ujD8yZd6VgPQ=
+
+Name: assets/cross_tip_24.png
+SHA-256-Digest: 4Nl1n85nhPpFVM80OQXMUnJZ0PUQg+YeaBAg6bBBZfo=
+
+Name: assets/cross_tip_25.png
+SHA-256-Digest: kx++DsMFk8l6HeKkxZiSUUzf3Z+qmDZ4hw8/A72wk+A=
+
+Name: assets/cross_tip_26.png
+SHA-256-Digest: HGgcB2y6CGDiv+OGeKdeypRjaiUleOKHu7vQSWJAitY=
+
+Name: assets/cross_tip_27.png
+SHA-256-Digest: McAX13AGs5QtOjQu92c/YHGSQ5tNmfXAh5t3FAvsE+I=
+
+Name: assets/cross_tip_28.png
+SHA-256-Digest: 0xWeXdy+pVuaztcTGUKKpl0K/Ba/CcAnUV70ffRf/98=
+
+Name: assets/cross_tip_3.png
+SHA-256-Digest: 36Vzf6K6P0X/WRz0vbgWOVFaU70t23PVyT56t7JdkGc=
+
+Name: assets/cross_tip_30.png
+SHA-256-Digest: 3Tw+y84UNHkI1rPFnW6rcC66U+w/qMAzdwZCeU5wcoM=
+
+Name: assets/cross_tip_31.png
+SHA-256-Digest: pHq8UiDsoxMmicIPBoh6NMh9ZukUEt5U8l16MAKiPlw=
+
+Name: assets/cross_tip_32.png
+SHA-256-Digest: +/kzdFkbDFrFwciLMTwHtk42n5TlKag11kCuHUBi6cE=
+
+Name: assets/cross_tip_33.png
+SHA-256-Digest: C9DSinhUIqLhqVuF/DjgsTWrjNU6lSkN0Y5yvFNX+OE=
+
+Name: assets/cross_tip_34.png
+SHA-256-Digest: n/665POIgwCIVvEjfFtxV7EwkOKUBE5GH0BH+Oy5CMw=
+
+Name: assets/cross_tip_35.png
+SHA-256-Digest: EBvYLkBFmh52iypmJ9YNRXdknyCq5NSW818mEadlwq0=
+
+Name: assets/cross_tip_36.png
+SHA-256-Digest: xB4w87olma/sFKjTSDKAo87zmGEdRc9+ElZo/3BiyHQ=
+
+Name: assets/cross_tip_37.png
+SHA-256-Digest: fGeTPaHxqHUceRCdTUpo4SIq2C8XnqOcpBrGE2EnXYg=
+
+Name: assets/cross_tip_38.png
+SHA-256-Digest: lyurU+aXTTobFSPo9c9Ea4lDLXRXfLUM9vRHweCM8rI=
+
+Name: assets/cross_tip_4.png
+SHA-256-Digest: 1ipXDAsNXgTQHydqJyk4kPmjicRmbtqyIPwFrKa0MJ0=
+
+Name: assets/cross_tip_40.png
+SHA-256-Digest: A8Jgbvwpm5DxRG7NnAR/pV8Up/qu+6rJtJMey/hcoA8=
+
+Name: assets/cross_tip_41.png
+SHA-256-Digest: Sj2zLMuhbI7p3QfKm29smJ/me5/Il7+3kne9B8nQRuQ=
+
+Name: assets/cross_tip_42.png
+SHA-256-Digest: 2SoMb0XoFLnc+NxyZJkOFETS8Xjx8JUJA1hg473Z8rQ=
+
+Name: assets/cross_tip_43.png
+SHA-256-Digest: XHr9OvBgquAkwIfVAcA+joAFs+oAj6rYQtui4AlrKbQ=
+
+Name: assets/cross_tip_44.png
+SHA-256-Digest: 6O3c9SqKne+jq6o89a1N84IJgeZfrr5p0pQnXjLjT/o=
+
+Name: assets/cross_tip_45.png
+SHA-256-Digest: kM3H/5uGxBVpVtG/n9gMavROBMdazqHKQS8EOu8kTEM=
+
+Name: assets/cross_tip_46.png
+SHA-256-Digest: 7Rt1t+ZxaInQoT/Y/74z7jOFWakYGX+Piyu0yrePwbc=
+
+Name: assets/cross_tip_47.png
+SHA-256-Digest: EgughXZA7QnpE4RnYfbgPi/lvKEwwUG5+9LhIYNHsWM=
+
+Name: assets/cross_tip_48.png
+SHA-256-Digest: 351n2O6l9L+/k7A3Gn0jrqGKrrY/vYBlS9O9Nk/DApo=
+
+Name: assets/cross_tip_5.png
+SHA-256-Digest: emC0hzHQMUtPdJUKPVSWBUDbHiMs4oVHcxY6jBT66mU=
+
+Name: assets/cross_tip_51.png
+SHA-256-Digest: 5ASCcykaejHFszeUd6bJV5C9FEzTJokAjLPb6SX1irY=
+
+Name: assets/cross_tip_52.png
+SHA-256-Digest: UpxWvXDw+3IycOX+LAdDpnNeUTP1pLO/D3OUrUzZdGs=
+
+Name: assets/cross_tip_53.png
+SHA-256-Digest: 22lsbILxCk1+lMDhS7/3S2bNxxd2pF8iTR45y63qawY=
+
+Name: assets/cross_tip_54.png
+SHA-256-Digest: fuvg5VOAmLUBEwcgAEAMQmiI/EQsx6hbkEoxELoBdZM=
+
+Name: assets/cross_tip_55.png
+SHA-256-Digest: Lf1SFP9PSnN2XcTTp8YKf4XWFyZlZ56iyqf1b4O8Sbs=
+
+Name: assets/cross_tip_56.png
+SHA-256-Digest: +Pc0kuTgD0uRkNqg0zqDHUSE3PZzLzLb5utFUd1wyoo=
+
+Name: assets/cross_tip_57.png
+SHA-256-Digest: b9prb8WT62NVAebAosC1uz/oBVEKhOQnjMJwjO5akW0=
+
+Name: assets/cross_tip_58.png
+SHA-256-Digest: RZLzXqlSdeumUWOrR8lGfn1i5xxanAC3Z7vfyfgUL54=
+
+Name: assets/cross_tip_59.png
+SHA-256-Digest: lVrO/QEUAwni57vqsMiFP3SU0mdGj1Jo5sz6dBUUMJ0=
+
+Name: assets/cross_tip_6.png
+SHA-256-Digest: HLti8TSN8X8whojwg9qKuo3eTKnxn4xN/SXUPuE/tQs=
+
+Name: assets/cross_tip_60.png
+SHA-256-Digest: 3ww8h1ww4dOQwuZgUBb5qNT/T+EK/lEIrU/wuSaugdA=
+
+Name: assets/cross_tip_61.png
+SHA-256-Digest: 3ww8h1ww4dOQwuZgUBb5qNT/T+EK/lEIrU/wuSaugdA=
+
+Name: assets/cross_tip_62.png
+SHA-256-Digest: 3ww8h1ww4dOQwuZgUBb5qNT/T+EK/lEIrU/wuSaugdA=
+
+Name: assets/cross_tip_63.png
+SHA-256-Digest: wVUTQ3I3FZY+td1oK2w7s7pzbNJ+2w/QgV0nX73P8Pw=
+
+Name: assets/cross_tip_64.png
+SHA-256-Digest: zkH92AES63jag4FDJRUt38KavP2ezFLi+YnckT+w3dU=
+
+Name: assets/cross_tip_65.png
+SHA-256-Digest: 9N8o5jK/Kk10LNegprNnR90w3qg//HKHjZpFhC5i6bU=
+
+Name: assets/cross_tip_66.png
+SHA-256-Digest: pSOFnpeZZtH7kIzwsKAKhPpD6U7Wc66nReLfArsjNdk=
+
+Name: assets/cross_tip_7.png
+SHA-256-Digest: 3ABZvs6IFYE+xEkEsGjQ4qSN1dWx5BZP2O+IMMsHc6M=
+
+Name: assets/cross_tip_8.png
+SHA-256-Digest: 3isln1MYsNZOfeumuPGFahH5RJNL0L86P2O5oemndAA=
+
+Name: assets/cross_tip_81.png
+SHA-256-Digest: Zx500SaJC9pWifMfx12NRz0aTAew713YjODVHtCsK8o=
+
+Name: assets/cross_tip_82.png
+SHA-256-Digest: BHy19n1HXXpHMSGgGqlzghVb4p7NJo2U7mY7NtQcBVg=
+
+Name: assets/cross_tip_83.png
+SHA-256-Digest: e5vbjrIF63hylKGaZ5icsbvHfpKZP+F18vqHW3D+JHM=
+
+Name: assets/cross_tip_84.png
+SHA-256-Digest: dfN6EfkPgxWi2RTlMpa/zdfDStebzKOi/wDS+a/HWL0=
+
+Name: assets/cross_tip_85.png
+SHA-256-Digest: 61t6XWf5f9lD9hPWTezHlsg4nJuXXeVnvBv6kC4ego8=
+
+Name: assets/cross_tip_86.png
+SHA-256-Digest: p4lLqY8u0giwK15ct/+/YXJ+wV1HMbpGhkw0C5kPuQs=
+
+Name: assets/cross_tip_87.png
+SHA-256-Digest: jyyCKoPkARFHPOn6UZ/2MvmajwM7LZ/oPDXY35NuNDc=
+
+Name: assets/cross_tip_88.png
+SHA-256-Digest: NbKtdJdmLBzCpmY/MpLj9z8qcWTo+Khz+JUpmOKyuwQ=
+
+Name: assets/cross_tip_89.png
+SHA-256-Digest: YG0Qe25ZOLkWU5Tx60jlM3iz/KxaTH9S5wuK62tNHwk=
+
+Name: classes.dex
+SHA-256-Digest: Y3m67XGklN8nFQdYSh9hJlLHgeO8m40azCF60SgAjas=
+
+Name: res/drawable-hdpi-v4/notification_bg_low_normal.9.png
+SHA-256-Digest: IfC1UoC+ELGHzv+O3vSlpwR2g+bp/PR95BCqODn0EJQ=
+
+Name: res/drawable-hdpi-v4/notification_bg_low_pressed.9.png
+SHA-256-Digest: Qq7gsDiD6U315UM0ijl9EwLBuCIYlYcag7gYmfWpZHs=
+
+Name: res/drawable-hdpi-v4/notification_bg_normal.9.png
+SHA-256-Digest: DGMox7JCBXCn7DizvrO6yaKdiVrBq3I5MVq6cmZBhZM=
+
+Name: res/drawable-hdpi-v4/notification_bg_normal_pressed.9.png
+SHA-256-Digest: GLMo2AF+Z31arT29ZrrjVrXKyXjG8GcJOOpkjlHQ62Y=
+
+Name: res/drawable-hdpi-v4/notify_panel_notification_icon_bg.png
+SHA-256-Digest: hDDsAD4APz8roveNSP0VDiVAdmflMOguh6fUhBwP1nY=
+
+Name: res/drawable-mdpi-v4/notification_bg_low_normal.9.png
+SHA-256-Digest: L3+9oLpuU+mkfi/A4k4yxEfGE6WAjC1ihdxlHoOgetc=
+
+Name: res/drawable-mdpi-v4/notification_bg_low_pressed.9.png
+SHA-256-Digest: 4Xdh7SgO3ZPXFBvVBLcPnp4VqGUiiNnmMzv0zpZO+EQ=
+
+Name: res/drawable-mdpi-v4/notification_bg_normal.9.png
+SHA-256-Digest: qGdqF5OsgxD/sSmGIy32bfCS0pwkKu7cK3NVbAENONw=
+
+Name: res/drawable-mdpi-v4/notification_bg_normal_pressed.9.png
+SHA-256-Digest: mcFNaFW4viltWAF9N1G43IScR7bR2Aq2FP+QdQgORhs=
+
+Name: res/drawable-mdpi-v4/notify_panel_notification_icon_bg.png
+SHA-256-Digest: DXc+YsdWQiMTJihGx4flj2fg7ofkXhrplCAC6BbEy54=
+
+Name: res/drawable-v21/notification_action_background.xml
+SHA-256-Digest: UoEekI4aVMI8Au070U9wUUqhj7adi2FCTDDo5kBZrMU=
+
+Name: res/drawable-v24/$ic_launcher_foreground__0.xml
+SHA-256-Digest: YNuSvLVkT8WWvwGmDWVWqmkp2PxWvlYWIpyUkb+4dUw=
+
+Name: res/drawable-v24/ic_launcher_foreground.xml
+SHA-256-Digest: Kf7/+DArmVM8fd2sYuccJf1W42w1d96CmQabTmjUFf8=
+
+Name: res/drawable-xhdpi-v4/notification_bg_low_normal.9.png
+SHA-256-Digest: PgmvohxFNywDVZjAF8j7QFptZ45suE3IV1gcs7QOSC0=
+
+Name: res/drawable-xhdpi-v4/notification_bg_low_pressed.9.png
+SHA-256-Digest: IDQyIvn3ndVlw6IkhJTUUucIIKwcQ3Fzw4ut1F+WKv0=
+
+Name: res/drawable-xhdpi-v4/notification_bg_normal.9.png
+SHA-256-Digest: VZv3g9dlwCM46XlSvcnGaJx/+ZCQuMmBM2kRjaiwgPA=
+
+Name: res/drawable-xhdpi-v4/notification_bg_normal_pressed.9.png
+SHA-256-Digest: 0nr0NRAcpMvsDIQL0waHkYzTnrg6qxSHQghVYjpFmYs=
+
+Name: res/drawable-xhdpi-v4/notify_panel_notification_icon_bg.png
+SHA-256-Digest: tE7to016Upwv5VcZ6wmPopcHyqkdGN4Gp6d11ua8+XM=
+
+Name: res/drawable/bg.png
+SHA-256-Digest: 7a2br3zQwAA7b3NrzirhYYzMXeeNUdcTesNBCiTDFA0=
+
+Name: res/drawable/car.png
+SHA-256-Digest: CxH6q0xc02chQzxCAPJMrRCKSILaoC+03FrNxylijDY=
+
+Name: res/drawable/car_info_bg.png
+SHA-256-Digest: tpwFARXHU3MIp4WS6i0e6wwQDaBkJzZ91j07qa0ebAs=
+
+Name: res/drawable/carinfo_audi_car_door_bg_00.png
+SHA-256-Digest: VIxY2F1gh0v/QPPPsVdU+NDM7RbO+HjxAjyibmfq/iY=
+
+Name: res/drawable/carinfo_audi_car_door_bg_01.png
+SHA-256-Digest: /GLeTg2929BsEfK46ud+dR1azGJdirVyEyHBgVdXRq8=
+
+Name: res/drawable/carinfo_audi_car_door_bg_02.png
+SHA-256-Digest: hLKC6Z0olT+uvAwaImdUk4sJjU0jeUBVccn00BlwxUY=
+
+Name: res/drawable/carinfo_audi_car_door_bg_03.png
+SHA-256-Digest: DsIGZGcmnX9njAXBc8or83OhGZrtD/FRdyWgG+mKySM=
+
+Name: res/drawable/carinfo_audi_car_door_front_left_00.png
+SHA-256-Digest: +U6i5UX1sQ6WaVKUsl8ahLIL9sgWJIMO4fnEfg9FE6s=
+
+Name: res/drawable/carinfo_audi_car_door_front_left_01.png
+SHA-256-Digest: yJzhFdEouvPB2YcarvwQqIKq40pZ96w0Pec7gqoS6pQ=
+
+Name: res/drawable/carinfo_audi_car_door_front_left_02.png
+SHA-256-Digest: iQDRPm/xe4ri0p04Nuv+LKIfuSj4edbo2NVGAOmYu1I=
+
+Name: res/drawable/carinfo_audi_car_door_front_left_03.png
+SHA-256-Digest: YsBRyPc2RI8IEMZLdzb+I0IkoH2IYddzhk3G/NdSxw4=
+
+Name: res/drawable/carinfo_audi_car_door_front_right_00.png
+SHA-256-Digest: KHaGx9gYIKKdHQRXk+hSISf0CDP6KBqLwVqxibm+UIo=
+
+Name: res/drawable/carinfo_audi_car_door_front_right_01.png
+SHA-256-Digest: 2e1kiB7nlV7GQ4JTYCickK+1DGBgItKchGr/1rRhXYs=
+
+Name: res/drawable/carinfo_audi_car_door_front_right_02.png
+SHA-256-Digest: wEYCV5dfZp2wIA480Q4ztpcnWuuw4iHlDtszO3Ginyc=
+
+Name: res/drawable/carinfo_audi_car_door_front_right_03.png
+SHA-256-Digest: nLhmCKEf+J/iW50OL+EUIpYioAYmwxl51Vtk8qhVflA=
+
+Name: res/drawable/carinfo_audi_car_door_hood_00.png
+SHA-256-Digest: U9q/BSOfUXdEQPmpKrlLPKM83f3h/3tDBI60DNJJH64=
+
+Name: res/drawable/carinfo_audi_car_door_hood_01.png
+SHA-256-Digest: JzWHBp1anEzuaaJWz0iV2qdRaJO8NcukrFNrEPFdWq4=
+
+Name: res/drawable/carinfo_audi_car_door_hood_02.png
+SHA-256-Digest: XUwxLWUSVMdUKwBukPDeeCev+CdnFJ7ne2Qmg8fw9Qo=
+
+Name: res/drawable/carinfo_audi_car_door_hood_03.png
+SHA-256-Digest: C0bFs57NKKeTbxAnva+z+BGwzvusTrOc4arBGBW0Yy4=
+
+Name: res/drawable/carinfo_audi_car_door_hood_on_00.png
+SHA-256-Digest: IYsY1TbpRE8su7S4jKfJIgXKlFTdU8Aj7Ej73ZaRpec=
+
+Name: res/drawable/carinfo_audi_car_door_hood_on_01.png
+SHA-256-Digest: cVx41vfwqud6CxASyy1iHBnnDRTg5ZM7eeBsWvruylY=
+
+Name: res/drawable/carinfo_audi_car_door_hood_on_02.png
+SHA-256-Digest: cAIgnDyhVJZ3j4oVh6oo4tCGTJunJMgc5dlGouEB7fY=
+
+Name: res/drawable/carinfo_audi_car_door_hood_on_03.png
+SHA-256-Digest: 04sjq7UrECEuSYuvq+xajaiKCNfWgsNx5rXEK3834ZM=
+
+Name: res/drawable/carinfo_audi_car_door_left_front_00.png
+SHA-256-Digest: N3ZmOr83UkZsa1kXe08MJo86q6EHhgDcPYXzV54Nolg=
+
+Name: res/drawable/carinfo_audi_car_door_left_front_01.png
+SHA-256-Digest: 7+aaNJ4shx5MLn6oOOYYYMkS2PQlv7C0gnZOiEw0Bcw=
+
+Name: res/drawable/carinfo_audi_car_door_left_front_02.png
+SHA-256-Digest: /NcjxF7/wosqR2wqrH3Zf9GwwMmBazDsTYGeHPGQGYI=
+
+Name: res/drawable/carinfo_audi_car_door_left_front_03.png
+SHA-256-Digest: jdPzUcD1mXL8w3TvxvMkAru0D66nBt+ImQ4183MxHtA=
+
+Name: res/drawable/carinfo_audi_car_door_left_off_00.png
+SHA-256-Digest: fHhUlKkTrbjwatC45YSQRrFPJ84FKMcqphQ52mymiXg=
+
+Name: res/drawable/carinfo_audi_car_door_left_off_01.png
+SHA-256-Digest: H3bnHBCRZOFF/N3xneUuVnhcTBGenHwGy9aM8NaRfzc=
+
+Name: res/drawable/carinfo_audi_car_door_left_off_02.png
+SHA-256-Digest: AUQHx5Y4qQuNii4vTgF7jQzKRFGiTtG4VOcjEau/dKk=
+
+Name: res/drawable/carinfo_audi_car_door_left_off_03.png
+SHA-256-Digest: dzG4fTYy7iC0pkMeNjAY3GA37YkFMuEzk2bbl2/xfgA=
+
+Name: res/drawable/carinfo_audi_car_door_left_rear_00.png
+SHA-256-Digest: Va25wbfUf1iV7UtXYMshLhWDxYz8tGScIXKv3Kn4x/4=
+
+Name: res/drawable/carinfo_audi_car_door_left_rear_01.png
+SHA-256-Digest: vBgNRxXitpVoBz4x8KfNpe/1P5GNtb/z0+BIon9Ppto=
+
+Name: res/drawable/carinfo_audi_car_door_left_rear_02.png
+SHA-256-Digest: H6DQpzuzAWLTcP+gbO/9EKT2x0nwtLMuszqGhfhim4U=
+
+Name: res/drawable/carinfo_audi_car_door_rear_left_00.png
+SHA-256-Digest: csFjykAXGd6gv2/Hi5msAnmQ1zO2NOnR51O51G0fxjk=
+
+Name: res/drawable/carinfo_audi_car_door_rear_left_01.png
+SHA-256-Digest: buig8shmLziQSnXIIebT91utRHEsc3s3/KIU5Z4MfBQ=
+
+Name: res/drawable/carinfo_audi_car_door_rear_left_02.png
+SHA-256-Digest: oCnVWJDjpQKmIhhApdXPMEa/9YFmdqXs1h5qMYO+agQ=
+
+Name: res/drawable/carinfo_audi_car_door_rear_right_00.png
+SHA-256-Digest: 3lSsgo3dE95vdlgxkw4zmBm7ytuMNlqZQGUW6097aVI=
+
+Name: res/drawable/carinfo_audi_car_door_rear_right_01.png
+SHA-256-Digest: SdnXiukBQ+IcZiYhHKaNEyw79njyZfZRATA67UJCjYs=
+
+Name: res/drawable/carinfo_audi_car_door_rear_right_02.png
+SHA-256-Digest: o9SfUF1/RkqC+fXCUOnus/UrTACIxXl1xado5SvxnCU=
+
+Name: res/drawable/carinfo_audi_car_door_right_front_00.png
+SHA-256-Digest: IH+ko8iLCQ0XUOtDZmp8eHPSLaPAIOzXywtF3tjgi+8=
+
+Name: res/drawable/carinfo_audi_car_door_right_front_01.png
+SHA-256-Digest: 2DBFx1tzUQUastxefMptvFx1oy2jeZJ/Hfjv1fHPlpw=
+
+Name: res/drawable/carinfo_audi_car_door_right_front_02.png
+SHA-256-Digest: KZsPho6yKAyPHtrQVkAh69Rh+vyOs6AVbKRV7XW1i0I=
+
+Name: res/drawable/carinfo_audi_car_door_right_front_03.png
+SHA-256-Digest: T/tB3oCT4xRyUx1NHgI5LK7aRMPSa8fdkBd+75Pa15g=
+
+Name: res/drawable/carinfo_audi_car_door_right_off_00.png
+SHA-256-Digest: UdG6d1X3MVL8Y+fKAwWwe3mWR58s0OK51g9zMUUBbmk=
+
+Name: res/drawable/carinfo_audi_car_door_right_off_01.png
+SHA-256-Digest: 7NujRpvn3lXMxIYw+guiMikoj9ZVJgf8J+1dZZT1kGM=
+
+Name: res/drawable/carinfo_audi_car_door_right_off_02.png
+SHA-256-Digest: BFBN2e2Nq2J9Z4xjjE+3o7gKuciPmYiea4TNj1zFIkE=
+
+Name: res/drawable/carinfo_audi_car_door_right_off_03.png
+SHA-256-Digest: unSqmN8T13c/ZB3C8Q1rUyKHSWTiy1dsAWAKC0RzQeg=
+
+Name: res/drawable/carinfo_audi_car_door_right_rear_00.png
+SHA-256-Digest: NsDhMn5DEx1f0lvDMpzV2pEoj/ao0ZTZpZuoPHtX594=
+
+Name: res/drawable/carinfo_audi_car_door_right_rear_01.png
+SHA-256-Digest: ofDESdY9Usk7R5bu59DTqoxsnUgoBqfdYuzFlqCkBTA=
+
+Name: res/drawable/carinfo_audi_car_door_right_rear_02.png
+SHA-256-Digest: bOCvUHx+vXQKKiqB/A0SHfHCvdSSP4WXqzN8kxlM1uQ=
+
+Name: res/drawable/carinfo_audi_car_door_trunk_00.png
+SHA-256-Digest: g1iIyWldkWpaukjNhxjsj7aEFnmWPXoAMe2ZxRq0gOg=
+
+Name: res/drawable/carinfo_audi_car_door_trunk_01.png
+SHA-256-Digest: VmujBTM21ndmocLFjUeTWCREVIrv9Hi1dThLDm3wwjY=
+
+Name: res/drawable/carinfo_audi_car_door_trunk_02.png
+SHA-256-Digest: dXYwKqsiRQAsdK2UfH/l2pbmrPqOMnaS2tJAqqhvZhg=
+
+Name: res/drawable/carinfo_audi_car_door_trunk_03.png
+SHA-256-Digest: rjrMSzyyZoCH6DOamElis+M5k6HjHH7J35roa4t4tN0=
+
+Name: res/drawable/carinfo_audi_car_door_trunk_on_00.png
+SHA-256-Digest: ScT+cS7ESMB8JLot1i4k+ECERcjbOCTGce0qlV6VFOk=
+
+Name: res/drawable/carinfo_audi_car_door_trunk_on_01.png
+SHA-256-Digest: qBrUtRaErYZhdZvvYAb/7ILKoZb8xgB8wHuThMXnFAc=
+
+Name: res/drawable/carinfo_audi_car_door_trunk_on_02.png
+SHA-256-Digest: cbeVWfpV/HPy6J06P4hB1oI3rgbuXUIek0bZu5jskmM=
+
+Name: res/drawable/carinfo_audi_car_door_trunk_on_03.png
+SHA-256-Digest: +cvi+QtBn6NmzjGEq593KPcXgOHXYMo/z70mJrRpSJc=
+
+Name: res/drawable/carinfo_benz_car_door_bg.png
+SHA-256-Digest: 7IszjLok5nLOeQqswS1Z4INncMRoSy2kcJyu9tgz12E=
+
+Name: res/drawable/carinfo_benz_car_door_bg_00.png
+SHA-256-Digest: hLKC6Z0olT+uvAwaImdUk4sJjU0jeUBVccn00BlwxUY=
+
+Name: res/drawable/carinfo_benz_car_door_bg_01.png
+SHA-256-Digest: HPbKLXihoYL9hoR2JJrqOmPuvevn853Mt9AVLz70iuE=
+
+Name: res/drawable/carinfo_benz_car_door_bg_02.png
+SHA-256-Digest: HFPnqJkKcPd97S3cevLqKtxrV+E4Qk4ubsYH1LEiHYc=
+
+Name: res/drawable/carinfo_benz_car_door_bg_03.png
+SHA-256-Digest: HNYgrZz0L5dlzHR114i0ViP9E5nPHbDigWkqGkSTH6Y=
+
+Name: res/drawable/carinfo_benz_car_door_bg_04.png
+SHA-256-Digest: aS+tkhRv7+fRN9OOsqd/jVtwcOBNK+bXPRpCesjwMuM=
+
+Name: res/drawable/carinfo_benz_car_door_bg_05.png
+SHA-256-Digest: 38tBZh0owYGsrfYaxaZpsG7oVRF9RkIbmz3pn0DoW3g=
+
+Name: res/drawable/carinfo_benz_car_door_bg_06.png
+SHA-256-Digest: P9GAcV9wqh4Bze3N/MI2ywLRFb0K+dGh5ZK86ABI4p0=
+
+Name: res/drawable/carinfo_benz_car_door_bg_07.png
+SHA-256-Digest: IPYOXalnKVUnxkTRbJSdgxGaHHvBjdg3gfw16bDZcCk=
+
+Name: res/drawable/carinfo_benz_car_door_front_left.png
+SHA-256-Digest: aoouikm+gL7Tb2ZD3GmMtvyoLhxtcyqLgadzIaHkgBM=
+
+Name: res/drawable/carinfo_benz_car_door_front_left_00.png
+SHA-256-Digest: iQDRPm/xe4ri0p04Nuv+LKIfuSj4edbo2NVGAOmYu1I=
+
+Name: res/drawable/carinfo_benz_car_door_front_left_01.png
+SHA-256-Digest: 8hBvnH4nQjiCRq4VjhKzft5RghI3kIfEyesSGhm9Qs8=
+
+Name: res/drawable/carinfo_benz_car_door_front_left_02.png
+SHA-256-Digest: 4NY74SOg20TpuDQfKM7Rbc9iAgeiMY/masuhKC/WHpo=
+
+Name: res/drawable/carinfo_benz_car_door_front_left_03.png
+SHA-256-Digest: 7Ss9so7mxcbw8bw2isNxTeiGJ7otrsSji9ZdadmSi3w=
+
+Name: res/drawable/carinfo_benz_car_door_front_left_04.png
+SHA-256-Digest: dy5PezzUIDHnMBeHg9jmqIOa8EM2V/oLONF7TXLm5OY=
+
+Name: res/drawable/carinfo_benz_car_door_front_left_05.png
+SHA-256-Digest: QcgCQFPALpV8T4K873mZFGfK4meVjC0uTEyfJ5907fI=
+
+Name: res/drawable/carinfo_benz_car_door_front_left_06.png
+SHA-256-Digest: Zs6J3c1h7YLKzi7f4CDkZzhRN5P2a6DQP5TYdRkdIUM=
+
+Name: res/drawable/carinfo_benz_car_door_front_left_07.png
+SHA-256-Digest: 3ehJj5Q9eg8LEFWvuKpx3ruGb/xw7wssyC4jQ7IlaRI=
+
+Name: res/drawable/carinfo_benz_car_door_front_right.png
+SHA-256-Digest: 6lI6MlbC40+TbxpC2qcWSssWDF5BuHiT2BevnS3ANNM=
+
+Name: res/drawable/carinfo_benz_car_door_front_right_00.png
+SHA-256-Digest: wEYCV5dfZp2wIA480Q4ztpcnWuuw4iHlDtszO3Ginyc=
+
+Name: res/drawable/carinfo_benz_car_door_front_right_01.png
+SHA-256-Digest: 3h3DXViaXFi5SvDeM6M0BJdhsuB4Us2FbBFRL2zOy9w=
+
+Name: res/drawable/carinfo_benz_car_door_front_right_02.png
+SHA-256-Digest: K9Hh0oUYF+Ldm5P+yR3srD+ip1tE8zT+pH+g8IGMkgQ=
+
+Name: res/drawable/carinfo_benz_car_door_front_right_03.png
+SHA-256-Digest: +yzgorg08HBw5fPw9RFPm5AwE09qZAUAudMKJRWGlVQ=
+
+Name: res/drawable/carinfo_benz_car_door_front_right_04.png
+SHA-256-Digest: qWIXqd+MsEDyoNicFrMIwXQn+Sgy5Lp/DgPJ2ZsiqZw=
+
+Name: res/drawable/carinfo_benz_car_door_front_right_05.png
+SHA-256-Digest: k318vfaKDIe5fgmYdBceFB2FakwTrfGG9fNXnHqaSnE=
+
+Name: res/drawable/carinfo_benz_car_door_front_right_06.png
+SHA-256-Digest: 4EFR1wtZj7M9ghEiwKP5yFXpgWJdiy8gTi2i+IH5yPk=
+
+Name: res/drawable/carinfo_benz_car_door_front_right_07.png
+SHA-256-Digest: 5/yIhSq5FoIjLoCLjDrAXJa03hFgHiVj0CPEZb08/+0=
+
+Name: res/drawable/carinfo_benz_car_door_hood.png
+SHA-256-Digest: m9iFpIePwWwICwHUjIvXEovwWXkd4HeiqyGwT9lFUQM=
+
+Name: res/drawable/carinfo_benz_car_door_hood_00.png
+SHA-256-Digest: XUwxLWUSVMdUKwBukPDeeCev+CdnFJ7ne2Qmg8fw9Qo=
+
+Name: res/drawable/carinfo_benz_car_door_hood_01.png
+SHA-256-Digest: bD9dpJ1WlxVJ3ZkRDma4gBiniclTPjzljvmiCfJxcdg=
+
+Name: res/drawable/carinfo_benz_car_door_hood_02.png
+SHA-256-Digest: J/W88W5EFPmAdrkBBhEvadmEDEySbzhX2teVKHgdrxk=
+
+Name: res/drawable/carinfo_benz_car_door_hood_03.png
+SHA-256-Digest: fiLG9Udd47EQy3MpHd3OB30ye70OewbQrGd0mA/4VxU=
+
+Name: res/drawable/carinfo_benz_car_door_hood_04.png
+SHA-256-Digest: 4e27cLIwiYHk0GCkTmqMLqtZrXv3rxKwl3KIYR4zrtA=
+
+Name: res/drawable/carinfo_benz_car_door_hood_05.png
+SHA-256-Digest: HpxGK1yy3A2DwpjXGAtM6od0u7OxbDAAvH8lgpPuheQ=
+
+Name: res/drawable/carinfo_benz_car_door_hood_06.png
+SHA-256-Digest: XUwxLWUSVMdUKwBukPDeeCev+CdnFJ7ne2Qmg8fw9Qo=
+
+Name: res/drawable/carinfo_benz_car_door_hood_07.png
+SHA-256-Digest: Ajy9noWLQSZZxWO7XzlrdmKM51vTVpkpioFReaMj0Jo=
+
+Name: res/drawable/carinfo_benz_car_door_hood_on_00.png
+SHA-256-Digest: 5/12eJAy8rJ+P0NgsjN6ab6kwZL8QN1DZIivAnIR9Yk=
+
+Name: res/drawable/carinfo_benz_car_door_hood_on_01.png
+SHA-256-Digest: fXbu7x26jkddN6WFMMIz2/a5Jv2NaLBCrnAP3qVqcns=
+
+Name: res/drawable/carinfo_benz_car_door_hood_on_02.png
+SHA-256-Digest: XkvqqLwiDHKrNenI0Pl6aXGiOnP8poqFDlR4doGnjow=
+
+Name: res/drawable/carinfo_benz_car_door_hood_on_03.png
+SHA-256-Digest: +423bC3PNbWJFHduJ2m5VGJvVlDETFLnizSNlrur7Uk=
+
+Name: res/drawable/carinfo_benz_car_door_hood_on_04.png
+SHA-256-Digest: CfnRd6fGd3rOky+PLnCHf596+i96XCEuSXs3z5v7kww=
+
+Name: res/drawable/carinfo_benz_car_door_hood_on_05.png
+SHA-256-Digest: MYmwx6brC6zP9CSaXUom1U8mRN56jAzq164M+l4kud8=
+
+Name: res/drawable/carinfo_benz_car_door_hood_on_06.png
+SHA-256-Digest: 95EhfdrD+F+gBxEUFNMZhv6XTNFO/rXlvEgmJnRWHu4=
+
+Name: res/drawable/carinfo_benz_car_door_hood_on_07.png
+SHA-256-Digest: JCyhB9aBV/daBuV+ohhd+M8w2pforB55LPlbvLpZm8E=
+
+Name: res/drawable/carinfo_benz_car_door_left_front_00.png
+SHA-256-Digest: zAw9lC6Z+WK6Z94mH1h4ZFXJ30Mn5FA+nbRv+0AegYo=
+
+Name: res/drawable/carinfo_benz_car_door_left_front_01.png
+SHA-256-Digest: algXua/ba0TxB6LCgJF6gGDBSHUi9NAyPzyxIGkYuIU=
+
+Name: res/drawable/carinfo_benz_car_door_left_front_02.png
+SHA-256-Digest: rim35yuJsHa+5ivODplC/m5RSyPxwXhW/bjqHalWCqs=
+
+Name: res/drawable/carinfo_benz_car_door_left_front_03.png
+SHA-256-Digest: dnuupu0XcudP7EW9rzBQbhFDKk4YeoUzXpzaHT68dm0=
+
+Name: res/drawable/carinfo_benz_car_door_left_front_04.png
+SHA-256-Digest: aWV2xn4Dc+9cjLOsjsvhfTEo/NRyWOape75bK2CoRDI=
+
+Name: res/drawable/carinfo_benz_car_door_left_front_05.png
+SHA-256-Digest: DpxCh38jo92Jmh3cX5xcReHho7K7H6M91QRohx/yS0g=
+
+Name: res/drawable/carinfo_benz_car_door_left_front_06.png
+SHA-256-Digest: mF9Ysxu/Pn2ms2ABBN8ZDJVG4TRGtF0vQ9B8GReamdc=
+
+Name: res/drawable/carinfo_benz_car_door_left_front_07.png
+SHA-256-Digest: 6QMO7Xsi8QTjb6UYty3Rd4fctsYf+43c0jPNCJLGSgA=
+
+Name: res/drawable/carinfo_benz_car_door_left_off_00.png
+SHA-256-Digest: Ak8po6xv9EMngzYYexswSdcaWJWMgX31xuoD0yph2Zw=
+
+Name: res/drawable/carinfo_benz_car_door_left_off_01.png
+SHA-256-Digest: x7jlTuTfRaYuDMSUgJm0sGikwLxPA0lfQ6H1RhBkERM=
+
+Name: res/drawable/carinfo_benz_car_door_left_off_02.png
+SHA-256-Digest: IxEPB1sRSoQhD0pi5ZSNaox7g/0F4YTBEJ8cYFyaAk0=
+
+Name: res/drawable/carinfo_benz_car_door_left_off_03.png
+SHA-256-Digest: qobdsZdSRd9+hY9aecoFF235swBgLJS7tNgY2h1PHxQ=
+
+Name: res/drawable/carinfo_benz_car_door_left_off_04.png
+SHA-256-Digest: Ciw/sdYS15o3qUzisrEOa91yOESUtZGDY5F2t0uesfA=
+
+Name: res/drawable/carinfo_benz_car_door_left_off_05.png
+SHA-256-Digest: 2/O8U1wRsVd4eeXbu1ytABQyEg0xc6UQzeiTMUZZ6t4=
+
+Name: res/drawable/carinfo_benz_car_door_left_off_06.png
+SHA-256-Digest: 4a8slRpIW5vueUuBKK1IuPWebhYaIiS/A0KWunRj82c=
+
+Name: res/drawable/carinfo_benz_car_door_left_off_07.png
+SHA-256-Digest: ctL/ePvDVwH08hBnTKKy4iDh0QzMuuMoZiShzcXZ+Rg=
+
+Name: res/drawable/carinfo_benz_car_door_left_rear_00.png
+SHA-256-Digest: EnE1yzBV0wW+k/IkBCbQxqqnOlflCNouEiby5zYTO2A=
+
+Name: res/drawable/carinfo_benz_car_door_left_rear_01.png
+SHA-256-Digest: L658325CyyM8M8Nyq3PD2xkOSq19evmwHMAQ9uo0sy8=
+
+Name: res/drawable/carinfo_benz_car_door_left_rear_02.png
+SHA-256-Digest: b4sRCl9xuDM8AZRSkW0aQaqpO9QyVCUcI0utUJiLd1o=
+
+Name: res/drawable/carinfo_benz_car_door_left_rear_03.png
+SHA-256-Digest: uHwxeccS2hvGJv7mAxuvqCUjT72+u7pwhRfOS2ATTd8=
+
+Name: res/drawable/carinfo_benz_car_door_left_rear_04.png
+SHA-256-Digest: sx1jx60OumkDnhg7orjUAsmD1giahpmTyldyUxKdVvA=
+
+Name: res/drawable/carinfo_benz_car_door_left_rear_06.png
+SHA-256-Digest: 4U0o+vBOoir895oASkStDM+m4+uzvH/8GnGsabvUKoI=
+
+Name: res/drawable/carinfo_benz_car_door_left_rear_07.png
+SHA-256-Digest: Gkskg5sbpPyCKEjaebO4vey2mHvb6vxwFa80aRJfafg=
+
+Name: res/drawable/carinfo_benz_car_door_rear_left.png
+SHA-256-Digest: n9blMc2mImR9NE62tClHpPwCwfqoEhbB4zc3kWGNu6M=
+
+Name: res/drawable/carinfo_benz_car_door_rear_left_00.png
+SHA-256-Digest: oCnVWJDjpQKmIhhApdXPMEa/9YFmdqXs1h5qMYO+agQ=
+
+Name: res/drawable/carinfo_benz_car_door_rear_left_01.png
+SHA-256-Digest: Vsf0OL8fEAVrKaMZBUyWHW7Z5wKl1syOCLTLV2VHHso=
+
+Name: res/drawable/carinfo_benz_car_door_rear_left_02.png
+SHA-256-Digest: mqa1yK4QfZJW9KvUYMrcNbFoCs7NQz7AzfFmcVUSkdY=
+
+Name: res/drawable/carinfo_benz_car_door_rear_left_03.png
+SHA-256-Digest: O3e2MQHan0kcrdWHbRwfQz2FtcDLHV6YfxDU7BNlkMM=
+
+Name: res/drawable/carinfo_benz_car_door_rear_left_04.png
+SHA-256-Digest: mzC5iCoNXYR38hzDyTpShX6tFq1wyFFC6fYUYkNCmdc=
+
+Name: res/drawable/carinfo_benz_car_door_rear_left_06.png
+SHA-256-Digest: +Gyn8TZtPC67sHkLAQ70sG0DLLu5+P3LlSklt5uob0Y=
+
+Name: res/drawable/carinfo_benz_car_door_rear_left_07.png
+SHA-256-Digest: qiUrrOoBJSzxw4y22fDguVrFI+TeomHkv+CyCDhqWok=
+
+Name: res/drawable/carinfo_benz_car_door_rear_right.png
+SHA-256-Digest: gtpTdwjqVh2ZcCoJoduF+YqYBgnJ51Ct3lFQ5ALfjpo=
+
+Name: res/drawable/carinfo_benz_car_door_rear_right_00.png
+SHA-256-Digest: o9SfUF1/RkqC+fXCUOnus/UrTACIxXl1xado5SvxnCU=
+
+Name: res/drawable/carinfo_benz_car_door_rear_right_01.png
+SHA-256-Digest: NidLehk/uf3mMPgdlKa5RraCKPg9+V506H9lLubtVew=
+
+Name: res/drawable/carinfo_benz_car_door_rear_right_02.png
+SHA-256-Digest: 9ZFtGlauuzSj+/S9+mNC5WcioY2oTR7O/OL4xVCkfKU=
+
+Name: res/drawable/carinfo_benz_car_door_rear_right_03.png
+SHA-256-Digest: QFjEwd8aDaBqpdbhcfmU8U8B8WNDr7dJI17HOWWDE4U=
+
+Name: res/drawable/carinfo_benz_car_door_rear_right_04.png
+SHA-256-Digest: P3zEjyvdbH1RnDF0bnJsOPWLg8w0YFKck4s6TXDFCqg=
+
+Name: res/drawable/carinfo_benz_car_door_rear_right_06.png
+SHA-256-Digest: 5T8p2u6oBfWA0p2KER3FSf3a/KBFGwRp0WUlPoYzyeU=
+
+Name: res/drawable/carinfo_benz_car_door_rear_right_07.png
+SHA-256-Digest: 4Ctn/IaLtG0C42efGI0Kxb771nKNNOFXIwePr7U4w3c=
+
+Name: res/drawable/carinfo_benz_car_door_right_front_00.png
+SHA-256-Digest: njsuCmQ63GpHQ7qDHJnd0ChxYatxalhVQ+iClsGe5VA=
+
+Name: res/drawable/carinfo_benz_car_door_right_front_01.png
+SHA-256-Digest: dSzNqMDl6Nf8O4DlbwJCXmHdhioMPPPr4/W/rF0CkYw=
+
+Name: res/drawable/carinfo_benz_car_door_right_front_02.png
+SHA-256-Digest: 7s4MyFRExFDOR4Lf+vFtoosEojM5k90nhmyppMaZRvk=
+
+Name: res/drawable/carinfo_benz_car_door_right_front_03.png
+SHA-256-Digest: Yh6broNIV4jvrzU3WDOgZU8PSOXLgBgjCXd404830wg=
+
+Name: res/drawable/carinfo_benz_car_door_right_front_04.png
+SHA-256-Digest: Atp0kVUm1LfCs9lLCqADJPCJ30Ze6f0R2fhQdkGPgGg=
+
+Name: res/drawable/carinfo_benz_car_door_right_front_05.png
+SHA-256-Digest: qDZCFU/YjxkXBRPtH1p5597hRcQW/sMrg79nmj8cvRU=
+
+Name: res/drawable/carinfo_benz_car_door_right_front_06.png
+SHA-256-Digest: j6hgIIvXByT9Fz5FgBaXbUiy+StYM2/Wd9UylaxeWaQ=
+
+Name: res/drawable/carinfo_benz_car_door_right_front_07.png
+SHA-256-Digest: pvZPM40Tv5PK6SRnfvYLDHsPZtVIMFWz5eDBSYuLZHc=
+
+Name: res/drawable/carinfo_benz_car_door_right_off_00.png
+SHA-256-Digest: A/LLYozGZ57CmI70IJWo+tO5agxuX+XGDuLppfbkFBs=
+
+Name: res/drawable/carinfo_benz_car_door_right_off_01.png
+SHA-256-Digest: xnm7U8Nw+Z4CVRKo5ENEdwxn8grf5U/b/EMwCLv5Mk0=
+
+Name: res/drawable/carinfo_benz_car_door_right_off_02.png
+SHA-256-Digest: 8B6MPwZ6bSpn+5WVLpyTsY40xUg/bSEZRq6yX5FJj8s=
+
+Name: res/drawable/carinfo_benz_car_door_right_off_03.png
+SHA-256-Digest: VxMLOqEveQQamdDS7ic+12G1dXJtW7SBTj0c0PLua3A=
+
+Name: res/drawable/carinfo_benz_car_door_right_off_04.png
+SHA-256-Digest: AKxaBsuEv4+LgBMYqX9IzmiQz5NgGRLgE4SJsqFQXp4=
+
+Name: res/drawable/carinfo_benz_car_door_right_off_05.png
+SHA-256-Digest: yU+h9r9huwHiCt6yh9QjzC95MX7PFgBDsw78vF9KKxQ=
+
+Name: res/drawable/carinfo_benz_car_door_right_off_06.png
+SHA-256-Digest: M2tokuxdrVCawy3GqiNzlOCeO0okU6If28/jojhGjrY=
+
+Name: res/drawable/carinfo_benz_car_door_right_off_07.png
+SHA-256-Digest: p3cZd/wiBhuzDBMW6HIN5kyHEBboXyC4fvAgKpk3b0M=
+
+Name: res/drawable/carinfo_benz_car_door_right_rear_00.png
+SHA-256-Digest: qQJzWvDnVWXQ+4GVs3Jw68M1Lh++gNXG580MOcS3yJI=
+
+Name: res/drawable/carinfo_benz_car_door_right_rear_01.png
+SHA-256-Digest: 0urPiklFFmpvd573MSIR2fpIKX2F0ckNFAtVrmJ0QPU=
+
+Name: res/drawable/carinfo_benz_car_door_right_rear_02.png
+SHA-256-Digest: zYMs+f++xZEzBvyCpWDaegYmVCgWoxQG/Aj0euwsWXk=
+
+Name: res/drawable/carinfo_benz_car_door_right_rear_03.png
+SHA-256-Digest: DSRkOBX/xheSXMfxeSZ2nsAIWDVUNulLEoPx7uLYfQY=
+
+Name: res/drawable/carinfo_benz_car_door_right_rear_04.png
+SHA-256-Digest: iCiSal8mhKyPu1tuQ0Gf3AQj2SH8qRWixNHOPC/+jvY=
+
+Name: res/drawable/carinfo_benz_car_door_right_rear_06.png
+SHA-256-Digest: 3JCORgnqOBs0guPnLsO+V2BgS/lZFxG/jH6guSDgapw=
+
+Name: res/drawable/carinfo_benz_car_door_right_rear_07.png
+SHA-256-Digest: v+JkmIWb4VqVnYWlTQZgyizmxyKs3Or/WAP1dTn+maw=
+
+Name: res/drawable/carinfo_benz_car_door_trunk.png
+SHA-256-Digest: yYCOTxJFkMi97drCPSvttOLMP+rUobbZW7gsaCfNvXM=
+
+Name: res/drawable/carinfo_benz_car_door_trunk_00.png
+SHA-256-Digest: dXYwKqsiRQAsdK2UfH/l2pbmrPqOMnaS2tJAqqhvZhg=
+
+Name: res/drawable/carinfo_benz_car_door_trunk_01.png
+SHA-256-Digest: i4vNlKqgdOeso/WsnVhjx2Zx8njSD1TX5ZU6X/29mfU=
+
+Name: res/drawable/carinfo_benz_car_door_trunk_02.png
+SHA-256-Digest: ZM9bdzgqHKTmUIsjOBTrSxSzaELVR45basWP+gVLQ5s=
+
+Name: res/drawable/carinfo_benz_car_door_trunk_03.png
+SHA-256-Digest: cCMTf+T0/HZ6fpZs9w4DQhvFidqfwQ2qTQDKvNks0sg=
+
+Name: res/drawable/carinfo_benz_car_door_trunk_04.png
+SHA-256-Digest: SONifC07Dyl2qcGXQ9g5WwlW2IGA8BRiWQj6PB3g6Kg=
+
+Name: res/drawable/carinfo_benz_car_door_trunk_05.png
+SHA-256-Digest: tHoHZVck6dLGY8NpsRKevuGeaGeDqdXixphzuEG+jkM=
+
+Name: res/drawable/carinfo_benz_car_door_trunk_06.png
+SHA-256-Digest: X4KWPripxqhOU8F0SIa4qIi6CkxFs/KAYthSYimftQg=
+
+Name: res/drawable/carinfo_benz_car_door_trunk_07.png
+SHA-256-Digest: ++Qv5AsOUcsZmFqy+kKE3tOwwuCxpeqT/N31QLBwu7Y=
+
+Name: res/drawable/carinfo_benz_car_door_trunk_on_00.png
+SHA-256-Digest: D/BxoHEq25EPCfeF9og7LWGHC7UON1YZcE2IptQfzeg=
+
+Name: res/drawable/carinfo_benz_car_door_trunk_on_01.png
+SHA-256-Digest: hOY9FR5t6JCppo1Zt1qDUCIOIYaIlDVIHhIcAYAQsCk=
+
+Name: res/drawable/carinfo_benz_car_door_trunk_on_02.png
+SHA-256-Digest: jYTuHknDcH+elIsqwP4rHDI7my2aFteVtqJfyFl5A5g=
+
+Name: res/drawable/carinfo_benz_car_door_trunk_on_03.png
+SHA-256-Digest: Hb7/RXambhq1i2YRz8YaFXyPerUPXJMJISJpqdy5aX8=
+
+Name: res/drawable/carinfo_benz_car_door_trunk_on_04.png
+SHA-256-Digest: Q3+RjxxEAyGe70D4juATPBW0wkdMiHUy7zPxu6GhUBY=
+
+Name: res/drawable/carinfo_benz_car_door_trunk_on_05.png
+SHA-256-Digest: pDg9VmVN/CamzFaqucTr0HJ1BobW/vD+XhvSOXI6kg8=
+
+Name: res/drawable/carinfo_benz_car_door_trunk_on_06.png
+SHA-256-Digest: gL2NNgFFTtXAFTsZS7pZPh1CsnOK/kfwoVp2Nar0mOo=
+
+Name: res/drawable/carinfo_benz_car_door_trunk_on_07.png
+SHA-256-Digest: W7rwXRJe122EOIcGuF6uLrRQAAGM4y6FR8lzXzBnbQo=
+
+Name: res/drawable/carinfo_benz_car_door_warning_icon.png
+SHA-256-Digest: R9mg+gju0yB7v/ABB3YNFPU4HWE23EDw0bCumLfBgWM=
+
+Name: res/drawable/carinfo_button_1_bg.xml
+SHA-256-Digest: jeykNuiRMhvNOiOg8iEb0guDxLEOlH5HzUWaL8wZYsI=
+
+Name: res/drawable/carinfo_button_bg.xml
+SHA-256-Digest: eENbDUMuNOTWjUYqcMSSV3dhQulXisc2tX69K82/t4g=
+
+Name: res/drawable/carinfo_button_left.xml
+SHA-256-Digest: bYK4dpyLo4UMk/BNy9xeRmmwYbmHgFb3ZWR7K1DB5Zw=
+
+Name: res/drawable/carinfo_button_right.xml
+SHA-256-Digest: QcE2SwboRzh1aIColXu+OBLH6YaoWXehfihOEYEVpuY=
+
+Name: res/drawable/ic_launcher_background.xml
+SHA-256-Digest: 7sCKhgFFYLOr5cB+WOXJ1h20ODJigCVXhI+jgwM9FH8=
+
+Name: res/drawable/icon_03.png
+SHA-256-Digest: FdyM523iVVKzgwq8BJZ8X/Wq+fs4HRgzzvo+HIGCl8A=
+
+Name: res/drawable/icon_04.png
+SHA-256-Digest: 68kO2D0LrpsShCj1n/nyIkG83KUzzYyMyqhZHzcv5ik=
+
+Name: res/drawable/icon_05.png
+SHA-256-Digest: yq5djigrUQjjFVbvyF+QkOYS05WFC3Ya6LstAOQHR44=
+
+Name: res/drawable/icon_06.png
+SHA-256-Digest: M2bVZ4US+98M1/vEkNdZjfubjGRlrMK3A5MuLJFHSnU=
+
+Name: res/drawable/icon_07.png
+SHA-256-Digest: e2cxS8au+tgtBiSYg56pzRJj3iLeU5ApJ/pBGhD9kdY=
+
+Name: res/drawable/icon_08.png
+SHA-256-Digest: hnv5fZmfs2oHlIFH2U3QDPX6tZCgXAkwPASzIA9BiBk=
+
+Name: res/drawable/icon_09.png
+SHA-256-Digest: L4SJ/kxxah5mhv7dpZUpXdM1I6nSCpeulPFhP4jF2l4=
+
+Name: res/drawable/icon_10.png
+SHA-256-Digest: hGoB9W97ahXK+1v6X5qVMXhXCQcTZu6H3iboi0H93u8=
+
+Name: res/drawable/icon_11.png
+SHA-256-Digest: Rk9Lj9gOTlDuirChtJojl85rdoSR4+Xp2BJtwtpyUrE=
+
+Name: res/drawable/icon_11_p.png
+SHA-256-Digest: nUnUKcTkm0UglmKC92Txh4v0p1hnRv7f5TCsMJUDV0c=
+
+Name: res/drawable/icon_12.png
+SHA-256-Digest: pSvpC0/wOPVu897hJCS6ucYOsWnHGIPru0T98Jq9Waw=
+
+Name: res/drawable/icon_12_p.png
+SHA-256-Digest: DN7gCoro/1vfpwRY+fn8WSHmgaKgQ1AzHpSzUTCzNnc=
+
+Name: res/drawable/icon_mileage.png
+SHA-256-Digest: qVcFTVC3XoNPpeJuMVKQ1zpjbqC2YpM514RVv/ELQX0=
+
+Name: res/drawable/icon_n.png
+SHA-256-Digest: 7T72O3oCWEK4nSfUcU+wp1dDD/KVOjGpasaK4g6/Y7A=
+
+Name: res/drawable/icon_p.png
+SHA-256-Digest: GtiiFBVZ7OlezWaBLXTFm7iqI62PQ6UslBPZ6s3UJmo=
+
+Name: res/drawable/icon_speed.png
+SHA-256-Digest: f76wHzDGmLkjbdpAculH7Ao1C22Oe88bJHXmBdrI1QU=
+
+Name: res/drawable/navi_bg.png
+SHA-256-Digest: BjupxdoAnX7MWrr3zt8VRdLFPUGF0cuFmg0okZNMFOA=
+
+Name: res/drawable/navi_tip.png
+SHA-256-Digest: UyDogiIRZvgX9DrqIUmbGEM9DdWfec110mAJSSY4YKo=
+
+Name: res/drawable/notification_bg.xml
+SHA-256-Digest: miDOpT3cdmsTMT1upsGeArQKn6/vfwqhe3JEK+iR6bg=
+
+Name: res/drawable/notification_bg_low.xml
+SHA-256-Digest: u5SNUmoAFekD6VJ1jv48L7iy2w6quw4LgTWCE5Y728w=
+
+Name: res/drawable/notification_icon_background.xml
+SHA-256-Digest: KfzYAhMwoCAYWGH2YfHs3VcmX9pVX9uHPntKkICrhJU=
+
+Name: res/drawable/notification_tile_bg.xml
+SHA-256-Digest: 2rHQPUMJdjV7jU7E9qBsP1zqvGn1yXFRWb/mU7ZDJ4E=
+
+Name: res/layout-v21/notification_action.xml
+SHA-256-Digest: p29CN/VE7Tid2sNR0ZIhN47KdJRQr2eTVC33+ihZ1Qg=
+
+Name: res/layout-v21/notification_action_tombstone.xml
+SHA-256-Digest: Eo+CI995yTlNB8RxjtY3rmbHcswb4QkwQ90CoUsdbhA=
+
+Name: res/layout-v21/notification_template_custom_big.xml
+SHA-256-Digest: YGkVUET3DN60E7fGymFBfnK+CEmHAC9qGUNjcSRTEiA=
+
+Name: res/layout-v21/notification_template_icon_group.xml
+SHA-256-Digest: zBzsanYg4KQAJoGEWTm80NQBkZvdJ3KVdnKVu6wqxtA=
+
+Name: res/layout/activity_fullscreen.xml
+SHA-256-Digest: zcmkmZvKLwZiSsqRkFf77w3l+gLY2Cqpmx+4B3XkIyU=
+
+Name: res/layout/carinfo_benz_car_door_layout.xml
+SHA-256-Digest: 10xXbDLKjtCycNG7vUFBvyD7qp1F656EAm43ThWApTY=
+
+Name: res/layout/key_one_layout.xml
+SHA-256-Digest: tK+LStHjic6Ev4W7CUCLsHHUyjZ5PLLZcGYU1XLrDIo=
+
+Name: res/layout/mileage_layout.xml
+SHA-256-Digest: ONDbv24QQISERQyXysKiK7/GOX6H3ftlXvT1H8WHWIc=
+
+Name: res/layout/navi_layout.xml
+SHA-256-Digest: 4swsJQ5CzSuQzSfkO5o5Bf80/A75aDJ67LDMe35EGIs=
+
+Name: res/layout/notification_media_action.xml
+SHA-256-Digest: P4zbZANvM2D5CR91r2HjhCMANiLPSsVaY+Cf51nf8fM=
+
+Name: res/layout/notification_media_cancel_action.xml
+SHA-256-Digest: G9xy4AjQhNyz5WzXb0JlpjbpF5SAuXrjuOOGlpp8Uoo=
+
+Name: res/layout/notification_template_big_media.xml
+SHA-256-Digest: M7VHrTXUzqdGa4q4T5miTaCzhEnp0/0igGtSgP8woH0=
+
+Name: res/layout/notification_template_big_media_custom.xml
+SHA-256-Digest: I88Enlh+EpzrmGY3g6GDOehPGoqQ2D2NqnSR4Pa2gP4=
+
+Name: res/layout/notification_template_big_media_narrow.xml
+SHA-256-Digest: iXjEyx5jEBzXqoZbNmy9BZdWH6g+wdYvE+2v+5cB+i4=
+
+Name: res/layout/notification_template_big_media_narrow_custom.xml
+SHA-256-Digest: 0y4ZX0MVpwGmAK6nGkSy+oBAaRGYxzrW0ReE8pPJM2w=
+
+Name: res/layout/notification_template_lines_media.xml
+SHA-256-Digest: 0W2kcFYLbpRN4N3bF1s8N/8uyULBlYgjIe4ussbq6aI=
+
+Name: res/layout/notification_template_media.xml
+SHA-256-Digest: UlsKm12wEsjcSpV6FtLOa5w3R+UtxgEMIyOV+dmj7UI=
+
+Name: res/layout/notification_template_media_custom.xml
+SHA-256-Digest: nnnyYpaCQT+4QDEaJMLh+v9UobfIXNpypv4cSUSh0l4=
+
+Name: res/layout/notification_template_part_chronometer.xml
+SHA-256-Digest: aiO1lYFaAzIXl5DZt23nJKZz+0i0jzOGcXw1YEo1/Ws=
+
+Name: res/layout/notification_template_part_time.xml
+SHA-256-Digest: bmkGSlqUFmx01WUTgKD0IN//jlpj/kx7q4Ao7+LB9+4=
+
+Name: res/layout/test_layout.xml
+SHA-256-Digest: bfmChVUM+MmllSPI41pP7f4UA8lATA/URht7GJE9bYA=
+
+Name: res/mipmap-anydpi-v26/ic_launcher.xml
+SHA-256-Digest: tVxVpeuAwXlMSitmC6Vr8XDifmOBGj08ASV2syn9lLA=
+
+Name: res/mipmap-anydpi-v26/ic_launcher_round.xml
+SHA-256-Digest: tVxVpeuAwXlMSitmC6Vr8XDifmOBGj08ASV2syn9lLA=
+
+Name: res/mipmap-hdpi-v4/ic_launcher.png
+SHA-256-Digest: RoOvJjjf3bzhqADAWouOt3HsDl8pKxzus7+1sd9ixpc=
+
+Name: res/mipmap-hdpi-v4/ic_launcher_round.png
+SHA-256-Digest: EXheWyTFYburq7VhcmlwCpR2hhxp+ywfR0RnBkg1TZw=
+
+Name: res/mipmap-hdpi-v4/ic_ntg_launcher.png
+SHA-256-Digest: 0vb5HZsgvWg3KFd713nIxv6vcdxV3aWLGAl104kccLE=
+
+Name: res/mipmap-mdpi-v4/ic_launcher.png
+SHA-256-Digest: p3qFYs8HXGbHE/dzSeV7to37Xv4Hmvs7yZ98agi9zJ8=
+
+Name: res/mipmap-mdpi-v4/ic_launcher_round.png
+SHA-256-Digest: 5uaKnVWlDplrfhGDRWScQL2+h8yBiiFHOf90WlEfF1E=
+
+Name: res/mipmap-mdpi-v4/ic_ntg_launcher.png
+SHA-256-Digest: WuD4Xn0ZeuNyAZvhFeM4oNf3vmk9bPWTUUXizkEA3IM=
+
+Name: res/mipmap-xhdpi-v4/ic_launcher.png
+SHA-256-Digest: nb2o3KY5SMrbxB+HwDMTEz5pMhSAVvJnO642YS68GrM=
+
+Name: res/mipmap-xhdpi-v4/ic_launcher_round.png
+SHA-256-Digest: roLsHHTRoVaGz+GOCog0Ca3PVEtYHpXooGBJVau+Cxs=
+
+Name: res/mipmap-xhdpi-v4/ic_ntg_launcher.png
+SHA-256-Digest: 4/h8wAAerGBG+H4vjdCQ+k8S7gyd2ByTrJnD57PT5F8=
+
+Name: res/mipmap-xxhdpi-v4/ic_launcher.png
+SHA-256-Digest: ZOQSHspOrXk5ETn1zA5rD16Jt2aqWjK5xZMH/AKrY/U=
+
+Name: res/mipmap-xxhdpi-v4/ic_launcher_round.png
+SHA-256-Digest: CEj5NFkqc4UR4Bz9sdsfHt+0TEDEtcct3fYqncV1fuo=
+
+Name: res/mipmap-xxhdpi-v4/ic_ntg_launcher.png
+SHA-256-Digest: vrfBnzC6bXwrjFRBMY9Vmi8Y6/U41Ln+ymhn7q6jqvM=
+
+Name: res/mipmap-xxxhdpi-v4/ic_launcher.png
+SHA-256-Digest: u/yzkOo9vNI8K6aYEdmebaQiU6bnbShHkdl2OXgh79M=
+
+Name: res/mipmap-xxxhdpi-v4/ic_launcher_round.png
+SHA-256-Digest: s4Kf4HEOItih+t9TiEp4yvR8VVtDJtNyyzG67Dce+Po=
+
+Name: resources.arsc
+SHA-256-Digest: 1XknbXw5e8/48qvC9vEUf2NxT/B5NyXPm05UlePb4B4=
+

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_width="match_parent" android:layout_height="match_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+        <TextView android:textSize="28.0px" android:textColor="#ffff" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PASS AIR BAG" />
+        <ImageButton android:id="@id/car_up" android:background="@drawable/carinfo_button_1_bg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="20.0px" android:src="@drawable/icon_03" />
+        <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="30.0px">
+            <ImageButton android:id="@id/left_key" android:background="@drawable/carinfo_button_1_bg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="20.0px" android:src="@drawable/icon_05" />
+            <ImageButton android:id="@id/sport_esp_off" android:background="@drawable/carinfo_button_1_bg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/icon_08" />
+            <ImageButton android:id="@id/right_key" android:background="@drawable/carinfo_button_1_bg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="20.0px" android:src="@drawable/icon_06" />
+        </LinearLayout>
+        <ImageButton android:id="@id/p_off" android:background="@drawable/carinfo_button_1_bg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="30.0px" android:src="@drawable/icon_07" />
+        <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="40.0px">
+            <ImageView android:id="@id/knob_left_l" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/carinfo_button_left" />
+            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/icon_09" />
+            <ImageView android:id="@id/knob_left_r" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/carinfo_button_right" />
+            <ImageView android:id="@id/knob_right_l" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="60.0px" android:src="@drawable/carinfo_button_left" />
+            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/icon_10" />
+            <ImageView android:id="@id/knob_right_r" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/carinfo_button_right" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

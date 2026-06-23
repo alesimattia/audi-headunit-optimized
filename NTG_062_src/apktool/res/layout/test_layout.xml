@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="horizontal" android:background="#40333333" android:layout_width="wrap_content" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <TextView android:textSize="30.0px" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="LOW:0~255" />
+        <EditText android:id="@id/edit_low_number" android:layout_width="180.0px" android:layout_height="wrap_content" android:hint="LOW" android:ems="10" android:layout_weight="1.0" android:inputType="number" />
+        <LinearLayout android:gravity="center" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="match_parent">
+            <Button android:textSize="30.0px" android:id="@id/button_low_m" android:layout_width="0.0px" android:layout_height="wrap_content" android:text="-" android:layout_weight="1.0" />
+            <Button android:textSize="30.0px" android:id="@id/button_low_p" android:layout_width="0.0px" android:layout_height="wrap_content" android:text="+" android:layout_weight="1.0" />
+            <Button android:textSize="12.0px" android:id="@id/button_low_reset" android:layout_width="0.0px" android:layout_height="wrap_content" android:text="RESET" android:layout_weight="1.0" />
+        </LinearLayout>
+        <Button android:id="@id/button_close" android:layout_width="150.0px" android:layout_height="wrap_content" android:text="CLOSE" />
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <TextView android:textSize="30.0px" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="HI:0~255" />
+        <EditText android:id="@id/edit_hi_number" android:layout_width="180.0px" android:layout_height="wrap_content" android:hint="HI" android:ems="10" android:layout_weight="1.0" android:inputType="number" />
+        <LinearLayout android:gravity="center" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="match_parent">
+            <Button android:textSize="30.0px" android:id="@id/button_hi_m" android:layout_width="0.0px" android:layout_height="wrap_content" android:text="-" android:layout_weight="1.0" />
+            <Button android:textSize="30.0px" android:id="@id/button_hi_p" android:layout_width="0.0px" android:layout_height="wrap_content" android:text="+" android:layout_weight="1.0" />
+            <Button android:textSize="12.0px" android:id="@id/button_hi_reset" android:layout_width="0.0px" android:layout_height="wrap_content" android:text="RESET" android:layout_weight="1.0" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <TextView android:textSize="30.0px" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="BRI:0~255" />
+        <EditText android:id="@id/edit_bri_number" android:layout_width="180.0px" android:layout_height="wrap_content" android:hint="BRIGHTNESS" android:ems="10" android:layout_weight="1.0" android:inputType="number" />
+        <LinearLayout android:gravity="center" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="match_parent">
+            <Button android:textSize="30.0px" android:id="@id/button_bri_m" android:layout_width="0.0px" android:layout_height="wrap_content" android:text="-" android:layout_weight="1.0" />
+            <Button android:textSize="30.0px" android:id="@id/button_bri_p" android:layout_width="0.0px" android:layout_height="wrap_content" android:text="+" android:layout_weight="1.0" />
+            <Button android:textSize="12.0px" android:id="@id/button_bri_reset" android:layout_width="0.0px" android:layout_height="wrap_content" android:text="RESET" android:layout_weight="1.0" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <TextView android:textSize="30.0px" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CONT:-100~100" />
+        <EditText android:id="@id/edit_cons_number" android:layout_width="180.0px" android:layout_height="wrap_content" android:hint="CONTRAST" android:ems="10" android:layout_weight="1.0" android:inputType="number" />
+        <LinearLayout android:gravity="center" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="match_parent">
+            <Button android:textSize="30.0px" android:id="@id/button_cons_m" android:layout_width="0.0px" android:layout_height="wrap_content" android:text="-" android:layout_weight="1.0" />
+            <Button android:textSize="30.0px" android:id="@id/button_cons_p" android:layout_width="0.0px" android:layout_height="wrap_content" android:text="+" android:layout_weight="1.0" />
+            <Button android:textSize="12.0px" android:id="@id/button_cons_reset" android:layout_width="0.0px" android:layout_height="wrap_content" android:text="RESET" android:layout_weight="1.0" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
