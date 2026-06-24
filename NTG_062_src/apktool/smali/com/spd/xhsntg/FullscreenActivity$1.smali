@@ -58,6 +58,27 @@
     .locals 2
     .param p1, "position"    # I
 
+    # all'apertura della pagina debug (indice 4) genera il dump one-shot dei parametri CarInfo
+    const/4 v0, 0x4
+
+    if-ne p1, v0, :cond_dump
+
+    invoke-static {}, Lcom/spd/xhsntg/DebugLog;->dumpAll()V
+
+    :cond_dump
+    # pagina Sistema (indice 5): avvia il refresh periodico entrando, fermalo uscendo
+    const/4 v0, 0x5
+
+    if-ne p1, v0, :cond_sys_off
+
+    invoke-static {}, Lcom/spd/xhsntg/SystemView;->start()V
+
+    goto :goto_sys
+
+    :cond_sys_off
+    invoke-static {}, Lcom/spd/xhsntg/SystemView;->stop()V
+
+    :goto_sys
     .line 431
     iget-object v0, p0, Lcom/spd/xhsntg/FullscreenActivity$1;->this$0:Lcom/spd/xhsntg/FullscreenActivity;
 

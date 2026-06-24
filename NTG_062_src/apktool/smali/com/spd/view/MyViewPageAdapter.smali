@@ -18,6 +18,8 @@
 
 .field private m_test_view_4:Landroid/view/View;
 
+.field private m_test_view_5:Landroid/view/View;
+
 
 # direct methods
 .method public constructor <init>(Landroid/content/Context;)V
@@ -85,6 +87,13 @@
 
     iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_4:Landroid/view/View;
 
+    # pagina Sistema (parametri headunit Android)
+    invoke-static {p1}, Lcom/spd/xhsntg/SystemView;->createView(Landroid/content/Context;)Landroid/view/View;
+
+    move-result-object v0
+
+    iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_5:Landroid/view/View;
+
     .line 35
     return-void
 .end method
@@ -118,7 +127,7 @@
     .locals 1
 
     .line 65
-    const/4 v0, 0x5
+    const/4 v0, 0x6
 
     return v0
 .end method
@@ -166,6 +175,12 @@
 
     goto :goto_0
 
+    # pagina Sistema (parametri headunit)
+    :pswitch_5
+    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_5:Landroid/view/View;
+
+    goto :goto_0
+
     .line 80
     :pswitch_1
     iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_navi_frame_layout:Landroid/widget/FrameLayout;
@@ -203,6 +218,7 @@
         :pswitch_1
         :pswitch_0
         :pswitch_4
+        :pswitch_5
     .end packed-switch
 .end method
 

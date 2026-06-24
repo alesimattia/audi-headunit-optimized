@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:compileSdkVersion="28" android:compileSdkVersionCodename="9" package="com.spd.xhsntg" platformBuildVersionCode="28" platformBuildVersionName="9">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:compileSdkVersion="28" android:compileSdkVersionCodename="9" package="com.spd.xhsntg.audi" platformBuildVersionCode="28" platformBuildVersionName="9">
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <application android:allowBackup="true" android:icon="@mipmap/ic_ntg_launcher" android:label="@string/app_name" android:resizeableActivity="false" android:supportsRtl="true" android:theme="@style/FullscreenTheme">
-        <activity android:configChanges="keyboardHidden|orientation|screenSize" android:label="@string/app_name" android:launchMode="singleInstance" android:name=".FullscreenActivity" android:theme="@style/FullscreenTheme">
+    <application android:allowBackup="true" android:icon="@android:mipmap/sym_def_app_icon" android:label="Audi functions" android:resizeableActivity="false" android:supportsRtl="true" android:theme="@style/FullscreenTheme">
+        <activity android:configChanges="keyboardHidden|orientation|screenSize" android:label="Audi functions" android:launchMode="singleInstance" android:name="com.spd.xhsntg.FullscreenActivity" android:theme="@style/FullscreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -14,7 +14,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <receiver android:enabled="true" android:exported="true" android:name=".ReverseBroadcast">
+        <receiver android:enabled="true" android:exported="true" android:name="com.spd.xhsntg.ReverseBroadcast">
             <intent-filter>
                 <action android:name="com.spd.action.ntg.reverse.START"/>
                 <action android:name="com.spd.action.ntg.reverse.STOP"/>

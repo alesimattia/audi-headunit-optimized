@@ -607,8 +607,6 @@
     .param p2, "o"    # Ljava/lang/Object;
     .param p3, "i1"    # I
 
-    invoke-static {p1, p2, p3}, Lcom/spd/xhsntg/DebugLog;->add(ILjava/lang/Object;I)V
-
     .line 87
     const/4 v0, 0x0
 

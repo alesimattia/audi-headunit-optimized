@@ -21,3 +21,4 @@ Backup di un'applicazione per android 9.0 car headunit
 - Non compilare l'apk senza avermelo chiesto 
 - Pulisci sempre la cache di build prima di ricompilare
 - applica sempre zipalign + firma v3 quando compili l'applicazione
+- Il PC windows con nome PC-030 va utilizzato solo per progettazione e scrittura del codice, non compilare app e non installare software aggiuntivo senza autorizzazione
