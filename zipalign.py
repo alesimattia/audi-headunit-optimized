@@ -3,7 +3,7 @@
 Da eseguire DOPO la firma v1 (jarsigner): ripaddabilita solo il campo 'extra'
 dell'header locale per allineare i dati di ogni voce; il contenuto NON cambia,
 quindi la firma v1 (JAR) resta valida.  Per firma v2/v3 usare invece
-uber-apk-signer (vedi sign_align.sh).
+uber-apk-signer (vedi compile_sign_align.sh).
 
 Uso:  python3 zipalign.py <input.apk> <output.apk>
 """

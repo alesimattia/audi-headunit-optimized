@@ -361,13 +361,13 @@
 
     div-long v12, v4, v8          # availMB
 
-    const-wide/16 v14, 0x64       # 100
+    const-wide/16 v8, 0x64        # 100 (riusa v8/v9)
 
-    mul-long v16, v6, v14         # used * 100
+    mul-long v6, v6, v8           # used * 100 -> v6/v7
 
-    div-long v16, v16, v2         # / total
+    div-long v6, v6, v2           # / total -> v6/v7
 
-    long-to-int v18, v16          # pct
+    long-to-int v6, v6            # pct -> v6 (registro basso: long-to-int e invoke sono a 4 bit)
 
     new-instance v0, Ljava/lang/StringBuilder;
 
@@ -395,7 +395,7 @@
 
     sget-object v0, Lcom/spd/xhsntg/SystemView;->sBar:Landroid/widget/ProgressBar;
 
-    invoke-virtual {v0, v18}, Landroid/widget/ProgressBar;->setProgress(I)V
+    invoke-virtual {v0, v6}, Landroid/widget/ProgressBar;->setProgress(I)V
     :try_end_0
     .catchall {:try_start_0 .. :try_end_0} :catch_0
 

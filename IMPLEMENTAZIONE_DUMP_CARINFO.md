@@ -86,10 +86,8 @@ L'assemblaggio reale e la verifica DEX avvengono alla build.
 
 ## PASSI DA ESEGUIRE SUL PC DI BUILD
 ```sh
-# dalla root del progetto (dove c'e sign_align.sh)
-rm -rf NTG_062_src/apktool/build          # regola di progetto: pulire la cache build
-apktool b NTG_062_src/apktool             # ricompila -> dist/NTG_062.apk (o nome da apktool.yml)
-./sign_align.sh                           # zipalign + firma v1/v2/v3 (debug key)
+# dalla root del progetto (dove c'e compile_sign_align.sh)
+./compile_sign_align.sh                   # pulizia cache + apktool b + zipalign + firma v1/v2/v3 (debug key)
 ```
 NB: in questo branch sono presenti anche le modifiche precedenti non ancora compilate
 (package distinto `com.spd.xhsntg.audi`, minSdk 26, label "Audi functions", icona di

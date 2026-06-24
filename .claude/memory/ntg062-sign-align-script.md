@@ -1,22 +1,24 @@
 ---
 name: ntg062-sign-align-script
-description: NTG_062 — script riutilizzabile sign_align.sh (zipalign + firma) nella root del progetto: come si usa e perché ogni passo serve
+description: NTG_062 — script compile_sign_align.sh (build completa + zipalign + firma) nella root del progetto: come si usa e perché ogni passo serve
 metadata:
   type: reference
 ---
 
-Nella **root del progetto** (`/Users/alesimattia/Downloads/Android car/`) ci sono strumenti pronti per ri-firmare/allineare un APK modificato:
-- `sign_align.sh` — wrapper principale (eseguibile).
+Nella **root del progetto** (`/Users/alesimattia/Documents/PROGETTi/audi-headunit-optimized/`) ci sono strumenti pronti per compilare/ri-firmare/allineare l'APK modificato:
+- `compile_sign_align.sh` — wrapper principale (eseguibile). Fa **tutto**: pulizia cache + `apktool b` + zipalign + firma. (ex `sign_align.sh`, rinominato il 2026-06-24.)
 - `zipalign.py` — zipalign auto-contenuto in Python (fallback, nessun SDK).
 - `uber-apk-signer.jar` — firmatario ufficiale-comunità (zipalign + v1/v2/v3 integrati).
 - `debug.keystore` — chiave di **debug** (alias `androiddebugkey`, pass `android`). NON per Google Play; riusata per avere firma coerente tra build (così aggiorni senza disinstallare tra i *tuoi* APK).
 
 ## Uso
 ```
-apktool b <progetto> -o NTG_mod.apk        # ricompila l'APK modificato
-./sign_align.sh NTG_mod.apk                # -> NTG_mod-aligned-signed.apk (allineato + firmato)
-# oppure: ./sign_align.sh in.apk out.apk
+./compile_sign_align.sh                    # build completa: pulizia cache + apktool b + zipalign + firma
+                                           # -> NTG_062_audi_it_aligned.apk (sovrascritto SEMPRE se esiste)
+./compile_sign_align.sh mia_build.apk      # build completa con nome di output scelto
+./compile_sign_align.sh --signOnly in.apk [out.apk]   # SOLO zipalign + firma di un APK già costruito
 ```
+La modalità build è il default e sovrascrive sempre l'output; la sola-firma si attiva unicamente col flag `--signOnly`.
 Verifica: `uber` stampa "signature verified [v3]"; in alternativa `jarsigner -verify out.apk` ("jar verified") o rilancia `python3 zipalign.py` (controlla che le voci STORED siano 4-allineate).
 
 ## Come funziona
@@ -31,3 +33,5 @@ Verifica: `uber` stampa "signature verified [v3]"; in alternativa `jarsigner -ve
 
 ## Per l'app NTG specificamente
 Prima di firmare/installare con questo script su un'app come `com.spd.xhsntg`: rimuovere `sharedUserId="android.uid.system"` dal manifest (Strada C, vedi [[ntg062-overview]]) altrimenti una firma diversa NON installa; e **disinstallare l'originale** (firma vendor diversa). Workflow completo decompila/ricompila in [[ntg062-modding-build]]; stato modifiche in [[ntg062-applied-mods]].
+
+> Nota: `apktool b` non serve più chiamarlo a mano per buildare — `compile_sign_align.sh` (senza argomenti) include già pulizia cache + `apktool b` + firma.
