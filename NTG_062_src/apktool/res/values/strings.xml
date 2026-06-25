@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Auto</string>
-    <string name="app_name_navigation">Navigazione</string>
-    <string name="carinfo_mileage">Chilometraggio</string>
-    <string name="carinfo_speed">Velocità</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">"DUMMY
 CONTENT"</string>

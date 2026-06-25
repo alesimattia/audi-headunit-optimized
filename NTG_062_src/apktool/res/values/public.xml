@@ -97,12 +97,9 @@
     <public type="drawable" name="icon_11_p" id="0x7f0400c7" />
     <public type="drawable" name="icon_12" id="0x7f0400c8" />
     <public type="drawable" name="icon_12_p" id="0x7f0400c9" />
-    <public type="drawable" name="icon_mileage" id="0x7f0400ca" />
     <public type="drawable" name="icon_n" id="0x7f0400cb" />
     <public type="drawable" name="icon_p" id="0x7f0400cc" />
     <public type="drawable" name="icon_speed" id="0x7f0400cd" />
-    <public type="drawable" name="navi_bg" id="0x7f0400ce" />
-    <public type="drawable" name="navi_tip" id="0x7f0400cf" />
     <public type="drawable" name="notification_action_background" id="0x7f0400d0" />
     <public type="drawable" name="notification_bg" id="0x7f0400d1" />
     <public type="drawable" name="notification_bg_low" id="0x7f0400d2" />
@@ -166,11 +163,6 @@
     <public type="id" name="id_car_door_rear_right" id="0x7f050030" />
     <public type="id" name="id_car_door_trunk" id="0x7f050031" />
     <public type="id" name="id_preview_surface_view" id="0x7f050032" />
-    <public type="id" name="id_text_navi_cross_distance" id="0x7f050033" />
-    <public type="id" name="id_text_navi_cross_distance_extends" id="0x7f050034" />
-    <public type="id" name="id_text_navi_cross_icon" id="0x7f050035" />
-    <public type="id" name="id_text_navi_cross_name" id="0x7f050036" />
-    <public type="id" name="id_text_navi_cross_name_extends" id="0x7f050037" />
     <public type="id" name="id_view_page" id="0x7f050038" />
     <public type="id" name="info" id="0x7f050039" />
     <public type="id" name="italic" id="0x7f05003a" />
@@ -213,7 +205,6 @@
     <public type="layout" name="carinfo_benz_car_door_layout" id="0x7f070001" />
     <public type="layout" name="key_one_layout" id="0x7f070002" />
     <public type="layout" name="mileage_layout" id="0x7f070003" />
-    <public type="layout" name="navi_layout" id="0x7f070004" />
     <public type="layout" name="notification_action" id="0x7f070005" />
     <public type="layout" name="notification_action_tombstone" id="0x7f070006" />
     <public type="layout" name="notification_media_action" id="0x7f070007" />
@@ -234,9 +225,6 @@
     <public type="mipmap" name="ic_launcher_round" id="0x7f080001" />
     <public type="mipmap" name="ic_ntg_launcher" id="0x7f080002" />
     <public type="string" name="app_name" id="0x7f090000" />
-    <public type="string" name="app_name_navigation" id="0x7f090001" />
-    <public type="string" name="carinfo_mileage" id="0x7f090002" />
-    <public type="string" name="carinfo_speed" id="0x7f090003" />
     <public type="string" name="dummy_button" id="0x7f090006" />
     <public type="string" name="dummy_content" id="0x7f090007" />
     <public type="string" name="status_bar_notification_info_overflow" id="0x7f090009" />

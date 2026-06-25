@@ -5,7 +5,9 @@ metadata:
   type: project
 ---
 
-**Scopo**: pagina slider che mostra parametri della **headunit Android** (NON dati CAN), realizzabili sotto Strada C (no root, no platform key). Lavoro del **2026-06-24**, staged in `NTG_062_src/`, **NON ancora ricompilato**.
+**Scopo**: pagina slider che mostra parametri della **headunit Android** (NON dati CAN), realizzabili sotto Strada C (no root, no platform key). Lavoro del **2026-06-24**.
+
+**STATO: TESTATA OK SUL DISPOSITIVO** (2026-06-25). Compilata, installata come **package distinto** dall'app di sistema originale (vedi punto 11 di [[ntg062-applied-mods]]) e **funziona correttamente SENZA permessi system ne root**. Conferma pratica che la Strada C regge per questa pagina: RAM/CPU/temp via API standard non richiedono privilegi. (NB: questo valida solo i parametri Android di SystemView; i dati CAN via AIDL restano un capitolo a parte, vedi [[ntg062-carinfo-data]].)
 
 **Decisioni utente**: CPU = **globale**, e se `/proc/stat` non leggibile la **riga sparisce** (nessun fallback ad app-process). Pagina **aggiunta come 6a** (indice 5), la pagina debug resta all'indice 4. Testi etichette a sinistra con piccolo padding, **valori incolonnati** (per questo si usa `TableLayout`).
 

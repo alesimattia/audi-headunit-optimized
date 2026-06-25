@@ -1,5 +1,6 @@
 # Memory index — progetto NTG_062 (testata Android Mercedes/Audi)
 
+- [Architettura IPC / componenti esterni](ntg062-architecture-ipc.md) — l'app e un thin-client che orchestra componenti SPD esterni (carinfo, dvr, aircondition+AVM, carinfo.ui, SpdManager, navi); capacita latenti (AVM/radar parcheggio, HVAC) + inventario chiavi Settings.System
 - [NTG_062 overview](ntg062-overview.md) — cos'è l'app, app di sistema + firma Zhantang, perché la ri-firma è vincolata (Strada A/B/C)
 - [Architettura slider](ntg062-slider.md) — ViewPager/MyViewPageAdapter, mappa delle 4 pagine, flusso dati CarInfo, CarKeyView, DVR
 - [Dati CarInfo](ntg062-carinfo-data.md) — dizionario what codes, push/pull AIDL, classi registrate, come sostituire il dato del mileage

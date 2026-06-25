@@ -753,32 +753,13 @@
 .end method
 
 .method private supportDebugLvds()Z
-    .locals 3
+    .locals 1
 
     .line 180
-    invoke-virtual {p0}, Lcom/spd/xhsntg/FullscreenActivity;->getContentResolver()Landroid/content/ContentResolver;
+    # Modifica Mattia Alesi: rimosso il vincolo SETTING_DEVELOPER_MODE, LvdsTestView sempre abilitata via long-press
+    const/4 v0, 0x1
 
-    move-result-object v0
-
-    const-string v1, "SETTING_DEVELOPER_MODE"
-
-    const/4 v2, 0x0
-
-    invoke-static {v0, v1, v2}, Landroid/provider/Settings$System;->getInt(Landroid/content/ContentResolver;Ljava/lang/String;I)I
-
-    move-result v0
-
-    const/4 v1, 0x1
-
-    if-ne v0, v1, :cond_0
-
-    goto :goto_0
-
-    :cond_0
-    move v1, v2
-
-    :goto_0
-    return v1
+    return v0
 .end method
 
 .method private supportScreenTouch()Z
@@ -1526,7 +1507,8 @@
     .line 153
     iget-object v3, p0, Lcom/spd/xhsntg/FullscreenActivity;->mHandler:Landroid/os/Handler;
 
-    const-wide/16 v4, 0x1388
+    # Modifica Mattia Alesi: long-press ridotto da 5000ms a 3000ms per mostrare LvdsTestView
+    const-wide/16 v4, 0xbb8
 
     invoke-virtual {v3, v2, v4, v5}, Landroid/os/Handler;->sendEmptyMessageDelayed(IJ)Z
 
@@ -1589,9 +1571,8 @@
     .local v6, "dy":I
     const/16 v7, 0x50
 
-    if-gt v5, v7, :cond_7
-
-    if-le v6, v7, :cond_a
+    # Modifica Mattia Alesi: rimosso il limite di movimento di 80px; lo spostamento del dito non annulla piu il long-press
+    goto :cond_a
 
     .line 166
     :cond_7

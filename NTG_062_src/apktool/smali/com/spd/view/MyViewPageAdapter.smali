@@ -6,9 +6,7 @@
 # instance fields
 .field private m_context:Landroid/content/Context;
 
-.field private m_navi_frame_layout:Landroid/widget/FrameLayout;
-
-.field private m_navi_manager:Lcom/spd/navi/NaviManager;
+.field private m_test_view_0:Landroid/view/View;
 
 .field private m_test_view_1:Lcom/spd/car/CarDoorWindowView;
 
@@ -23,7 +21,7 @@
 
 # direct methods
 .method public constructor <init>(Landroid/content/Context;)V
-    .locals 2
+    .locals 1
     .param p1, "context"    # Landroid/content/Context;
 
     .line 27
@@ -32,18 +30,12 @@
     .line 28
     iput-object p1, p0, Lcom/spd/view/MyViewPageAdapter;->m_context:Landroid/content/Context;
 
-    .line 29
-    const v0, 0x7f070004
+    # pagina 0: vista nera vuota (nessuno sfondo, nessuna funzionalita)
+    new-instance v0, Landroid/view/View;
 
-    const/4 v1, 0x0
+    invoke-direct {v0, p1}, Landroid/view/View;-><init>(Landroid/content/Context;)V
 
-    invoke-static {p1, v0, v1}, Landroid/view/View;->inflate(Landroid/content/Context;ILandroid/view/ViewGroup;)Landroid/view/View;
-
-    move-result-object v0
-
-    check-cast v0, Landroid/widget/FrameLayout;
-
-    iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_navi_frame_layout:Landroid/widget/FrameLayout;
+    iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_0:Landroid/view/View;
 
     .line 30
     new-instance v0, Lcom/spd/car/CarDoorWindowView;
@@ -65,20 +57,6 @@
     invoke-direct {v0, p1}, Lcom/spd/car/CarKeyView;-><init>(Landroid/content/Context;)V
 
     iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_3:Lcom/spd/car/CarKeyView;
-
-    .line 33
-    new-instance v0, Lcom/spd/navi/NaviManager;
-
-    invoke-direct {v0, p1}, Lcom/spd/navi/NaviManager;-><init>(Landroid/content/Context;)V
-
-    iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_navi_manager:Lcom/spd/navi/NaviManager;
-
-    .line 34
-    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_navi_manager:Lcom/spd/navi/NaviManager;
-
-    iget-object v1, p0, Lcom/spd/view/MyViewPageAdapter;->m_navi_frame_layout:Landroid/widget/FrameLayout;
-
-    invoke-virtual {v0, v1}, Lcom/spd/navi/NaviManager;->setFrameLayout(Landroid/widget/FrameLayout;)V
 
     # pagina diagnostica (debug overlay)
     invoke-static {p1}, Lcom/spd/xhsntg/DebugLog;->createView(Landroid/content/Context;)Landroid/view/View;
@@ -133,14 +111,9 @@
 .end method
 
 .method public initManager()V
-    .locals 1
+    .locals 0
 
-    .line 39
-    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_navi_manager:Lcom/spd/navi/NaviManager;
-
-    invoke-virtual {v0}, Lcom/spd/navi/NaviManager;->initFrameManager()V
-
-    .line 40
+    # navi rimossa: nessun manager da inizializzare
     return-void
 .end method
 
@@ -163,43 +136,40 @@
 
     goto :goto_0
 
-    .line 89
+    # 0 -> pagina nera vuota
     :pswitch_0
+    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_0:Landroid/view/View;
+
+    goto :goto_0
+
+    # 1 -> porte/finestrini
+    :pswitch_1
+    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_1:Lcom/spd/car/CarDoorWindowView;
+
+    goto :goto_0
+
+    # 2 -> chilometraggio/velocita
+    :pswitch_2
+    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_2:Lcom/spd/car/CarMileageSpeedView;
+
+    goto :goto_0
+
+    # 3 -> comandi auto
+    :pswitch_3
     iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_3:Lcom/spd/car/CarKeyView;
 
     goto :goto_0
 
-    # pagina diagnostica (debug overlay)
+    # 4 -> pagina diagnostica (debug overlay)
     :pswitch_4
     iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_4:Landroid/view/View;
 
     goto :goto_0
 
-    # pagina Sistema (parametri headunit)
+    # 5 -> pagina Sistema (parametri headunit)
     :pswitch_5
     iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_5:Landroid/view/View;
 
-    goto :goto_0
-
-    .line 80
-    :pswitch_1
-    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_navi_frame_layout:Landroid/widget/FrameLayout;
-
-    .line 81
-    goto :goto_0
-
-    .line 86
-    :pswitch_2
-    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_2:Lcom/spd/car/CarMileageSpeedView;
-
-    .line 87
-    goto :goto_0
-
-    .line 83
-    :pswitch_3
-    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_1:Lcom/spd/car/CarDoorWindowView;
-
-    .line 84
     nop
 
     .line 93
@@ -213,10 +183,10 @@
 
     :pswitch_data_0
     .packed-switch 0x0
-        :pswitch_3
-        :pswitch_2
-        :pswitch_1
         :pswitch_0
+        :pswitch_1
+        :pswitch_2
+        :pswitch_3
         :pswitch_4
         :pswitch_5
     .end packed-switch
@@ -261,14 +231,9 @@
 .end method
 
 .method public uninitManager()V
-    .locals 1
+    .locals 0
 
-    .line 44
-    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_navi_manager:Lcom/spd/navi/NaviManager;
-
-    invoke-virtual {v0}, Lcom/spd/navi/NaviManager;->uninitFrameManager()V
-
-    .line 45
+    # navi rimossa: nessun manager da deinizializzare
     return-void
 .end method
 

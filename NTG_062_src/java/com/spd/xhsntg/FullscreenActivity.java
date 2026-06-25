@@ -146,7 +146,7 @@ public class FullscreenActivity extends Activity implements View.OnClickListener
             if (action == 0) {
                 this.mDownX = (int) event.getX();
                 this.mDownY = (int) event.getY();
-                this.mHandler.sendEmptyMessageDelayed(1000, 5000L);
+                this.mHandler.sendEmptyMessageDelayed(1000, 3000L);
             } else if (action == 1 || action == 3) {
                 if (this.mHandler.hasMessages(1000)) {
                     this.mHandler.removeMessages(1000);
@@ -154,13 +154,7 @@ public class FullscreenActivity extends Activity implements View.OnClickListener
                     return true;
                 }
             } else if (action == 2) {
-                int x3 = (int) event.getX();
-                int y2 = (int) event.getY();
-                int dx = Math.abs(x3 - this.mDownX);
-                int dy = Math.abs(y2 - this.mDownY);
-                if ((dx > 80 || dy > 80) && this.mHandler.hasMessages(1000)) {
-                    this.mHandler.removeMessages(1000);
-                }
+                // Modifica Mattia Alesi: rimosso il limite di movimento di 80px; lo spostamento del dito non annulla piu il long-press
             }
         }
         return false;
@@ -171,7 +165,8 @@ public class FullscreenActivity extends Activity implements View.OnClickListener
     }
 
     private boolean supportDebugLvds() {
-        return Settings.System.getInt(getContentResolver(), "SETTING_DEVELOPER_MODE", 0) == 1;
+        // Modifica Mattia Alesi: rimosso il vincolo SETTING_DEVELOPER_MODE, LvdsTestView sempre abilitata via long-press
+        return true;
     }
 
     private void startHome() {

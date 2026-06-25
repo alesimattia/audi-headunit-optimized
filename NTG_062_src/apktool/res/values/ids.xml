@@ -51,11 +51,6 @@
     <id name="id_car_door_rear_right" />
     <id name="id_car_door_trunk" />
     <id name="id_preview_surface_view" />
-    <id name="id_text_navi_cross_distance" />
-    <id name="id_text_navi_cross_distance_extends" />
-    <id name="id_text_navi_cross_icon" />
-    <id name="id_text_navi_cross_name" />
-    <id name="id_text_navi_cross_name_extends" />
     <id name="id_view_page" />
     <id name="info" />
     <id name="italic" />
