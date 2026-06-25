@@ -228,7 +228,7 @@
 
     invoke-virtual {v1, v4}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
 
-    const-string v2, "\ncriterio: solo i what con almeno un valore non nullo (int!=0 / float!=0 / stringa non vuota)\n\n"
+    const-string v2, "\ncriterio: tengo ogni coppia what+arg con almeno un valore PRESENTE (!= sentinella), inclusi gli zeri reali. arg scandito 0..5 (sedili/ruote/porte/zone/finestrini/camere). righe con arg=0 = valore globale.\n\n"
 
     invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
@@ -303,11 +303,36 @@
 
     move-result-object v14
 
+    # P3: scansione indicizzata arg=0..5 (cattura sedili/ruote/porte/zone/finestrini/camere AVM).
+    # v11 (Field, ormai inutilizzato dopo getName) riusato come contatore arg; arg -> DebugLog.sArg.
+    const/4 v11, 0x0
+
+    :goto_arg
+    const/4 v12, 0x6
+
+    if-ge v11, v12, :goto_inner_next
+
+    sput v11, Lcom/spd/xhsntg/DebugLog;->sArg:I
+
+    # P2: un singolo what malformato (es. ClassCastException) non deve abortire l'intero dump.
+    :try_start_probe
     invoke-static {v1, v0, v14, v13}, Lcom/spd/xhsntg/DebugLog;->probe(Ljava/lang/StringBuilder;Lcom/spd/carinfo/CarInfo;Ljava/lang/String;I)I
 
     move-result v12
 
     add-int/2addr v6, v12
+    :try_end_probe
+    .catch Ljava/lang/Throwable; {:try_start_probe .. :try_end_probe} :catch_probe
+
+    :goto_arg_cont
+    add-int/lit8 v11, v11, 0x1
+
+    goto :goto_arg
+
+    :catch_probe
+    move-exception v12
+
+    goto :goto_arg_cont
 
     :goto_inner_next
     add-int/lit8 v10, v10, 0x1
@@ -341,13 +366,13 @@
     goto :goto_outer
 
     :goto_outer_end
-    const-string v2, "\nscansionati="
+    const-string v2, "\nwhat scansionati="
 
     invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     invoke-virtual {v1, v5}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
 
-    const-string v2, " tenuti="
+    const-string v2, " righe tenute (what+arg)="
 
     invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 

@@ -19,6 +19,10 @@
 # flag anti-rientro: evita dump sovrapposti se la pagina viene riaperta mentre uno e in corso
 .field static sRunning:Z
 
+# arg corrente della scansione indicizzata: DumpTask lo imposta in un loop 0..N prima di ogni
+# probe, e probe lo usa come parametro 'arg' di CarInfo.get() (sedili/ruote/porte/zone/camere).
+.field static sArg:I
+
 
 # direct methods
 
@@ -73,7 +77,8 @@
 
     move-result-object v1
 
-    const/4 v2, 0x0
+    # arg per tutte le get() di questa probe: impostato da DumpTask (loop scansione indicizzata).
+    sget v2, Lcom/spd/xhsntg/DebugLog;->sArg:I
 
     invoke-virtual {p1, p3, v2, v1}, Lcom/spd/carinfo/CarInfo;->get(IILjava/lang/Object;)Ljava/lang/Object;
 
@@ -113,7 +118,41 @@
     check-cast v4, Ljava/lang/String;
 
 
-    # --- keepInt = (iv != MIN_VALUE) && (iv != 0) ---
+    # --- lettura bundle (sentinella = nuovo Bundle vuoto) ---
+    # get(what,0,defBundle) ritorna un Bundle; size() forza l'unparcel del binder.
+    # keepBundle (v11) = e davvero un Bundle non vuoto. v9 = bundle utile (o null).
+    new-instance v9, Landroid/os/Bundle;
+
+    invoke-direct {v9}, Landroid/os/Bundle;-><init>()V
+
+    invoke-virtual {p1, p3, v2, v9}, Lcom/spd/carinfo/CarInfo;->get(IILjava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v9
+
+    const/4 v11, 0x0
+
+    instance-of v10, v9, Landroid/os/Bundle;
+
+    if-eqz v10, :cond_bdone
+
+    check-cast v9, Landroid/os/Bundle;
+
+    invoke-virtual {v9}, Landroid/os/Bundle;->size()I
+
+    move-result v10
+
+    if-eqz v10, :cond_bdone
+
+    const/4 v11, 0x1
+
+    goto :goto_bdone
+
+    :cond_bdone
+    const/4 v9, 0x0
+
+    :goto_bdone
+
+    # --- keepInt = (iv != MIN_VALUE)  [P1: rimosso filtro 'zero', ridondante con la sentinella] ---
     const/4 v5, 0x0
 
 
@@ -121,13 +160,11 @@
 
     if-eq v1, v6, :cond_int
 
-    if-eqz v1, :cond_int
-
     const/4 v5, 0x1
 
     :cond_int
 
-    # --- keepFloat = !isNaN(fv) && (fv != 0.0) ---
+    # --- keepFloat = !isNaN(fv)  [P1: rimosso filtro 'zero', ridondante con la sentinella NaN] ---
     const/4 v6, 0x0
 
 
@@ -137,17 +174,11 @@
 
     if-nez v7, :cond_float
 
-    const/4 v7, 0x0
-
-    cmpl-float v7, v3, v7
-
-    if-eqz v7, :cond_float
-
     const/4 v6, 0x1
 
     :cond_float
 
-    # --- keepStr = sv!=null && !sv.equals(sent) && len>0 && !sv.equals("0") ---
+    # --- keepStr = sv!=null && !sv.equals("NA") && len>0  [P1: rimosso filtro 'sv=="0"'] ---
     const/4 v7, 0x0
 
 
@@ -167,14 +198,6 @@
 
     if-eqz v8, :cond_str
 
-    const-string v8, "0"
-
-    invoke-virtual {v4, v8}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
-
-    move-result v8
-
-    if-nez v8, :cond_str
-
     const/4 v7, 0x1
 
     :cond_str
@@ -185,6 +208,8 @@
     if-nez v6, :cond_keep
 
     if-nez v7, :cond_keep
+
+    if-nez v11, :cond_keep
 
     const/4 v0, 0x0
 
@@ -200,6 +225,16 @@
 
     invoke-virtual {p0, p3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
 
+    # P3: " arg=N" solo se arg>0 (le righe globali arg=0 restano nel formato originale)
+    if-eqz v2, :cond_noarg
+
+    const-string v8, " arg="
+
+    invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {p0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    :cond_noarg
     const-string v8, " int="
 
     invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
@@ -240,9 +275,29 @@
 
     invoke-virtual {p0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    goto :goto_nl
+    goto :goto_bundle
 
     :cond_psd
+    const-string v8, "-"
+
+    invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    :goto_bundle
+    const-string v8, " bundle="
+
+    invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    if-eqz v11, :cond_pbd
+
+    invoke-virtual {v9}, Landroid/os/Bundle;->toString()Ljava/lang/String;
+
+    move-result-object v8
+
+    invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    goto :goto_nl
+
+    :cond_pbd
     const-string v8, "-"
 
     invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;

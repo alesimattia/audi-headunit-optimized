@@ -1,18 +1,17 @@
 #!/usr/bin/env bash
-# compile_sign_align.sh — Build completa + zipalign + firma SOLO v2 di NTG_062 (app modificata con apktool).
+# compile_sign_align.sh — Build completa + zipalign + firma di NTG_062 (app modificata con apktool).
 #
 # Uso:
-#   ./compile_sign_align.sh                                 -> build completa: pulizia cache + apktool b + zipalign + firma v2
+#   ./compile_sign_align.sh                                 -> build completa: pulizia cache + apktool b + zipalign + firma
 #                                                              output: NTG_062_audi_it.apk (sovrascritto se esiste)
 #   ./compile_sign_align.sh <output.apk>                    -> build completa con nome di output scelto da te (sovrascritto)
-#   ./compile_sign_align.sh --signOnly <in.apk> [out.apk]   -> SOLO zipalign + firma v2 di un APK gia' costruito
+#   ./compile_sign_align.sh --signOnly <in.apk> [out.apk]   -> SOLO zipalign + firma di un APK gia' costruito
 #
-# FIRMA: esclusivamente APK Signature Scheme v2 — niente v1/v3/v4 (v2 e' sufficiente per
-#        Android 9 / API 28, l'unico target di questa app).
-# MOTORE: apksigner (Android SDK build-tools) e' l'UNICO strumento che firma in v2 "puro"
-#        (--vN-signing-enabled). uber-apk-signer/jarsigner NON sanno limitare gli schemi
-#        -> volutamente NON usati. Se apksigner non e' presente lo script si ferma con errore
-#        (meglio fermarsi che produrre un APK con schemi non richiesti).
+# FIRMA: uber-apk-signer.jar (incluso nel repo) -> zipalign (built-in) + firma in un colpo solo.
+#        AUTOCONTENUTO: serve solo un JDK, NIENTE Android SDK/build-tools.
+#        NB: uber 1.3.0 applica gli schemi di default (v2 + v3); non sa limitarsi a un singolo
+#        schema come apksigner. Va benissimo per Android 9 / API 28 (lo schema v3 e' stato
+#        introdotto proprio in API 28; v1/JAR non serve sopra API 24).
 # Keystore di DEBUG (password "android") creata una volta e riusata. NB: NON per Google Play.
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -26,36 +25,13 @@ JAVA="$JBIN/java"; KEYTOOL="$JBIN/keytool"
 
 SRC="$HERE/NTG_062_src/apktool"          # sorgenti apktool da cui si compila
 KS="$HERE/debug.keystore"; ALIAS=androiddebugkey; PW=android
+UBER="$HERE/uber-apk-signer.jar"         # firmatario autocontenuto: zipalign built-in + firma v2+v3
 
-# Android SDK build-tools: apksigner (firma v2 pura) + zipalign (stessa cartella).
-SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-$HOME/Library/Android/sdk}}"
-APKSIGNER_JAR="$(ls "$SDK"/build-tools/*/lib/apksigner.jar 2>/dev/null | sort -V | tail -1 || true)"
-ZIPALIGN="$(ls "$SDK"/build-tools/*/zipalign 2>/dev/null | sort -V | tail -1 || true)"
-
-# Esegue zipalign su $1 producendo $2. Usa lo zipalign dell'SDK se disponibile,
-# altrimenti ricade su zipalign.py incluso nel repo (richiede python3).
-align_apk() {
-  local IN="$1" OUT="$2"
-  if [ -n "$ZIPALIGN" ]; then
-    "$ZIPALIGN" -f -p 4 "$IN" "$OUT"
-  else
-    command -v python3 >/dev/null || { echo "[ERR] ne' zipalign dell'SDK ne' python3 disponibili per allineare"; exit 1; }
-    python3 "$HERE/zipalign.py" "$IN" "$OUT"
-  fi
-}
-
-# zipalign + firma SOLO v2 di un APK GIA' costruito.  $1 = input.apk, $2 = output.apk
+# zipalign + firma di un APK GIA' costruito, via uber-apk-signer.  $1 = input.apk, $2 = output.apk
 sign_apk() {
   local IN="$1" OUT="$2"
 
-  # apksigner e' obbligatorio: e' l'unico che firma in v2 puro.
-  if [ -z "$APKSIGNER_JAR" ]; then
-    echo "[ERR] apksigner non trovato nell'SDK ($SDK)."
-    echo "[ERR] Serve per firmare in v2 puro (uber-apk-signer/jarsigner non sanno limitare gli schemi)."
-    echo "[ERR] Installa le Android SDK build-tools (es. sdkmanager 'build-tools;34.0.0')"
-    echo "[ERR] oppure esporta ANDROID_HOME verso un SDK che le contiene."
-    exit 1
-  fi
+  [ -f "$UBER" ] || { echo "[ERR] uber-apk-signer.jar non trovato: $UBER"; exit 1; }
 
   if [ ! -f "$KS" ]; then
     echo "[*] Creo keystore di debug: $KS"
@@ -63,19 +39,20 @@ sign_apk() {
       -validity 10000 -storepass "$PW" -keypass "$PW" -dname "CN=Android Debug,O=Android,C=US"
   fi
 
-  # apksigner richiede l'APK GIA' allineato prima della firma -> zipalign PRIMA.
-  echo "[*] apksigner: zipalign + firma SOLO v2"
-  local ALIGNED; ALIGNED="$(mktemp -u).apk"
-  align_apk "$IN" "$ALIGNED"
+  # uber fa zipalign (built-in) + firma. Scrive in una CARTELLA (--out), con suffisso
+  # "-aligned-signed.apk"; lo si sposta poi sul nome di output voluto.
+  # --allowResign: consente di ri-firmare un APK gia' firmato (utile in --signOnly).
+  echo "[*] uber-apk-signer: zipalign (built-in) + firma v2+v3"
+  local OUTDIR; OUTDIR="$(mktemp -d)"
+  "$JAVA" -jar "$UBER" --apks "$IN" \
+    --ks "$KS" --ksAlias "$ALIAS" --ksPass "$PW" --ksKeyPass "$PW" \
+    --allowResign --out "$OUTDIR"
 
-  "$JAVA" -jar "$APKSIGNER_JAR" sign \
-    --ks "$KS" --ks-key-alias "$ALIAS" --ks-pass "pass:$PW" --key-pass "pass:$PW" \
-    --v1-signing-enabled false \
-    --v2-signing-enabled true \
-    --v3-signing-enabled false \
-    --out "$OUT" "$ALIGNED"
-  rm -f "$ALIGNED" "${OUT}.idsig"
-  echo "[OK] $OUT  (allineato; firma SOLO v2)"
+  local PRODUCED; PRODUCED="$(ls "$OUTDIR"/*.apk 2>/dev/null | head -1)"
+  [ -n "$PRODUCED" ] || { echo "[ERR] uber-apk-signer non ha prodotto alcun apk in $OUTDIR"; rm -rf "$OUTDIR"; exit 1; }
+  mv -f "$PRODUCED" "$OUT"
+  rm -rf "$OUTDIR"
+  echo "[OK] $OUT  (zipalign + firma v2+v3 via uber-apk-signer)"
 }
 
 # MODO "solo firma": SOLO col flag esplicito --signOnly <input.apk> [output.apk].
@@ -102,4 +79,4 @@ apktool b "$SRC" -o "$UNSIGNED"
 
 sign_apk "$UNSIGNED" "$OUT"
 rm -f "$UNSIGNED"
-echo "[FATTO] build + zipalign + firma v2 completate -> $OUT"
+echo "[FATTO] build + zipalign + firma (v2+v3, uber-apk-signer) completate -> $OUT"

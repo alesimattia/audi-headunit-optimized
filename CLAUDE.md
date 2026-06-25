@@ -20,5 +20,5 @@ Backup di un'applicazione per android 9.0 car headunit
 - Quando scopri dettagli rilevanti dell'architettura o caratteristiche dell'applicazione di partenza ossia NTG_062.apk salva una memoria Claude locale su ciò che hai scoperto o integrala in una memoria locale esistente
 - Non compilare l'apk senza avermelo chiesto 
 - Pulisci sempre la cache di build prima di ricompilare
-- applica sempre zipalign + firma v3 quando compili l'applicazione
+- applica sempre zipalign + firma con uber-apk-signer (schemi v2+v3) quando compili l'applicazione
 - Il PC windows con nome PC-030 va utilizzato solo per progettazione e scrittura del codice, non compilare app e non installare software aggiuntivo senza autorizzazione
