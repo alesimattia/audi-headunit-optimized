@@ -79,6 +79,19 @@
     invoke-static {}, Lcom/spd/xhsntg/SystemView;->stop()V
 
     :goto_sys
+    # pagina Sensori/Marcia (indice 3): avvia il polling entrando, fermalo uscendo
+    const/4 v0, 0x3
+
+    if-ne p1, v0, :cond_sensor_off
+
+    invoke-static {}, Lcom/spd/car/CarSensorView;->start()V
+
+    goto :goto_sensor
+
+    :cond_sensor_off
+    invoke-static {}, Lcom/spd/car/CarSensorView;->stop()V
+
+    :goto_sensor
     .line 431
     iget-object v0, p0, Lcom/spd/xhsntg/FullscreenActivity$1;->this$0:Lcom/spd/xhsntg/FullscreenActivity;
 

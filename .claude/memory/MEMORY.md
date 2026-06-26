@@ -10,5 +10,5 @@
 - [Modding & build](ntg062-modding-build.md) — toolchain jadx/apktool/firma + tranelli cancellazione risorse e firma su macOS
 - [Script build+firma+zipalign](ntg062-sign-align-script.md) — `compile_sign_align.sh` nella root (build completa o `--signOnly`): come si usa e perché
 - [Modifiche applicate](ntg062-applied-mods.md) — stato APK consegnato (Audi A5 / IT / alleggerito) + TODO aperti
-- [Overlay diagnostico](ntg062-debug-overlay.md) — 5ª pagina che logga i what CarInfo a schermo + file Download (build `_debug`)
+- [Bersagli debloat](ntg062-debloat-targets.md) — cosa si può togliere (bg.png 1.5MB coperta, car.png orfana, androidx/media ~1.5MB inutilizzato) e perché il resto androidx NON è rimovibile a cuor leggero
 - [Pagina Sistema](ntg062-system-page.md) — 6ª pagina con parametri headunit Android (RAM/CPU/temp) senza root, smali a mano, refresh 1s

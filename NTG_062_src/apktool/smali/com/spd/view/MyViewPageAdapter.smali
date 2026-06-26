@@ -12,7 +12,7 @@
 
 .field private m_test_view_2:Lcom/spd/car/CarMileageSpeedView;
 
-.field private m_test_view_3:Lcom/spd/car/CarKeyView;
+.field private m_test_view_3:Landroid/view/View;
 
 .field private m_test_view_4:Landroid/view/View;
 
@@ -51,12 +51,12 @@
 
     iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_2:Lcom/spd/car/CarMileageSpeedView;
 
-    .line 32
-    new-instance v0, Lcom/spd/car/CarKeyView;
+    # pagina 3: sensori/marcia (sostituisce CarKeyView; vedi com.spd.car.CarSensorView)
+    invoke-static {p1}, Lcom/spd/car/CarSensorView;->createView(Landroid/content/Context;)Landroid/view/View;
 
-    invoke-direct {v0, p1}, Lcom/spd/car/CarKeyView;-><init>(Landroid/content/Context;)V
+    move-result-object v0
 
-    iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_3:Lcom/spd/car/CarKeyView;
+    iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_3:Landroid/view/View;
 
     # pagina diagnostica (debug overlay)
     invoke-static {p1}, Lcom/spd/xhsntg/DebugLog;->createView(Landroid/content/Context;)Landroid/view/View;
@@ -154,9 +154,9 @@
 
     goto :goto_0
 
-    # 3 -> comandi auto
+    # 3 -> sensori/marcia
     :pswitch_3
-    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_3:Lcom/spd/car/CarKeyView;
+    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_3:Landroid/view/View;
 
     goto :goto_0
 
@@ -218,15 +218,10 @@
 .end method
 
 .method public setCarInfoManager(Lcom/spd/xhsntg/CarInfoManager;)V
-    .locals 1
+    .locals 0
     .param p1, "manager"    # Lcom/spd/xhsntg/CarInfoManager;
 
-    .line 60
-    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_3:Lcom/spd/car/CarKeyView;
-
-    invoke-virtual {v0, p1}, Lcom/spd/car/CarKeyView;->setCarInfoManage(Lcom/spd/xhsntg/CarInfoManager;)V
-
-    .line 61
+    # CarSensorView legge i dati da CarInfo in autonomia (PULL): nessun manager da propagare
     return-void
 .end method
 

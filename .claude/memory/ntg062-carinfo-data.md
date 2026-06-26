@@ -15,11 +15,10 @@ Il flusso dati telemetrici (vedi [[ntg062-slider]]) passa per l'AIDL `ICarInfoAi
 - `Instruments` = **100xxx / 101xxx** (telemetria principale + flag config per-brand)
 - `Vehicles` = 170xxx · `ReverseAndAVM` = 140xxx · `Doors` = 50xxx · `General` (es. UNIT_SPEED=10006)
 
-**Classi NON registrate** (per usarle va aggiunto il CLASS_NAME all'array `ids[]` in `CarInfoManager`):
-- `AirCondition` = **30xxx** (es. `OUT_TEMPERATURE`=30023 temp esterna)
-- `Battery` = **160xxx** (es. `VOLTAGE`=160013 tensione batteria) — quasi tutto EV, irrilevante per diesel
-- `Maintenance` = **120xxx** (es. `REMAINING_MAINTENANCE_MILEAGE`=120081)
-- `Lights` = 110xxx
+**Tassonomia COMPLETA delle classi** (verificata 2026-06-25 leggendo `CarInfo.java`; `ID = what/10000`, ogni classe ha `OFFSET=ID*10000`). Le NON registrate vanno aggiunte all'array `ids[]` in `CarInfoManager.init` per riceverle in push:
+- `General`=1 · `Keys`=2 (solo `KEY_IN`) · `AirCondition`=3 (es. OUT_TEMPERATURE) · `Seats`=4 · `Doors`=5 · `Windows`=6 · `WheelsAndTires`=7 · `Mirrors`=8 · `SteeringWheel`=9 (solo `HEATED`) · `Instruments`=10 (+ range 101xxx = flag config per-brand) · `Lighting`=11 (nome reale, **non** "Lights") · `DriverAssistance`=12 (120xxx) · `DrivingAndOperating`=13 (vuota) · `ReverseAndAVM`=14 · `Wipers`=15 · `Battery`=16 (EV, irrilevante diesel) · `Vehicles`=17 · `Other`=19 · più `CarPhone`.
+- ⚠️ **CORREZIONE**: non esiste alcuna classe `Maintenance`. Il vecchio appunto "`Maintenance`=120xxx, `REMAINING_MAINTENANCE_MILEAGE`=120081" era **errato**: 120xxx = **`DriverAssistance`** (ADAS) e 120081 = `ASSIST_AUTO_BRAKE`.
+- Registrate (già in push, vedi sopra): `Doors`, `ReverseAndAVM`, `General`, `Instruments`, `Vehicles`.
 
 **Valori telemetrici mostrabili più utili per diesel A5** (tutti in `Instruments`, già ricevuti):
 - 100002 `INSTANTANEOUS_FUEL` (consumo istantaneo) · 100003 `AVERAGE_FUEL` (medio)
@@ -28,10 +27,16 @@ Il flusso dati telemetrici (vedi [[ntg062-slider]]) passa per l'AIDL `ICarInfoAi
 - 100042 `ENGINE_TACHOMETER` / 100004 `TACHOMETER` (giri) · 100043 `INSTANTANEOUS_SPEED`
 - 100001 `AVERAGE_SPEED` · 100015 `SINCE_REFUELING_DISTANCE`
 
+**Altri dati utili scoperti (2026-06-25), fuori da `Instruments`**:
+- **`WheelsAndTires`** (70xxx, NON registrata): `TIRE_PRESS_MONITORING_INFO`=70001, `TIRE_PRESS_WARNING_INFO`=70002, `TIRE_TEMP_MONITORING_INFO`=70007, `TIRE_PRESS_WARNING_TEMP_INFO`=70015 → **TPMS pressione/temperatura gomme** (molto rilevante su Audi; tipicamente Bundle per-ruota).
+- **`ReverseAndAVM`** (140xxx, **GIA registrata → arriva già in push**, ma `onCarInfoDataChanged` scarta tutto tranne 140062): `FRONT_RADAR_DISTANCE`=140016, `REAR_RADAR_DISTANCE`=140017, `FRONT/REAR/LEFT/RIGHT_RADAR_LEVEL`=140007/140006/140008/140009 (sensori parcheggio), `GEAR`=140080 (marcia), `IG_STATUS`=140061 (quadro/accensione), `ESP_STATE`=140092, `REVERSE`=140011, `ANGLE`=140057 (sterzo), `HAS_AVM`=140078. → **per mostrarli basta aggiungere un `case` in `CarInfoManager.onCarInfoDataChanged`** (nessuna registrazione extra). NB esiste anche `ReverseAVMInfo` via servizio DVR con gli stessi dati, vedi [[ntg062-architecture-ipc]].
+- **`General`** (10xxx): `VIN`=10016, `CANBOX_VERSION`=10004, `STM32_VERSION`=10034/`STM8_VERSION`=10035 (firmware MCU), `KEYCODE_EVENT`=10045 (canale che `CarKeyView` usa per inviare i tasti auto), unità `UNIT_SPEED`=10006/`UNIT_MILEAGE`=10005/`UNIT_TEMPERTURE`=10007/`UNIT_FUEL_CONSUMPTION`=10010/`UNIT_TIRE_PRESS`=10011/`UNIT_SYSTEM`=10033.
+- **`DriverAssistance`** (120xxx, NON registrata): flag `AUDI_*` (vedi [[ntg062-architecture-ipc]]), più `ALTITUDE`=120100, `COMPASS`=120101, `CAR_TURBO_ICON`=120195, `AUTO_START_STOP`=120145, blind-spot/AEB ecc.
+
 **Per sostituire il dato mostrato al posto del mileage** (vista `CarMileageSpeedView`, `mileage_layout.xml`, TextView id `mileage`):
 opzione minima = in `CarInfoManager.onCarInfoDataChanged` cambiare/aggiungere il `case` dal `what` voluto e instradarlo a `updateTotalMileage`/`updateMileage`. La view formatta `"<value> <unit>"`; l'unità (`unit==1` imperiale) va adattata al nuovo dato.
 
-**Caveat forte (onestà tecnica)**: è firmware generico multi-brand. Che un dato `what` *arrivi davvero* dipende dal CAN-box e da cosa decodifica per la specifica Audi — molti `what` sono per altri marchi e non verranno mai popolati. Inoltre sotto **Strada C** (no privilegi di sistema, vedi [[ntg062-overview]]) il servizio CarInfo potrebbe non collegarsi affatto → schermate a dati vuoti. Da validare con logcat su testata.
+**Caveat forte (onestà tecnica)**: è firmware generico multi-brand. Che un dato `what` *arrivi davvero* dipende dal CAN-box e da cosa decodifica per la specifica Audi — molti `what` sono per altri marchi e non verranno mai popolati. ✅ **Il servizio CarInfo SI collega sotto Strada C** — confermato sulla testata utente (2026-06-25): porte/velocità mostrano **dati reali** senza privilegi system (vedi [[ntg062-overview]]). Quindi l'incertezza residua è solo **per-`what`** (il CAN-box Audi decodifica quel dato?), NON se il servizio/AIDL funziona.
 
 ---
 

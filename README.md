@@ -34,8 +34,8 @@ normale (Strada C, vedi Note).
 - [Note importanti](#note-importanti)
 
 ## Struttura della cartella
-- **`NTG_062.apk`** — APK originale del vendor (fonte di verità, ri-decodificabile).
-- **`NTG_062_audi_it_aligned.apk`** — build modificata, zipallineata + firma v1/v2/v3 (da installare).
+- **`NTG_062_original.apk`** — APK originale del vendor (fonte di verità, ri-decodificabile), 10.5 MB.
+- **`NTG_062_audi_it.apk`** — build modificata, zipallineata + firma **v2/v3** (da installare), **1.41 MB**.
 - **`NTG_062_src/`** — sorgenti decompilati:
   - `apktool/` — smali + risorse + manifest. **Qui si modifica e si ricompila.**
   - `java/` — Java leggibile (jadx), solo per consultazione (`java/com/spd/`).
@@ -48,7 +48,8 @@ normale (Strada C, vedi Note).
 
 `FullscreenActivity` (l'activity di avvio, a tutto schermo) gonfia
 [activity_fullscreen.xml](NTG_062_src/apktool/res/layout/activity_fullscreen.xml). È un **`FrameLayout`**
-(per sovrapporre l'overlay di test) che contiene un **`LinearLayout` orizzontale** (`background=@drawable/bg`)
+(per sovrapporre l'overlay di test) che contiene un **`LinearLayout` orizzontale** (`background=#ff000000` —
+lo sfondo `bg.png` da 1.5 MB è stato **rimosso**: era coperto da ViewPager+preview, mai visibile)
 con due elementi affiancati, **più** una view di test nascosta sopra a tutto:
 
 | Vista | ID | Larghezza | Ruolo |
@@ -123,10 +124,10 @@ display. Quante e quali pagine compaiono è deciso da `MyViewPageAdapter.getCoun
  Slider (app modificata) — getCount()=6, swipe orizzontale tra le pagine
  +--------+ +--------+ +--------+ +--------+ +--------+ +--------+
  |   0    | |   1    | |   2    | |   3    | |   4    | |   5    |
- | (nera) | | porte/ | |  km /  | |comandi | | debug  | |sistema |
- | vuota  | |finestr.| | veloc. | |  auto  | | (what) | |RAM/CPU |
+ | (nera) | | porte/ | |  km /  | |sensori | | debug  | |sistema |
+ | vuota  | |finestr.| | veloc. | | marcia | | (what) | |RAM/CPU |
  +--------+ +--------+ +--------+ +--------+ +--------+ +--------+
-   View      CarDoor    CarMile    CarKey     DebugLog   SystemView
+   View      CarDoor    CarMile    CarSensor  DebugLog   SystemView
    (vuota)   WindowView SpeedView  View       (overlay)  (refresh 1s)
 ```
 
@@ -139,7 +140,7 @@ nuovo indice 0** (ultime modifiche di questa sessione).
 | **0** | Nera (vuota) | Vista vuota senza sfondo né funzionalità; appare **nera** perché il `ViewPager` ha `background=#f000`. Nessun listener/tocco. | **Classe**: `android.view.View` (`m_test_view_0`). **Risorse**: nessuna. **Servizi/dati**: nessuno. |
 | **1** | Porte / finestrini | Sagoma auto con stato apertura di porte, cofano, baule e finestrini. | **Classi**: `CarDoorWindowView` (+`$1`). **Layout**: `carinfo_benz_car_door_layout.xml`. **Drawable**: 15 `carinfo_audi_car_door_*_02` (solo Audi tipo `_02`). **ID**: `id_car_door_bg/front_left/front_right/hood/rear_left/rear_right/trunk`. **Dato CarInfo**: porte `what=50001` (push `onUpdateDoors`→`updateDoors`). **Setting**: `SETTING_BENZ_CAR_TYPE` (fissato a 2). |
 | **2** | Chilometraggio / velocità | Chilometraggio totale e velocità istantanea (unità KM/MILE · KM/H/MPH). | **Classe**: `CarMileageSpeedView`. **Layout**: `mileage_layout.xml` (ID `mileage`, `speed`). **Dati CarInfo**: mileage `what=100013`, velocità `140062`, unità `10006` (push `updateMileage`/`updateSpeed`). **Stringhe**: `carinfo_mileage`, `carinfo_speed`. |
-| **3** | Comandi auto | Pannello tasti/manopole; era nascosta nell'originale. | **Classe**: `CarKeyView`. **Layout**: `key_one_layout.xml`. **Drawable**: `icon_04`/`icon_08`, `carinfo_button_*`. **Azioni/servizi**: `CarInfoManager.setKeyEvent` (`what=10045`); luminosità via `SpdManager.setSystemCmd(5,…)`. **Tasti**: `car_up`/`p_off`/`sport_esp_off`/`left_key`/`right_key`. |
+| **3** | Sensori / marcia | Sensori di parcheggio (barre Anteriore/Posteriore/Sinistra/Destra) + marcia + retromarcia. **Sostituisce** la vecchia CarKeyView (tasti non funzionanti, **rimossa** con `key_one_layout.xml`). | **Classe**: `CarSensorView` (+`$1` ticker), UI costruita in codice (no layout), barre `ProgressBar`. **Dati CarInfo** (`ReverseAndAVM`, in PULL, polling 300 ms): `GEAR=140080`, `REVERSE=140011`, `RADAR_LEVEL=140006-140009`, `RADAR_DISTANCE=140016/140017`. **Trigger**: `onPageSelected==3` → `CarSensorView.start()`/`stop()`. |
 | **4** | Diagnostica (debug) | Overlay che logga a schermo i codici `what` CarInfo + scrive un file in Download. Aggiunta in sessione precedente. | **Classi**: `DebugLog` (+`$DumpTask`). **Dati**: legge l'intero dizionario `CarInfo$*`. **Trigger**: `FullscreenActivity$1.onPageSelected==4` → `DebugLog.dumpAll()`. **Permesso**: `WRITE_EXTERNAL_STORAGE`. |
 | **5** | Sistema | Parametri headunit Android (RAM/CPU/temperatura) letti senza root, refresh ogni 1s. Aggiunta in sessione precedente. | **Classi**: `SystemView` (+`$1`). **Fonti**: `ActivityManager.MemoryInfo` (RAM), `/proc`–`/sys` (CPU/temp) — nessun servizio CarInfo. **Trigger**: `onPageSelected==5` → `SystemView.start()`/`stop()` (timer refresh 1s). |
 
@@ -194,7 +195,9 @@ ma è **irraggiungibile** via swipe (pagina nascosta di fabbrica).
 10. **Rimosse 3 stringhe navi inutilizzate** (`distance_metre_after`, `distance_kilometer_after`,
     `enter`) da `values/strings.xml`, `values-it/strings.xml` e `public.xml`.
 
-- `NTG_062_audi_it.apk` (consegnato) contiene i punti **1–8**. Dimensione: **10.5 MB → 3.28 MB**.
+- Build consegnata `NTG_062_audi_it.apk`: dopo le ottimizzazioni di **questa** sessione (vedi sotto) è scesa a **1.41 MB** (da 10.5 MB originali), firma v2/v3 con la chiave del repo.
+
+> **Aggiornamento sessione 2026-06-25** (oltre ai punti sopra): (a) **debloat sicuro** — rimossi `bg.png` (1.5 MB), `car.png` (orfana) e l'**isola media morta** `androidx/media`+`android/support/v4/media` (601 classi); (b) **pagina indice 3 ricostruita** — rimossa `CarKeyView` (tasti non funzionanti), aggiunta `CarSensorView` (sensori parcheggio + marcia, barre grafiche, dati da `CarInfo.ReverseAndAVM`); (c) **build+firma su Windows** validate (apktool 3.0.2, firma v2/v3 via JDK 12 con la chiave del repo).
 
 ### Non fatto / scartato
 - A2 (rimozione UI debug LVDS) e B1 (anticipo bind DVR): impatto trascurabile.
@@ -209,6 +212,8 @@ Mappa dei componenti rimovibili, ordinata per rapporto guadagno/rischio.
 Su **1639 classi di libreria** presenti nello smali, solo **96 sono raggiungibili** dal codice dell'app. L'app usa di fatto **solo `androidx.viewpager.widget`** (lo slider), che trascina un sottoinsieme minimo di `core`/`customview`/`collection`/`annotation`. Tutto il resto è zavorra importata dall'umbrella `legacy-support-v4`.
 
 ### Tier 1 — Codice libreria morto · ~11 MB smali, rischio zero
+> ✅ **Parzialmente FATTO (2026-06-25)**: rimossi `androidx/media` (434) + `android/support/v4/media` (167) = **601 classi** (isola morta, closure verificata). Gli altri moduli sotto restano da valutare (attenzione alle dipendenze transitive di `viewpager`).
+
 Moduli interi **0 classi raggiungibili / N totali** → cancellabili in blocco (cartelle):
 
 | Modulo | classi | note |
@@ -235,25 +240,30 @@ Questo è il **vero grande taglio**: ~1543 classi morte → il `classes.dex` (og
 - **Stub navi `WeCarNaviFrameManager`/`AmapAutoNaviFrameManager`**: già neutralizzati a no-op, ma referenziati 24 volte da `NaviManager` → rimozione completa chirurgica e a guadagno minimo. **Lascerei come sono.**
 
 ### Tier 4 — Asset (ricomprimere, non rimuovere)
-- **`bg.png` ≈ 1.5 MB**: è di gran lunga il file più pesante dell'intero APK (lo sfondo). Non si rimuove ma **downscale/ricompressione** (es. WebP o ridimensionamento alla risoluzione target) è il singolo intervento più efficace sugli asset.
+- ✅ **`bg.png` ≈ 1.5 MB — RIMOSSO (2026-06-25)**: era lo sfondo del `LinearLayout` root ma **coperto** da ViewPager+preview → mai visibile. Sostituito con `background=#ff000000` ed eliminato (file + voce `public.xml`). Era il file più pesante dell'APK. (Anche `car.png` 113 KB, orfana, rimossa.)
 
 ---
 
-**Raccomandazione**: il **Tier 1** è il taglio da fare per primo — massimo peso, zero rischio funzionale (sono classi provatamente irraggiungibili) — più il **Tier 2 LvdsTestView**. Tier 3 dipende dall'hardware (dashcam/retrocamera).
+**Raccomandazione**: il taglio principale del **Tier 1** (isola media, 601 classi) e il **Tier 4** (`bg.png`) sono **già fatti** in questa sessione → APK **10.5 MB → 1.41 MB**. Resta opzionale il **Tier 2 LvdsTestView**; il **Tier 3** dipende dall'hardware (dashcam/retrocamera).
 
 ## Ricompilare → firmare → installare
 ```sh
-cd "/Users/alesimattia/Documents/PROGETTi/audi-headunit-optimized"
-./compile_sign_align.sh                  # fa tutto: pulizia cache + apktool b + zipalign + firma v1/v2/v3
-                                         # output predefinito: NTG_062_audi_it_aligned.apk
-./compile_sign_align.sh mia_build.apk    # come sopra, ma scegli tu il nome di output
-# installa: disinstalla prima l'originale (firma diversa), poi sideload dell'APK firmato
+# Windows (PC-030): compile_sign_align.sh NON gira (e' macOS-only). Procedura manuale confermata:
+cd /a/aa
+# 1) build — apktool 3.0.2 in a:/tmp, gira su Java 8 (in PATH); pulizia cache obbligatoria
+rm -rf NTG_062_src/apktool/build NTG_062_src/apktool/dist
+java -jar a:/tmp/apktool_3.0.2.jar b NTG_062_src/apktool -o a:/tmp/out.apk
+# 2) firma v2/v3 + zipalign con la CHIAVE DEL REPO, via JDK 12 (Java 8 NON legge il PKCS12 del repo)
+"/c/Program Files/Java/jdk-12.0.2/bin/java" -jar uber-apk-signer.jar -a a:/tmp/out.apk --ks debug.keystore --ksAlias androiddebugkey --ksPass android --ksKeyPass android -o a:/tmp
+cp a:/tmp/out-aligned-signed.apk NTG_062_audi_it.apk
+# stessa chiave del repo -> aggiorni senza disinstallare (altrimenti disinstalla prima)
 ```
 Dettagli completi dello script: vedi [§ Script `compile_sign_align.sh`](#script-compile_sign_alignsh).
 
 ## Script `compile_sign_align.sh`
-Script unico per la toolchain di build: **pulizia cache → `apktool b` → zipalign → firma v1/v2/v3**.
-Si lancia dalla root del progetto e non richiede l'Android SDK (usa `uber-apk-signer.jar` e il JDK di Homebrew).
+> ⚠️ **`compile_sign_align.sh` è macOS-only** (cerca il JDK di Homebrew + `apksigner` dell'SDK) → **non gira su Windows/PC-030**: lì si usa la procedura manuale della sezione precedente (apktool jar in `a:/tmp` + firma via JDK 12). Inoltre la versione **attuale** dello script firma **SOLO v2** (via `apksigner`), non più v1/v2/v3: il testo qui sotto descrive la logica storica con `uber-apk-signer`.
+
+Script unico per la toolchain di build (macOS): **pulizia cache → `apktool b` → zipalign → firma**.
 
 ### Modalità d'uso
 | Comando | Cosa fa | Output |
@@ -298,9 +308,10 @@ consumo, temperature…). È un **servizio Android esterno** all'app launcher ch
 | `ReverseAndAVM` | 140xxx | retromarcia, velocità (140062) | ✅ sì |
 | `Doors` | 50xxx | stato porte (50001) | ✅ sì |
 | `AirCondition` | 30xxx | temp esterna (30023) | ❌ no — aggiungere il CLASS_NAME a `ids[]` |
-| `Maintenance` | 120xxx | km al tagliando (120081) | ❌ no |
+| `DriverAssistance` | 120xxx | ADAS + flag `AUDI_*`. NB **non** è "Maintenance" (errore corretto): 120081 = `ASSIST_AUTO_BRAKE` | ❌ no |
+| `WheelsAndTires` | 70xxx | TPMS pressione/temp gomme (non supportato dall'auto target) | ❌ no |
 | `Battery` | 160xxx | tensione (160013) — quasi tutto EV | ❌ no |
-| `Lights` | 110xxx | — | ❌ no |
+| `Lighting` | 110xxx | luci/fendinebbia/ambient (nome reale, non "Lights") | ❌ no |
 
 ### Cosa usa l'app oggi
 `CarInfoManager.onCarInfoDataChanged(what, obj, unit)` ha uno `switch` che gestisce **solo pochi**
@@ -315,15 +326,16 @@ va prima aggiunto il loro `CLASS_NAME` all'array `ids[]` in `CarInfoManager`.
 ### Limiti (onestà tecnica)
 - **Firmware generico multi-marca**: che un `what` *arrivi davvero* dipende dal CAN-box e da cosa
   decodifica per la specifica **Audi A5**; molti codici sono per altri brand e non verranno mai popolati.
-- **Strada C** (firma debug, no privilegi di sistema): il servizio CarInfo potrebbe non collegarsi
-  affatto → schermate a dati vuoti. **Da validare con `logcat` sulla testata reale.**
+- **Strada C** (firma debug, no privilegi di sistema): ✅ **confermato sulla testata** — il servizio
+  CarInfo **si collega e legge dati reali** (porte/velocità) anche senza privilegi system. L'incertezza
+  residua è solo *per-`what`* (se il CAN-box Audi decodifica quel dato specifico), **non** se il servizio funziona.
 - Dettaglio completo (dizionario `what`, come sostituire il dato del mileage): `.claude/memory/ntg062-carinfo-data.md`.
 
 ## Note importanti
 - **App di sistema** firmata col certificato del vendor: per installare una build ri-firmata è stato
-  rimosso `sharedUserId` (Strada C) → si installa come app normale ma **perde i privilegi di sistema**
-  (la telemetria CarInfo — km/velocità/porte — può restare vuota; possibile crash all'avvio da verificare
-  sulla testata).
+  rimosso `sharedUserId` e cambiato il package in **`com.spd.xhsntg.audi`** (Strada C) → si installa come
+  app normale (separata da quella di sistema), **senza privilegi di sistema**. ✅ **Verificato sulla testata**:
+  la telemetria CarInfo (km/velocità/porte) **funziona comunque** e l'app non crasha.
 - **Trappola cache apktool**: se cancelli risorse, fai `rm -rf NTG_062_src/apktool/build` prima di
   `apktool b`, altrimenti i file eliminati riappaiono nell'APK.
 - Dettagli, trappole e superficie di tuning DVR: `.claude/memory/ntg062-*.md`.

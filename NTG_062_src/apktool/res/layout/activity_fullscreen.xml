@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent"
   xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
-    <LinearLayout android:orientation="horizontal" android:background="@drawable/bg" android:focusable="false" android:descendantFocusability="blocksDescendants" android:layout_width="match_parent" android:layout_height="match_parent" android:defaultFocusHighlightEnabled="false">
+    <LinearLayout android:orientation="horizontal" android:background="#ff000000" android:focusable="false" android:descendantFocusability="blocksDescendants" android:layout_width="match_parent" android:layout_height="match_parent" android:defaultFocusHighlightEnabled="false">
         <androidx.viewpager.widget.ViewPager android:id="@id/id_view_page" android:background="#f000" android:layout_width="0.0px" android:layout_height="match_parent" android:layout_weight="1.0" />
         <com.spd.xhsntg.DvrPreviewSurfaceView android:layout_gravity="right" android:id="@id/id_preview_surface_view" android:layout_width="1280.0px" android:layout_height="match_parent" custom:dvr_channel="0" />
     </LinearLayout>
