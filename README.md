@@ -41,7 +41,7 @@ normale (Strada C, vedi Note).
   - `java/` — Java leggibile (jadx), solo per consultazione (`java/com/spd/`).
 - **`compile_sign_align.sh` · `zipalign.py` · `uber-apk-signer.jar` · `debug.keystore`** — toolchain build+firma+zipalign.
 - **[`DATI_MOSTRABILI.md`](DATI_MOSTRABILI.md)** — catalogo dei dati CarInfo (`what`) mostrabili al posto del chilometraggio + come sostituirli.
-- **[`mockup.md`](mockup.md) · [`mockup.png`](mockup.png)** — mockup dell'interfaccia (schermata principale + 6 pagine), in ASCII e in versione grafica.
+- **[`mockup.png`](mockup.png)** — mockup grafico dell'interfaccia (schermata principale + slider a **4 pagine**), allineato allo stato attuale dei sorgenti.
 - **`.claude/memory/ntg062-*.md`** — contesto, trappole e dettagli per modifiche future.
 
 ## Layout principale (`activity_fullscreen.xml`)
@@ -62,7 +62,7 @@ Quindi a schermo: **a sinistra lo slider** (largo quanto avanza), **a destra un 
 col video**. La larghezza del riquadro può diventare a tutto schermo a seconda di `SETTING_NTG_FULL_SCREEN`
 (letto in `m_show_preview_mode`: `1` → `match_parent`, `0` → larghezza calcolata da `getPreviewViewWidth()`).
 
-Mockup grafico: [`mockup.png`](mockup.png) · versione testuale: [`mockup.md`](mockup.md).
+Mockup grafico: [`mockup.png`](mockup.png).
 
 ![Mockup interfaccia NTG_062](mockup.png)
 
@@ -80,8 +80,8 @@ Mockup grafico: [`mockup.png`](mockup.png) · versione testuale: [`mockup.md`](m
  |   |   78 km/h         |  |   |    originale dell'auto     |   |
  |   +-------------------+  |   |                            |   |
  |                          |   |  RETROMARCIA ->            |   |
- |   o * o o o o            |   |    video retrocamera       |   |
- |  (6 pagine, sfondo nero) |   +----------------------------+   |
+ |   o * o o                |   |    video retrocamera       |   |
+ |  (4 pagine, sfondo nero) |   +----------------------------+   |
  +--------------------------+-----------------------------------+
      LvdsTestView (gone): long-press 3s sul riquadro -> compare al centro
 ```
@@ -121,32 +121,37 @@ display. Quante e quali pagine compaiono è deciso da `MyViewPageAdapter.getCoun
 `instantiateItem`.
 
 ```
- Slider (app modificata) — getCount()=6, swipe orizzontale tra le pagine
- +--------+ +--------+ +--------+ +--------+ +--------+ +--------+
- |   0    | |   1    | |   2    | |   3    | |   4    | |   5    |
- | (nera) | | porte/ | |  km /  | |sensori | | debug  | |sistema |
- | vuota  | |finestr.| | veloc. | | marcia | | (what) | |RAM/CPU |
- +--------+ +--------+ +--------+ +--------+ +--------+ +--------+
-   View      CarDoor    CarMile    CarSensor  DebugLog   SystemView
-   (vuota)   WindowView SpeedView  View       (overlay)  (refresh 1s)
+ Slider (app modificata) — getCount()=4, swipe orizzontale tra le pagine
+ +--------+ +--------+ +--------+ +--------+
+ |   0    | |   1    | |   2    | |   3    |
+ | (nera) | |  km /  | | debug  | |sistema |
+ | vuota  | | veloc. | | (what) | |RAM/CPU |
+ +--------+ +--------+ +--------+ +--------+
+   View      CarMile    DebugLog   SystemView
+   (vuota)   SpeedView  (overlay)  (refresh 1s)
 ```
 
 ### App modificata — stato attuale dei sorgenti (`NTG_062_src/`)
-`getCount() = 6`. Rispetto all'originale: **pagina mappa/navi rimossa** e **pagina nera aggiunta come
-nuovo indice 0** (ultime modifiche di questa sessione).
+`getCount() = 4`. Rispetto all'originale: **pagina mappa/navi rimossa**, **pagina nera aggiunta come
+nuovo indice 0**, e in seguito **rimosse anche le pagine porte/finestrini (`CarDoorWindowView`) e
+sensori/marcia (`CarSensorView`)** — quest'ultima perché sull'Audi A5 i dati di marcia e sensori
+parcheggio non sono leggibili dal CAN-box (vedi [Limiti](#limiti-onestà-tecnica)).
 
 | Indice | Pagina | Descrizione | Componenti / risorse / servizi coinvolti |
 |---|---|---|---|
 | **0** | Nera (vuota) | Vista vuota senza sfondo né funzionalità; appare **nera** perché il `ViewPager` ha `background=#f000`. Nessun listener/tocco. | **Classe**: `android.view.View` (`m_test_view_0`). **Risorse**: nessuna. **Servizi/dati**: nessuno. |
-| **1** | Porte / finestrini | Sagoma auto con stato apertura di porte, cofano, baule e finestrini. | **Classi**: `CarDoorWindowView` (+`$1`). **Layout**: `carinfo_benz_car_door_layout.xml`. **Drawable**: 15 `carinfo_audi_car_door_*_02` (solo Audi tipo `_02`). **ID**: `id_car_door_bg/front_left/front_right/hood/rear_left/rear_right/trunk`. **Dato CarInfo**: porte `what=50001` (push `onUpdateDoors`→`updateDoors`). **Setting**: `SETTING_BENZ_CAR_TYPE` (fissato a 2). |
-| **2** | Chilometraggio / velocità | Chilometraggio totale e velocità istantanea (unità KM/MILE · KM/H/MPH). | **Classe**: `CarMileageSpeedView`. **Layout**: `mileage_layout.xml` (ID `mileage`, `speed`). **Dati CarInfo**: mileage `what=100013`, velocità `140062`, unità `10006` (push `updateMileage`/`updateSpeed`). **Stringhe**: `carinfo_mileage`, `carinfo_speed`. |
-| **3** | Sensori / marcia | Sensori di parcheggio (barre Anteriore/Posteriore/Sinistra/Destra) + marcia + retromarcia. **Sostituisce** la vecchia CarKeyView (tasti non funzionanti, **rimossa** con `key_one_layout.xml`). | **Classe**: `CarSensorView` (+`$1` ticker), UI costruita in codice (no layout), barre `ProgressBar`. **Dati CarInfo** (`ReverseAndAVM`, in PULL, polling 300 ms): `GEAR=140080`, `REVERSE=140011`, `RADAR_LEVEL=140006-140009`, `RADAR_DISTANCE=140016/140017`. **Trigger**: `onPageSelected==3` → `CarSensorView.start()`/`stop()`. |
-| **4** | Diagnostica (debug) | Overlay che logga a schermo i codici `what` CarInfo + scrive un file in Download. Aggiunta in sessione precedente. | **Classi**: `DebugLog` (+`$DumpTask`). **Dati**: legge l'intero dizionario `CarInfo$*`. **Trigger**: `FullscreenActivity$1.onPageSelected==4` → `DebugLog.dumpAll()`. **Permesso**: `WRITE_EXTERNAL_STORAGE`. |
-| **5** | Sistema | Parametri headunit Android (RAM/CPU/temperatura) letti senza root, refresh ogni 1s. Aggiunta in sessione precedente. | **Classi**: `SystemView` (+`$1`). **Fonti**: `ActivityManager.MemoryInfo` (RAM), `/proc`–`/sys` (CPU/temp) — nessun servizio CarInfo. **Trigger**: `onPageSelected==5` → `SystemView.start()`/`stop()` (timer refresh 1s). |
+| **1** | Chilometraggio / velocità | Chilometraggio totale e velocità istantanea (unità KM/MILE · KM/H/MPH). | **Classe**: `CarMileageSpeedView` (`m_test_view_1`). **Layout**: `mileage_layout.xml` (ID `mileage`, `speed`). **Dati CarInfo**: mileage `what=100013`, velocità `140062`, unità `10006` (push `updateMileage`/`updateSpeed`). |
+| **2** | Diagnostica (debug) | Overlay che logga a schermo i codici `what` CarInfo + scrive un file in Download. | **Classi**: `DebugLog` (+`$DumpTask`). **Dati**: legge l'intero dizionario `CarInfo$*`. **Trigger**: `FullscreenActivity$1.onPageSelected==2` → `DebugLog.dumpAll()`. **Permesso**: `WRITE_EXTERNAL_STORAGE`. |
+| **3** | Sistema | Parametri headunit Android letti senza root, refresh ogni 1s (font 19sp, dentro `ScrollView`): **RAM** (usata/libera + barra), **RAM app** (PSS), **Carico CPU** (nascosta se negata), **Freq CPU** (cpu0 MHz), e **una riga per ogni temperatura** (`thermal_zone*`, etichetta dal `type`; fallback "Temp batteria"). | **Classi**: `SystemView` (+`$1`). **Fonti**: `ActivityManager.MemoryInfo`, `Debug.MemoryInfo` (PSS), `/proc/stat`, `/sys/.../cpufreq/scaling_cur_freq`, `/sys/class/thermal/thermal_zone*`, sticky batteria — nessun servizio CarInfo. **Trigger**: `onPageSelected==3` → `SystemView.start()`/`stop()` (timer refresh 1s). |
 
-> Le pagine 4 e 5 entrano in azione per indice nel listener `FullscreenActivity$1.onPageSelected`
-> (4 → dump diagnostico one-shot, 5 → avvio/stop refresh Sistema): la rimozione navi (−1) e l'aggiunta
-> della pagina nera (+1) si compensano, quindi quegli indici restano 4 e 5 e il listener non va toccato.
+> Le pagine 2 e 3 entrano in azione per indice nel listener `FullscreenActivity$1.onPageSelected`
+> (2 → dump diagnostico one-shot, 3 → avvio/stop refresh Sistema). Gli indici sono stati **shiftati**
+> dopo la rimozione delle pagine porte e sensori (prima debug=4/Sistema=5, poi 3/4, ora 2/3).
+>
+> **Pagine rimosse** (2026-06-29): **Porte/finestrini** (`CarDoorWindowView` + `$1`, `carinfo_benz_car_door_layout.xml`,
+> 15 drawable `carinfo_audi_car_door_*_02`, dato `what=50001`, callback `onUpdateDoors`/registrazione
+> `CarInfo$Doors`) e **Sensori/marcia** (`CarSensorView` + `$1`, che a sua volta aveva sostituito la
+> vecchia `CarKeyView`). Entrambe staged nei sorgenti, da ricompilare.
 
 ### App originale (`NTG_062_original.apk`, `com.spd.xhsntg`)
 `getCount() = 3` → si scorrono **solo gli indici 0, 1, 2**. La pagina all'indice 3 esiste nello `switch`
@@ -198,6 +203,8 @@ ma è **irraggiungibile** via swipe (pagina nascosta di fabbrica).
 - Build consegnata `NTG_062_audi_it.apk`: dopo le ottimizzazioni di **questa** sessione (vedi sotto) è scesa a **1.41 MB** (da 10.5 MB originali), firma v2/v3 con la chiave del repo.
 
 > **Aggiornamento sessione 2026-06-25** (oltre ai punti sopra): (a) **debloat sicuro** — rimossi `bg.png` (1.5 MB), `car.png` (orfana) e l'**isola media morta** `androidx/media`+`android/support/v4/media` (601 classi); (b) **pagina indice 3 ricostruita** — rimossa `CarKeyView` (tasti non funzionanti), aggiunta `CarSensorView` (sensori parcheggio + marcia, barre grafiche, dati da `CarInfo.ReverseAndAVM`); (c) **build+firma su Windows** validate (apktool 3.0.2, firma v2/v3 via JDK 12 con la chiave del repo).
+>
+> **Aggiornamento sessione 2026-06-29**: rimosse due pagine dello slider (`getCount()` 6→4). (a) **Porte/finestrini** (`CarDoorWindowView`): pagina + layout + 15 drawable + callback porte (`onUpdateDoors`, `what=50001`) e registrazione `CarInfo$Doors` eliminati. (b) **Sensori/marcia** (`CarSensorView`, che a giugno 25 aveva sostituito `CarKeyView`): rimossa perché sull'**Audi A5 il CAN-box non popola** marcia (`GEAR=140080`) né distanze sensori parcheggio (`RADAR_DISTANCE=140016/140017`) — restavano a 0. `CarInfoManager` non toccato (la registrazione `ReverseAndAVM` serve ancora alla velocità `140062`). Entrambe **staged**, da ricompilare.
 
 ### Non fatto / scartato
 - A2 (rimozione UI debug LVDS) e B1 (anticipo bind DVR): impatto trascurabile.
@@ -305,8 +312,8 @@ consumo, temperature…). È un **servizio Android esterno** all'app launcher ch
 |---|---|---|---|
 | `Instruments` | 100xxx / 101xxx | velocità, giri, consumo, livello/autonomia carburante, temp acqua/olio | ✅ sì |
 | `Vehicles` | 170xxx | modello auto | ✅ sì |
-| `ReverseAndAVM` | 140xxx | retromarcia, velocità (140062) | ✅ sì |
-| `Doors` | 50xxx | stato porte (50001) | ✅ sì |
+| `ReverseAndAVM` | 140xxx | velocità (140062, **usata**); marcia/PDC **non popolati** dall'Audi | ✅ sì |
+| `Doors` | 50xxx | stato porte (50001) | ❌ **non più** (registrazione rimossa con la pagina porte, 2026-06-29) |
 | `AirCondition` | 30xxx | temp esterna (30023) | ❌ no — aggiungere il CLASS_NAME a `ids[]` |
 | `DriverAssistance` | 120xxx | ADAS + flag `AUDI_*`. NB **non** è "Maintenance" (errore corretto): 120081 = `ASSIST_AUTO_BRAKE` | ❌ no |
 | `WheelsAndTires` | 70xxx | TPMS pressione/temp gomme (non supportato dall'auto target) | ❌ no |
@@ -315,8 +322,9 @@ consumo, temperature…). È un **servizio Android esterno** all'app launcher ch
 
 ### Cosa usa l'app oggi
 `CarInfoManager.onCarInfoDataChanged(what, obj, unit)` ha uno `switch` che gestisce **solo pochi**
-`what` (velocità 140062, unità 10006, porte 50001, km totali 100013, sorgente media 100085,
-modello 170004) e **ignora tutto il resto, pur ricevendolo**. Qui sta il margine per "leggere più
+`what` (velocità 140062, unità 10006, km totali 100013, sorgente media 100085, modello 170004) e
+**ignora tutto il resto, pur ricevendolo**. Il case porte (50001) e la registrazione `Doors` sono
+stati **rimossi** insieme alla pagina porte (2026-06-29). Qui sta il margine per "leggere più
 parametri auto": per i range già registrati basta aggiungere un `case`; per i range non registrati
 va prima aggiunto il loro `CLASS_NAME` all'array `ids[]` in `CarInfoManager`.
 
@@ -329,6 +337,11 @@ va prima aggiunto il loro `CLASS_NAME` all'array `ids[]` in `CarInfoManager`.
 - **Strada C** (firma debug, no privilegi di sistema): ✅ **confermato sulla testata** — il servizio
   CarInfo **si collega e legge dati reali** (porte/velocità) anche senza privilegi system. L'incertezza
   residua è solo *per-`what`* (se il CAN-box Audi decodifica quel dato specifico), **non** se il servizio funziona.
+- **Dati confermati NON leggibili sull'Audi A5** (2026-06-29): **marcia/current gear** (`140080`),
+  **distanze sensori parcheggio** (`RADAR_DISTANCE 140016/140017`) e i **radar level** (`140006-140009`)
+  non sono popolati dal CAN-box (restavano a 0). È il motivo per cui la pagina sensori/marcia
+  (`CarSensorView`) è stata rimossa. Di `ReverseAndAVM` il box decodifica di fatto solo velocità
+  (`140062`), angolo sterzo (`140057`), `ACC` (`140086`), luci di posizione (`140059`).
 - Dettaglio completo (dizionario `what`, come sostituire il dato del mileage): `.claude/memory/ntg062-carinfo-data.md`.
 
 ## Note importanti

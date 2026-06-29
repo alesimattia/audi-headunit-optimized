@@ -101,42 +101,6 @@
     return-void
 .end method
 
-.method private updateDoors(ZZZZZZ)V
-    .locals 8
-    .param p1, "hood"    # Z
-    .param p2, "trunk"    # Z
-    .param p3, "frontLeft"    # Z
-    .param p4, "frontRight"    # Z
-    .param p5, "rearLeft"    # Z
-    .param p6, "rearRight"    # Z
-
-    .line 150
-    iget-object v0, p0, Lcom/spd/xhsntg/CarInfoManager;->mCallback:Lcom/spd/xhsntg/CarInfoManager$Callback;
-
-    if-eqz v0, :cond_0
-
-    .line 151
-    iget-object v1, p0, Lcom/spd/xhsntg/CarInfoManager;->mCallback:Lcom/spd/xhsntg/CarInfoManager$Callback;
-
-    move v2, p1
-
-    move v3, p2
-
-    move v4, p3
-
-    move v5, p4
-
-    move v6, p5
-
-    move v7, p6
-
-    invoke-interface/range {v1 .. v7}, Lcom/spd/xhsntg/CarInfoManager$Callback;->onUpdateDoors(ZZZZZZ)V
-
-    .line 153
-    :cond_0
-    return-void
-.end method
-
 .method private updateMediaSource(II)V
     .locals 3
     .param p1, "source"    # I
@@ -233,37 +197,32 @@
 
     move-result-object v0
 
-    const/4 v1, 0x5
+    # registrazione classe Doors rimossa insieme alla pagina porte; array 5->4
+    const/4 v1, 0x4
 
     new-array v1, v1, [Ljava/lang/String;
 
-    sget-object v2, Lcom/spd/carinfo/CarInfo$Doors;->CLASS_NAME:Ljava/lang/String;
+    sget-object v2, Lcom/spd/carinfo/CarInfo$ReverseAndAVM;->CLASS_NAME:Ljava/lang/String;
 
     const/4 v3, 0x0
 
     aput-object v2, v1, v3
 
-    sget-object v2, Lcom/spd/carinfo/CarInfo$ReverseAndAVM;->CLASS_NAME:Ljava/lang/String;
+    sget-object v2, Lcom/spd/carinfo/CarInfo$General;->CLASS_NAME:Ljava/lang/String;
 
     const/4 v3, 0x1
 
     aput-object v2, v1, v3
 
-    sget-object v2, Lcom/spd/carinfo/CarInfo$General;->CLASS_NAME:Ljava/lang/String;
+    sget-object v2, Lcom/spd/carinfo/CarInfo$Instruments;->CLASS_NAME:Ljava/lang/String;
 
     const/4 v3, 0x2
 
     aput-object v2, v1, v3
 
-    sget-object v2, Lcom/spd/carinfo/CarInfo$Instruments;->CLASS_NAME:Ljava/lang/String;
-
-    const/4 v3, 0x3
-
-    aput-object v2, v1, v3
-
     sget-object v2, Lcom/spd/carinfo/CarInfo$Vehicles;->CLASS_NAME:Ljava/lang/String;
 
-    const/4 v3, 0x4
+    const/4 v3, 0x3
 
     aput-object v2, v1, v3
 
@@ -295,140 +254,9 @@
     .line 56
     if-eqz p1, :cond_6
 
+    # blocco pull porte rimosso (pagina porte eliminata); v3=0 serve ai blocchi successivi
     .line 57
-    invoke-static {}, Lcom/spd/carinfo/CarInfo;->instance()Lcom/spd/carinfo/CarInfo;
-
-    move-result-object v0
-
-    const v1, 0xc351
-
-    new-instance v2, Landroid/os/Bundle;
-
-    invoke-direct {v2}, Landroid/os/Bundle;-><init>()V
-
     const/4 v3, 0x0
-
-    invoke-virtual {v0, v1, v3, v2}, Lcom/spd/carinfo/CarInfo;->get(IILjava/lang/Object;)Ljava/lang/Object;
-
-    move-result-object v0
-
-    check-cast v0, Landroid/os/Bundle;
-
-    .line 58
-    .local v0, "bundle":Landroid/os/Bundle;
-    const-string v1, "trunk"
-
-    invoke-virtual {v0, v1, v3}, Landroid/os/Bundle;->getInt(Ljava/lang/String;I)I
-
-    move-result v1
-
-    const/4 v2, 0x1
-
-    if-ne v1, v2, :cond_0
-
-    move v6, v2
-
-    goto :goto_0
-
-    :cond_0
-    move v6, v3
-
-    .line 59
-    .local v6, "trunk":Z
-    :goto_0
-    const-string v1, "hood"
-
-    invoke-virtual {v0, v1, v3}, Landroid/os/Bundle;->getInt(Ljava/lang/String;I)I
-
-    move-result v1
-
-    if-ne v1, v2, :cond_1
-
-    move v5, v2
-
-    goto :goto_1
-
-    :cond_1
-    move v5, v3
-
-    .line 60
-    .local v5, "hood":Z
-    :goto_1
-    const-string v1, "frontLeft"
-
-    invoke-virtual {v0, v1, v3}, Landroid/os/Bundle;->getInt(Ljava/lang/String;I)I
-
-    move-result v1
-
-    if-ne v1, v2, :cond_2
-
-    move v7, v2
-
-    goto :goto_2
-
-    :cond_2
-    move v7, v3
-
-    .line 61
-    .local v7, "frontLeft":Z
-    :goto_2
-    const-string v1, "frontRight"
-
-    invoke-virtual {v0, v1, v3}, Landroid/os/Bundle;->getInt(Ljava/lang/String;I)I
-
-    move-result v1
-
-    if-ne v1, v2, :cond_3
-
-    move v8, v2
-
-    goto :goto_3
-
-    :cond_3
-    move v8, v3
-
-    .line 62
-    .local v8, "frontRight":Z
-    :goto_3
-    const-string v1, "rearLeft"
-
-    invoke-virtual {v0, v1, v3}, Landroid/os/Bundle;->getInt(Ljava/lang/String;I)I
-
-    move-result v1
-
-    if-ne v1, v2, :cond_4
-
-    move v9, v2
-
-    goto :goto_4
-
-    :cond_4
-    move v9, v3
-
-    .line 63
-    .local v9, "rearLeft":Z
-    :goto_4
-    const-string v1, "rearRight"
-
-    invoke-virtual {v0, v1, v3}, Landroid/os/Bundle;->getInt(Ljava/lang/String;I)I
-
-    move-result v1
-
-    if-ne v1, v2, :cond_5
-
-    move v10, v2
-
-    goto :goto_5
-
-    :cond_5
-    move v10, v3
-
-    .line 64
-    .local v10, "rearRight":Z
-    :goto_5
-    move-object v4, p0
-
-    invoke-direct/range {v4 .. v10}, Lcom/spd/xhsntg/CarInfoManager;->updateDoors(ZZZZZZ)V
 
     .line 66
     invoke-static {}, Lcom/spd/carinfo/CarInfo;->instance()Lcom/spd/carinfo/CarInfo;
@@ -584,17 +412,10 @@
     invoke-direct {p0, v11, v12}, Lcom/spd/xhsntg/CarInfoManager;->updateMediaSource(II)V
 
     .line 83
-    .end local v0    # "bundle":Landroid/os/Bundle;
     .end local v1    # "value":I
     .end local v2    # "unit":I
     .end local v3    # "source":I
     .end local v4    # "carModel":I
-    .end local v5    # "hood":Z
-    .end local v6    # "trunk":Z
-    .end local v7    # "frontLeft":Z
-    .end local v8    # "frontRight":Z
-    .end local v9    # "rearLeft":Z
-    .end local v10    # "rearRight":Z
     .end local v11    # "newSource":I
     .end local v12    # "hasSource":I
     :cond_6
@@ -717,142 +538,6 @@
     :cond_0
     goto/16 :goto_6
 
-    .line 89
-    :sswitch_4
-    move-object v1, p2
-
-    check-cast v1, Landroid/os/Bundle;
-
-    .line 90
-    .restart local v1    # "bundle":Landroid/os/Bundle;
-    if-eqz v1, :cond_7
-
-    .line 91
-    const-string v2, "trunk"
-
-    invoke-virtual {v1, v2, v0}, Landroid/os/Bundle;->getInt(Ljava/lang/String;I)I
-
-    move-result v2
-
-    const/4 v3, 0x1
-
-    if-ne v2, v3, :cond_1
-
-    move v6, v3
-
-    goto :goto_0
-
-    :cond_1
-    move v6, v0
-
-    .line 92
-    .local v6, "trunk":Z
-    :goto_0
-    const-string v2, "hood"
-
-    invoke-virtual {v1, v2, v0}, Landroid/os/Bundle;->getInt(Ljava/lang/String;I)I
-
-    move-result v2
-
-    if-ne v2, v3, :cond_2
-
-    move v5, v3
-
-    goto :goto_1
-
-    :cond_2
-    move v5, v0
-
-    .line 93
-    .local v5, "hood":Z
-    :goto_1
-    const-string v2, "frontLeft"
-
-    invoke-virtual {v1, v2, v0}, Landroid/os/Bundle;->getInt(Ljava/lang/String;I)I
-
-    move-result v2
-
-    if-ne v2, v3, :cond_3
-
-    move v7, v3
-
-    goto :goto_2
-
-    :cond_3
-    move v7, v0
-
-    .line 94
-    .local v7, "frontLeft":Z
-    :goto_2
-    const-string v2, "frontRight"
-
-    invoke-virtual {v1, v2, v0}, Landroid/os/Bundle;->getInt(Ljava/lang/String;I)I
-
-    move-result v2
-
-    if-ne v2, v3, :cond_4
-
-    move v8, v3
-
-    goto :goto_3
-
-    :cond_4
-    move v8, v0
-
-    .line 95
-    .local v8, "frontRight":Z
-    :goto_3
-    const-string v2, "rearLeft"
-
-    invoke-virtual {v1, v2, v0}, Landroid/os/Bundle;->getInt(Ljava/lang/String;I)I
-
-    move-result v2
-
-    if-ne v2, v3, :cond_5
-
-    move v9, v3
-
-    goto :goto_4
-
-    :cond_5
-    move v9, v0
-
-    .line 96
-    .local v9, "rearLeft":Z
-    :goto_4
-    const-string v2, "rearRight"
-
-    invoke-virtual {v1, v2, v0}, Landroid/os/Bundle;->getInt(Ljava/lang/String;I)I
-
-    move-result v2
-
-    if-ne v2, v3, :cond_6
-
-    move v10, v3
-
-    goto :goto_5
-
-    :cond_6
-    move v10, v0
-
-    .line 97
-    .local v10, "rearRight":Z
-    :goto_5
-    move-object v4, p0
-
-    invoke-direct/range {v4 .. v10}, Lcom/spd/xhsntg/CarInfoManager;->updateDoors(ZZZZZZ)V
-
-    .line 100
-    .end local v1    # "bundle":Landroid/os/Bundle;
-    .end local v5    # "hood":Z
-    .end local v6    # "trunk":Z
-    .end local v7    # "frontLeft":Z
-    .end local v8    # "frontRight":Z
-    .end local v9    # "rearLeft":Z
-    .end local v10    # "rearRight":Z
-    :cond_7
-    goto :goto_6
-
     .line 106
     :sswitch_5
     move-object v0, p2
@@ -884,7 +569,6 @@
     :sswitch_data_0
     .sparse-switch
         0x2716 -> :sswitch_5
-        0xc351 -> :sswitch_4
         0x186ad -> :sswitch_3
         0x186f5 -> :sswitch_2
         0x2231e -> :sswitch_1

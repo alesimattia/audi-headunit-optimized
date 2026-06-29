@@ -1641,36 +1641,6 @@
     return-void
 .end method
 
-.method public onUpdateDoors(ZZZZZZ)V
-    .locals 7
-    .param p1, "hood"    # Z
-    .param p2, "trunk"    # Z
-    .param p3, "frontLeft"    # Z
-    .param p4, "frontRight"    # Z
-    .param p5, "rearLeft"    # Z
-    .param p6, "rearRight"    # Z
-
-    .line 339
-    iget-object v0, p0, Lcom/spd/xhsntg/FullscreenActivity;->m_view_page_adapter:Lcom/spd/view/MyViewPageAdapter;
-
-    move v1, p1
-
-    move v2, p2
-
-    move v3, p3
-
-    move v4, p4
-
-    move v5, p5
-
-    move v6, p6
-
-    invoke-virtual/range {v0 .. v6}, Lcom/spd/view/MyViewPageAdapter;->updateDoors(ZZZZZZ)V
-
-    .line 340
-    return-void
-.end method
-
 .method public onUpdateMediaSource(II)V
     .locals 3
     .param p1, "source"    # I

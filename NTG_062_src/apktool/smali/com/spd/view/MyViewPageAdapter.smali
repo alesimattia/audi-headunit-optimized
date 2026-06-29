@@ -8,15 +8,11 @@
 
 .field private m_test_view_0:Landroid/view/View;
 
-.field private m_test_view_1:Lcom/spd/car/CarDoorWindowView;
+.field private m_test_view_1:Lcom/spd/car/CarMileageSpeedView;
 
-.field private m_test_view_2:Lcom/spd/car/CarMileageSpeedView;
+.field private m_test_view_2:Landroid/view/View;
 
 .field private m_test_view_3:Landroid/view/View;
-
-.field private m_test_view_4:Landroid/view/View;
-
-.field private m_test_view_5:Landroid/view/View;
 
 
 # direct methods
@@ -37,40 +33,26 @@
 
     iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_0:Landroid/view/View;
 
-    .line 30
-    new-instance v0, Lcom/spd/car/CarDoorWindowView;
-
-    invoke-direct {v0, p1}, Lcom/spd/car/CarDoorWindowView;-><init>(Landroid/content/Context;)V
-
-    iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_1:Lcom/spd/car/CarDoorWindowView;
-
-    .line 31
+    # pagina 1: chilometraggio/velocita
     new-instance v0, Lcom/spd/car/CarMileageSpeedView;
 
     invoke-direct {v0, p1}, Lcom/spd/car/CarMileageSpeedView;-><init>(Landroid/content/Context;)V
 
-    iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_2:Lcom/spd/car/CarMileageSpeedView;
+    iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_1:Lcom/spd/car/CarMileageSpeedView;
 
-    # pagina 3: sensori/marcia (sostituisce CarKeyView; vedi com.spd.car.CarSensorView)
-    invoke-static {p1}, Lcom/spd/car/CarSensorView;->createView(Landroid/content/Context;)Landroid/view/View;
-
-    move-result-object v0
-
-    iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_3:Landroid/view/View;
-
-    # pagina diagnostica (debug overlay)
+    # pagina 2: diagnostica (debug overlay)
     invoke-static {p1}, Lcom/spd/xhsntg/DebugLog;->createView(Landroid/content/Context;)Landroid/view/View;
 
     move-result-object v0
 
-    iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_4:Landroid/view/View;
+    iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_2:Landroid/view/View;
 
-    # pagina Sistema (parametri headunit Android)
+    # pagina 3: Sistema (parametri headunit Android)
     invoke-static {p1}, Lcom/spd/xhsntg/SystemView;->createView(Landroid/content/Context;)Landroid/view/View;
 
     move-result-object v0
 
-    iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_5:Landroid/view/View;
+    iput-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_3:Landroid/view/View;
 
     .line 35
     return-void
@@ -105,7 +87,7 @@
     .locals 1
 
     .line 65
-    const/4 v0, 0x6
+    const/4 v0, 0x4
 
     return v0
 .end method
@@ -142,33 +124,21 @@
 
     goto :goto_0
 
-    # 1 -> porte/finestrini
+    # 1 -> chilometraggio/velocita
     :pswitch_1
-    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_1:Lcom/spd/car/CarDoorWindowView;
+    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_1:Lcom/spd/car/CarMileageSpeedView;
 
     goto :goto_0
 
-    # 2 -> chilometraggio/velocita
+    # 2 -> diagnostica (debug overlay)
     :pswitch_2
-    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_2:Lcom/spd/car/CarMileageSpeedView;
+    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_2:Landroid/view/View;
 
     goto :goto_0
 
-    # 3 -> sensori/marcia
+    # 3 -> pagina Sistema (parametri headunit)
     :pswitch_3
     iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_3:Landroid/view/View;
-
-    goto :goto_0
-
-    # 4 -> pagina diagnostica (debug overlay)
-    :pswitch_4
-    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_4:Landroid/view/View;
-
-    goto :goto_0
-
-    # 5 -> pagina Sistema (parametri headunit)
-    :pswitch_5
-    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_5:Landroid/view/View;
 
     nop
 
@@ -187,8 +157,6 @@
         :pswitch_1
         :pswitch_2
         :pswitch_3
-        :pswitch_4
-        :pswitch_5
     .end packed-switch
 .end method
 
@@ -221,7 +189,7 @@
     .locals 0
     .param p1, "manager"    # Lcom/spd/xhsntg/CarInfoManager;
 
-    # CarSensorView legge i dati da CarInfo in autonomia (PULL): nessun manager da propagare
+    # nessuna view dello slider necessita del manager (km/velocita arriva via callback, le altre sono autonome)
     return-void
 .end method
 
@@ -232,43 +200,13 @@
     return-void
 .end method
 
-.method public updateDoors(ZZZZZZ)V
-    .locals 7
-    .param p1, "hood"    # Z
-    .param p2, "trunk"    # Z
-    .param p3, "frontLeft"    # Z
-    .param p4, "frontRight"    # Z
-    .param p5, "rearLeft"    # Z
-    .param p6, "rearRight"    # Z
-
-    .line 48
-    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_1:Lcom/spd/car/CarDoorWindowView;
-
-    move v1, p1
-
-    move v2, p2
-
-    move v3, p3
-
-    move v4, p4
-
-    move v5, p5
-
-    move v6, p6
-
-    invoke-virtual/range {v0 .. v6}, Lcom/spd/car/CarDoorWindowView;->updateBenzCarDoor(ZZZZZZ)V
-
-    .line 49
-    return-void
-.end method
-
 .method public updateMileage(II)V
     .locals 1
     .param p1, "value"    # I
     .param p2, "unit"    # I
 
     .line 56
-    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_2:Lcom/spd/car/CarMileageSpeedView;
+    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_1:Lcom/spd/car/CarMileageSpeedView;
 
     invoke-virtual {v0, p1, p2}, Lcom/spd/car/CarMileageSpeedView;->updateMileage(II)V
 
@@ -282,7 +220,7 @@
     .param p2, "unit"    # I
 
     .line 52
-    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_2:Lcom/spd/car/CarMileageSpeedView;
+    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_1:Lcom/spd/car/CarMileageSpeedView;
 
     invoke-virtual {v0, p1, p2}, Lcom/spd/car/CarMileageSpeedView;->updateSpeed(FI)V
 

@@ -5,6 +5,8 @@ metadata:
   type: reference
 ---
 
+> ⚠️ **STORICO — pagina RIMOSSA il 2026-06-29** (punto 16 di [[ntg062-applied-mods]]). `CarDoorWindowView`, il layout e i 15 PNG `carinfo_audi_car_door_*_02` non esistono più nei sorgenti. Questo file resta come riferimento sul *come funzionava* (utile se in futuro si vuole reintrodurre una pagina porte). I 7 id `id_car_door_*` sono ancora in `ids.xml`/`public.xml` come orfani innocui.
+
 `CarDoorWindowView` (layout `carinfo_benz_car_door_layout.xml`) mostra l'auto **vista dall'alto** con overlay di cofano/baule/4 porte che si attivano all'apertura. Le immagini sono caricate **DINAMICAMENTE** in `resetBenzCarDoorIcon` via:
 `getResources().getIdentifier("carinfo_audi_car_door_<pezzo>" + "_0" + type, "drawable", pkg)`, dove `type = Settings.System.getInt("SETTING_BENZ_CAR_TYPE", 0)` (**default 0**).
 

@@ -58,16 +58,16 @@
     .locals 2
     .param p1, "position"    # I
 
-    # all'apertura della pagina debug (indice 4) genera il dump one-shot dei parametri CarInfo
-    const/4 v0, 0x4
+    # all'apertura della pagina debug (indice 2, shiftato dopo rimozione pagine porte+sensori) genera il dump one-shot dei parametri CarInfo
+    const/4 v0, 0x2
 
     if-ne p1, v0, :cond_dump
 
     invoke-static {}, Lcom/spd/xhsntg/DebugLog;->dumpAll()V
 
     :cond_dump
-    # pagina Sistema (indice 5): avvia il refresh periodico entrando, fermalo uscendo
-    const/4 v0, 0x5
+    # pagina Sistema (indice 3, shiftato): avvia il refresh periodico entrando, fermalo uscendo
+    const/4 v0, 0x3
 
     if-ne p1, v0, :cond_sys_off
 
@@ -79,19 +79,6 @@
     invoke-static {}, Lcom/spd/xhsntg/SystemView;->stop()V
 
     :goto_sys
-    # pagina Sensori/Marcia (indice 3): avvia il polling entrando, fermalo uscendo
-    const/4 v0, 0x3
-
-    if-ne p1, v0, :cond_sensor_off
-
-    invoke-static {}, Lcom/spd/car/CarSensorView;->start()V
-
-    goto :goto_sensor
-
-    :cond_sensor_off
-    invoke-static {}, Lcom/spd/car/CarSensorView;->stop()V
-
-    :goto_sensor
     .line 431
     iget-object v0, p0, Lcom/spd/xhsntg/FullscreenActivity$1;->this$0:Lcom/spd/xhsntg/FullscreenActivity;
 

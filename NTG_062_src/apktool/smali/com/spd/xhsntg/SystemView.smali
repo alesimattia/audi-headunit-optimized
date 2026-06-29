@@ -5,14 +5,14 @@
 
 # Pagina "Sistema": mostra parametri della headunit Android (NON dati CAN).
 # Costruita interamente in codice (stesso approccio di com.spd.xhsntg.DebugLog).
-# Layout: TableLayout a 2 colonne -> etichette a sinistra (piccolo padding) e
-# valori tutti incolonnati (la colonna 1 parte dopo l'etichetta piu lunga,
-# quindi i valori restano allineati verticalmente qualunque sia la loro lunghezza).
-# Righe: RAM usata/libera (MB) + barra full-width; Ram usage app (PSS); Carico CPU
-# (globale, riga nascosta se /proc/stat non leggibile); Temp CPU (thermal_zone0,
-# fallback batteria, stessa etichetta).
-# Aggiornamento periodico ogni 1 s via Handler+Runnable, avviato/fermato da
-# com.spd.xhsntg.FullscreenActivity$1.onPageSelected quando si entra/esce dall'indice 5.
+# Layout: TableLayout a 2 colonne (etichette a sinistra, valori incolonnati) dentro
+# uno ScrollView (le righe temperatura sono dinamiche e potrebbero superare l'altezza).
+# Righe: RAM usata/libera (MB) + barra; Ram usage app (PSS); Carico CPU (globale,
+# nascosta se /proc/stat non leggibile); Freq CPU (cpu0 scaling_cur_freq -> MHz);
+# una riga per ogni thermal_zone leggibile (etichetta dal file "type"), fallback batteria.
+# Font 19sp su tutta la pagina (impostato in fillRow). Refresh ogni 1 s via Handler+Runnable,
+# avviato/fermato da com.spd.xhsntg.FullscreenActivity$1.onPageSelected entrando/uscendo
+# dall'indice 3 (la pagina Sistema dopo la rimozione delle pagine porte e sensori).
 
 
 # static fields
@@ -27,7 +27,12 @@
 
 .field static sCpuText:Landroid/widget/TextView;
 
-.field static sTempText:Landroid/widget/TextView;
+.field static sFreqText:Landroid/widget/TextView;
+
+# Righe temperatura dinamiche: celle valore + percorsi file paralleli ("BATTERY" = sticky batteria).
+.field static sTempViews:Ljava/util/ArrayList;
+
+.field static sTempPaths:Ljava/util/ArrayList;
 
 .field static sHandler:Landroid/os/Handler;
 
@@ -136,18 +141,21 @@
 
     sput-object v2, Lcom/spd/xhsntg/SystemView;->sCpuText:Landroid/widget/TextView;
 
-    # --- riga Temp CPU ---
+    # --- riga Freq CPU ---
     new-instance v1, Landroid/widget/TableRow;
 
     invoke-direct {v1, p0}, Landroid/widget/TableRow;-><init>(Landroid/content/Context;)V
 
-    const-string v2, "Temp CPU"
+    const-string v2, "Freq CPU"
 
     invoke-static {v0, p0, v2, v1}, Lcom/spd/xhsntg/SystemView;->fillRow(Landroid/widget/TableLayout;Landroid/content/Context;Ljava/lang/String;Landroid/widget/TableRow;)Landroid/widget/TextView;
 
     move-result-object v2
 
-    sput-object v2, Lcom/spd/xhsntg/SystemView;->sTempText:Landroid/widget/TextView;
+    sput-object v2, Lcom/spd/xhsntg/SystemView;->sFreqText:Landroid/widget/TextView;
+
+    # --- righe Temperature (una per thermal_zone leggibile) ---
+    invoke-static {v0, p0}, Lcom/spd/xhsntg/SystemView;->buildTempRows(Landroid/widget/TableLayout;Landroid/content/Context;)V
 
     # handler sul main looper + ticker
     new-instance v1, Landroid/os/Handler;
@@ -166,7 +174,175 @@
 
     sput-object v1, Lcom/spd/xhsntg/SystemView;->sTicker:Ljava/lang/Runnable;
 
-    return-object v0
+    # avvolge la tabella in uno ScrollView (le righe temperatura possono superare l'altezza)
+    new-instance v1, Landroid/widget/ScrollView;
+
+    invoke-direct {v1, p0}, Landroid/widget/ScrollView;-><init>(Landroid/content/Context;)V
+
+    invoke-virtual {v1, v0}, Landroid/widget/ScrollView;->addView(Landroid/view/View;)V
+
+    return-object v1
+.end method
+
+# Enumera /sys/class/thermal/thermal_zone0..9: per ogni file temp leggibile crea una riga
+# "Temp <type>" e memorizza cella valore + percorso. Se nessuna zona e leggibile, crea una
+# sola riga "Temp batteria" (percorso sentinella "BATTERY"). Chiamato da createView.
+.method private static buildTempRows(Landroid/widget/TableLayout;Landroid/content/Context;)V
+    .locals 6
+    .param p0, "table"    # Landroid/widget/TableLayout;
+    .param p1, "ctx"      # Landroid/content/Context;
+
+    new-instance v0, Ljava/util/ArrayList;
+
+    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
+
+    sput-object v0, Lcom/spd/xhsntg/SystemView;->sTempViews:Ljava/util/ArrayList;
+
+    new-instance v0, Ljava/util/ArrayList;
+
+    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
+
+    sput-object v0, Lcom/spd/xhsntg/SystemView;->sTempPaths:Ljava/util/ArrayList;
+
+    const/4 v0, 0x0              # i = 0
+
+    :goto_loop
+    const/16 v1, 0xa            # limite 10 zone
+
+    if-ge v0, v1, :goto_done
+
+    # tempPath = "/sys/class/thermal/thermal_zone" + i + "/temp"
+    new-instance v1, Ljava/lang/StringBuilder;
+
+    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v2, "/sys/class/thermal/thermal_zone"
+
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    const-string v2, "/temp"
+
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v1        # v1 = tempPath (preservato fino all'add)
+
+    invoke-static {v1}, Lcom/spd/xhsntg/SystemView;->readTempPath(Ljava/lang/String;)F
+
+    move-result v2
+
+    invoke-static {v2}, Ljava/lang/Float;->isNaN(F)Z
+
+    move-result v2
+
+    if-nez v2, :goto_next        # zona non leggibile -> salta
+
+    # typePath = "/sys/class/thermal/thermal_zone" + i + "/type"
+    new-instance v2, Ljava/lang/StringBuilder;
+
+    invoke-direct {v2}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v3, "/sys/class/thermal/thermal_zone"
+
+    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    const-string v3, "/type"
+
+    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-static {v2}, Lcom/spd/xhsntg/SystemView;->readLine(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v2        # v2 = type (o null)
+
+    # label = (type != null) ? "Temp " + type : "Temp zone" + i
+    new-instance v3, Ljava/lang/StringBuilder;
+
+    invoke-direct {v3}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v4, "Temp "
+
+    invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    if-eqz v2, :cond_zone
+
+    invoke-virtual {v3, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    goto :cond_lbl_done
+
+    :cond_zone
+    const-string v4, "zone"
+
+    invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    :cond_lbl_done
+    invoke-virtual {v3}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v3        # v3 = label
+
+    new-instance v4, Landroid/widget/TableRow;
+
+    invoke-direct {v4, p1}, Landroid/widget/TableRow;-><init>(Landroid/content/Context;)V
+
+    invoke-static {p0, p1, v3, v4}, Lcom/spd/xhsntg/SystemView;->fillRow(Landroid/widget/TableLayout;Landroid/content/Context;Ljava/lang/String;Landroid/widget/TableRow;)Landroid/widget/TextView;
+
+    move-result-object v4        # v4 = cella valore
+
+    sget-object v5, Lcom/spd/xhsntg/SystemView;->sTempViews:Ljava/util/ArrayList;
+
+    invoke-virtual {v5, v4}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+
+    sget-object v5, Lcom/spd/xhsntg/SystemView;->sTempPaths:Ljava/util/ArrayList;
+
+    invoke-virtual {v5, v1}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+
+    :goto_next
+    add-int/lit8 v0, v0, 0x1
+
+    goto :goto_loop
+
+    :goto_done
+    # fallback batteria se nessuna zona leggibile
+    sget-object v0, Lcom/spd/xhsntg/SystemView;->sTempViews:Ljava/util/ArrayList;
+
+    invoke-virtual {v0}, Ljava/util/ArrayList;->size()I
+
+    move-result v0
+
+    if-nez v0, :cond_ret
+
+    new-instance v0, Landroid/widget/TableRow;
+
+    invoke-direct {v0, p1}, Landroid/widget/TableRow;-><init>(Landroid/content/Context;)V
+
+    const-string v1, "Temp batteria"
+
+    invoke-static {p0, p1, v1, v0}, Lcom/spd/xhsntg/SystemView;->fillRow(Landroid/widget/TableLayout;Landroid/content/Context;Ljava/lang/String;Landroid/widget/TableRow;)Landroid/widget/TextView;
+
+    move-result-object v1
+
+    sget-object v2, Lcom/spd/xhsntg/SystemView;->sTempViews:Ljava/util/ArrayList;
+
+    invoke-virtual {v2, v1}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+
+    sget-object v2, Lcom/spd/xhsntg/SystemView;->sTempPaths:Ljava/util/ArrayList;
+
+    const-string v3, "BATTERY"
+
+    invoke-virtual {v2, v3}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+
+    :cond_ret
+    return-void
 .end method
 
 # Riempie una TableRow [etichetta | valore], la aggiunge a parent e ritorna la cella valore.
@@ -186,7 +362,7 @@
 
     invoke-virtual {v0, v1}, Landroid/widget/TextView;->setTextColor(I)V
 
-    const/high16 v1, 0x41900000    # 18.0f
+    const/high16 v1, 0x41980000    # 19.0f (era 18.0f)
 
     invoke-virtual {v0, v1}, Landroid/widget/TextView;->setTextSize(F)V
 
@@ -211,7 +387,7 @@
 
     invoke-virtual {v0, v1}, Landroid/widget/TextView;->setTextColor(I)V
 
-    const/high16 v1, 0x41900000    # 18.0f
+    const/high16 v1, 0x41980000    # 19.0f (era 18.0f)
 
     invoke-virtual {v0, v1}, Landroid/widget/TextView;->setTextSize(F)V
 
@@ -296,7 +472,9 @@
 
     invoke-static {}, Lcom/spd/xhsntg/SystemView;->updateCpu()V
 
-    invoke-static {}, Lcom/spd/xhsntg/SystemView;->updateTemp()V
+    invoke-static {}, Lcom/spd/xhsntg/SystemView;->updateFreq()V
+
+    invoke-static {}, Lcom/spd/xhsntg/SystemView;->updateTemps()V
 
     return-void
 .end method
@@ -617,53 +795,40 @@
     return-void
 .end method
 
-# Temperatura: prova la CPU (thermal_zone0), altrimenti fallback batteria, stesso valore mostrato.
-.method private static updateTemp()V
+# Frequenza attuale di cpu0 (scaling_cur_freq, in kHz -> MHz). "--" se non leggibile.
+.method private static updateFreq()V
     .locals 4
 
-    invoke-static {}, Lcom/spd/xhsntg/SystemView;->readCpuTemp()F
+    sget-object v0, Lcom/spd/xhsntg/SystemView;->sFreqText:Landroid/widget/TextView;
 
-    move-result v0
+    if-eqz v0, :cond_ret
 
-    invoke-static {v0}, Ljava/lang/Float;->isNaN(F)Z
+    const-string v0, "/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq"
 
-    move-result v1
+    invoke-static {v0}, Lcom/spd/xhsntg/SystemView;->readLine(Ljava/lang/String;)Ljava/lang/String;
 
-    if-eqz v1, :cond_have
+    move-result-object v0
 
-    invoke-static {}, Lcom/spd/xhsntg/SystemView;->readBatteryTemp()F
+    if-eqz v0, :cond_fail
 
-    move-result v0
+    :try_start_0
+    invoke-static {v0}, Ljava/lang/Long;->parseLong(Ljava/lang/String;)J
 
-    :cond_have
-    sget-object v1, Lcom/spd/xhsntg/SystemView;->sTempText:Landroid/widget/TextView;
+    move-result-wide v0          # kHz in v0/v1
 
-    if-eqz v1, :cond_ret
+    const-wide/16 v2, 0x3e8      # 1000
 
-    invoke-static {v0}, Ljava/lang/Float;->isNaN(F)Z
+    div-long v0, v0, v2          # -> MHz
+    :try_end_0
+    .catchall {:try_start_0 .. :try_end_0} :catch_0
 
-    move-result v2
-
-    if-eqz v2, :cond_show
-
-    const-string v2, "--"
-
-    invoke-virtual {v1, v2}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
-
-    return-void
-
-    :cond_show
     new-instance v2, Ljava/lang/StringBuilder;
 
     invoke-direct {v2}, Ljava/lang/StringBuilder;-><init>()V
 
-    invoke-static {v0}, Ljava/lang/Math;->round(F)I
+    invoke-virtual {v2, v0, v1}, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;
 
-    move-result v3
-
-    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
-
-    const-string v3, " °C"
+    const-string v3, " MHz"
 
     invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
@@ -671,25 +836,134 @@
 
     move-result-object v3
 
-    invoke-virtual {v1, v3}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+    sget-object v0, Lcom/spd/xhsntg/SystemView;->sFreqText:Landroid/widget/TextView;
+
+    invoke-virtual {v0, v3}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+
+    return-void
+
+    :catch_0
+    move-exception v0
+
+    :cond_fail
+    sget-object v0, Lcom/spd/xhsntg/SystemView;->sFreqText:Landroid/widget/TextView;
+
+    const-string v1, "--"
+
+    invoke-virtual {v0, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 
     :cond_ret
     return-void
 .end method
 
-# Legge /sys/class/thermal/thermal_zone0/temp; ritorna gradi C o Float.NaN se non disponibile.
-# Valori >1000 sono in milli-gradi (li divide per 1000), altrimenti gia in gradi.
-.method private static readCpuTemp()F
+# Aggiorna tutte le righe temperatura: per ogni cella, legge il percorso parallelo
+# ("BATTERY" = sticky batteria, altrimenti file thermal) e mostra "NN °C" o "--".
+.method private static updateTemps()V
     .locals 6
 
-    const-string v0, "/sys/class/thermal/thermal_zone0/temp"
+    sget-object v0, Lcom/spd/xhsntg/SystemView;->sTempViews:Ljava/util/ArrayList;
+
+    if-eqz v0, :cond_ret
+
+    invoke-virtual {v0}, Ljava/util/ArrayList;->size()I
+
+    move-result v0                # n
+
+    const/4 v1, 0x0              # i
+
+    :goto_loop
+    if-ge v1, v0, :cond_ret
+
+    sget-object v2, Lcom/spd/xhsntg/SystemView;->sTempPaths:Ljava/util/ArrayList;
+
+    invoke-virtual {v2, v1}, Ljava/util/ArrayList;->get(I)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, Ljava/lang/String;     # path
+
+    sget-object v3, Lcom/spd/xhsntg/SystemView;->sTempViews:Ljava/util/ArrayList;
+
+    invoke-virtual {v3, v1}, Ljava/util/ArrayList;->get(I)Ljava/lang/Object;
+
+    move-result-object v3
+
+    check-cast v3, Landroid/widget/TextView;   # cella valore
+
+    const-string v4, "BATTERY"
+
+    invoke-virtual {v2, v4}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v4
+
+    if-eqz v4, :cond_file
+
+    invoke-static {}, Lcom/spd/xhsntg/SystemView;->readBatteryTemp()F
+
+    move-result v4
+
+    goto :cond_have
+
+    :cond_file
+    invoke-static {v2}, Lcom/spd/xhsntg/SystemView;->readTempPath(Ljava/lang/String;)F
+
+    move-result v4
+
+    :cond_have
+    invoke-static {v4}, Ljava/lang/Float;->isNaN(F)Z
+
+    move-result v5
+
+    if-eqz v5, :cond_num
+
+    const-string v5, "--"
+
+    invoke-virtual {v3, v5}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+
+    goto :cond_next
+
+    :cond_num
+    new-instance v5, Ljava/lang/StringBuilder;
+
+    invoke-direct {v5}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-static {v4}, Ljava/lang/Math;->round(F)I
+
+    move-result v4
+
+    invoke-virtual {v5, v4}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    const-string v4, " °C"
+
+    invoke-virtual {v5, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v5}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v4
+
+    invoke-virtual {v3, v4}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+
+    :cond_next
+    add-int/lit8 v1, v1, 0x1
+
+    goto :goto_loop
+
+    :cond_ret
+    return-void
+.end method
+
+# Legge un file thermal (es. /sys/class/thermal/thermal_zoneN/temp); ritorna gradi C o Float.NaN.
+# Valori >1000 sono in milli-gradi (li divide per 1000), altrimenti gia in gradi.
+.method private static readTempPath(Ljava/lang/String;)F
+    .locals 6
+    .param p0, "path"    # Ljava/lang/String;
 
     :try_start_0
     new-instance v1, Ljava/io/BufferedReader;
 
     new-instance v2, Ljava/io/FileReader;
 
-    invoke-direct {v2, v0}, Ljava/io/FileReader;-><init>(Ljava/lang/String;)V
+    invoke-direct {v2, p0}, Ljava/io/FileReader;-><init>(Ljava/lang/String;)V
 
     invoke-direct {v1, v2}, Ljava/io/BufferedReader;-><init>(Ljava/io/Reader;)V
 
@@ -741,6 +1015,49 @@
     sget v0, Ljava/lang/Float;->NaN:F
 
     return v0
+.end method
+
+# Legge la prima riga (trimmata) di un file di testo; null se non leggibile.
+.method private static readLine(Ljava/lang/String;)Ljava/lang/String;
+    .locals 2
+    .param p0, "path"    # Ljava/lang/String;
+
+    :try_start_0
+    new-instance v0, Ljava/io/BufferedReader;
+
+    new-instance v1, Ljava/io/FileReader;
+
+    invoke-direct {v1, p0}, Ljava/io/FileReader;-><init>(Ljava/lang/String;)V
+
+    invoke-direct {v0, v1}, Ljava/io/BufferedReader;-><init>(Ljava/io/Reader;)V
+
+    invoke-virtual {v0}, Ljava/io/BufferedReader;->readLine()Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v0}, Ljava/io/BufferedReader;->close()V
+
+    if-eqz v1, :cond_null
+
+    invoke-virtual {v1}, Ljava/lang/String;->trim()Ljava/lang/String;
+
+    move-result-object v1
+    :try_end_0
+    .catchall {:try_start_0 .. :try_end_0} :catch_0
+
+    return-object v1
+
+    :cond_null
+    const/4 v1, 0x0
+
+    return-object v1
+
+    :catch_0
+    move-exception v0
+
+    const/4 v0, 0x0
+
+    return-object v0
 .end method
 
 # Temperatura via sticky ACTION_BATTERY_CHANGED (decimi di grado -> gradi). NaN se assente.

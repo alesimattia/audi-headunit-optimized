@@ -62,21 +62,6 @@
     <public type="dimen" name="subtitle_shadow_offset" id="0x7f030018" />
     <public type="dimen" name="subtitle_shadow_radius" id="0x7f030019" />
     <public type="drawable" name="$ic_launcher_foreground__0" id="0x7f040000" />
-    <public type="drawable" name="carinfo_audi_car_door_bg_02" id="0x7f040006" />
-    <public type="drawable" name="carinfo_audi_car_door_front_left_02" id="0x7f04000a" />
-    <public type="drawable" name="carinfo_audi_car_door_front_right_02" id="0x7f04000e" />
-    <public type="drawable" name="carinfo_audi_car_door_hood_02" id="0x7f040012" />
-    <public type="drawable" name="carinfo_audi_car_door_hood_on_02" id="0x7f040016" />
-    <public type="drawable" name="carinfo_audi_car_door_left_front_02" id="0x7f04001a" />
-    <public type="drawable" name="carinfo_audi_car_door_left_off_02" id="0x7f04001e" />
-    <public type="drawable" name="carinfo_audi_car_door_left_rear_02" id="0x7f040022" />
-    <public type="drawable" name="carinfo_audi_car_door_rear_left_02" id="0x7f040025" />
-    <public type="drawable" name="carinfo_audi_car_door_rear_right_02" id="0x7f040028" />
-    <public type="drawable" name="carinfo_audi_car_door_right_front_02" id="0x7f04002b" />
-    <public type="drawable" name="carinfo_audi_car_door_right_off_02" id="0x7f04002f" />
-    <public type="drawable" name="carinfo_audi_car_door_right_rear_02" id="0x7f040033" />
-    <public type="drawable" name="carinfo_audi_car_door_trunk_02" id="0x7f040036" />
-    <public type="drawable" name="carinfo_audi_car_door_trunk_on_02" id="0x7f04003a" />
     <public type="drawable" name="carinfo_button_1_bg" id="0x7f0400b8" />
     <public type="drawable" name="carinfo_button_bg" id="0x7f0400b9" />
     <public type="drawable" name="carinfo_button_left" id="0x7f0400ba" />
@@ -200,7 +185,6 @@
     <public type="integer" name="cancel_button_image_alpha" id="0x7f060000" />
     <public type="integer" name="status_bar_notification_info_maxnum" id="0x7f060001" />
     <public type="layout" name="activity_fullscreen" id="0x7f070000" />
-    <public type="layout" name="carinfo_benz_car_door_layout" id="0x7f070001" />
     <public type="layout" name="mileage_layout" id="0x7f070003" />
     <public type="layout" name="notification_action" id="0x7f070005" />
     <public type="layout" name="notification_action_tombstone" id="0x7f070006" />

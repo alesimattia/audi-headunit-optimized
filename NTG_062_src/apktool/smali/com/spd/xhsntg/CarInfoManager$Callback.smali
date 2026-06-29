@@ -18,9 +18,6 @@
 .method public abstract onUpdateConnected(Z)V
 .end method
 
-.method public abstract onUpdateDoors(ZZZZZZ)V
-.end method
-
 .method public abstract onUpdateMediaSource(II)V
 .end method
 

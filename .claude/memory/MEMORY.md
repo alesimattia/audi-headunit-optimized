@@ -2,9 +2,9 @@
 
 - [Architettura IPC / componenti esterni](ntg062-architecture-ipc.md) — l'app e un thin-client che orchestra componenti SPD esterni (carinfo, dvr, aircondition+AVM, carinfo.ui, SpdManager, navi); capacita latenti (AVM/radar parcheggio, HVAC) + inventario chiavi Settings.System
 - [NTG_062 overview](ntg062-overview.md) — cos'è l'app, app di sistema + firma Zhantang, perché la ri-firma è vincolata (Strada A/B/C)
-- [Architettura slider](ntg062-slider.md) — ViewPager/MyViewPageAdapter, mappa delle 4 pagine, flusso dati CarInfo, CarKeyView, DVR
+- [Architettura slider](ntg062-slider.md) — ViewPager/MyViewPageAdapter, mappa delle 5 pagine (porte rimossa 2026-06-29), flusso dati CarInfo, DVR
 - [Dati CarInfo](ntg062-carinfo-data.md) — dizionario what codes, push/pull AIDL, classi registrate, come sostituire il dato del mileage
-- [Sistema immagini stato-porte](ntg062-cardoor-images.md) — trappole audi-vs-benz, getIdentifier, tipo default, src statico nel layout
+- [Sistema immagini stato-porte](ntg062-cardoor-images.md) — STORICO (pagina porte rimossa 2026-06-29): trappole audi-vs-benz, getIdentifier, tipo default, src statico
 - [Schermata navigazione](ntg062-navigation.md) — widget info da broadcast AMap + avvio app via SETTING_NAVI_APP
 - [Tuning DVR](ntg062-dvr-tuning.md) — superficie AIDL/SettingInfo per migliorare qualità/FPS/apertura (Fase 2)
 - [Modding & build](ntg062-modding-build.md) — toolchain jadx/apktool/firma + tranelli cancellazione risorse e firma su macOS
