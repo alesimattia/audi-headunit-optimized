@@ -48,7 +48,7 @@
 
     const-string v1, "service binderDied"
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 188
     iget-object v0, p0, Lcom/spd/xhsntg/DvrHelper$2;->this$0:Lcom/spd/xhsntg/DvrHelper;

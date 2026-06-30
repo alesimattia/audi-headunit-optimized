@@ -22,3 +22,4 @@ Backup di un'applicazione per android 9.0 car headunit
 - Pulisci sempre la cache di build prima di ricompilare
 - applica sempre zipalign + firma con uber-apk-signer (schemi v2+v3) quando compili l'applicazione
 - Il PC windows con nome PC-030 va utilizzato solo per progettazione e scrittura del codice, non compilare app e non installare software aggiuntivo senza autorizzazione
+- Quando editi il readme non devi parlare di modifiche. Il documento deve riflettere lo stato attuale dell'applicazione.

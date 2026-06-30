@@ -201,7 +201,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 343
     iget-object v0, p0, Lcom/spd/xhsntg/DvrHelper$DvrListCallBackRegister;->this$0:Lcom/spd/xhsntg/DvrHelper;

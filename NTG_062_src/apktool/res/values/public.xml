@@ -68,14 +68,6 @@
     <public type="drawable" name="carinfo_button_right" id="0x7f0400bb" />
     <public type="drawable" name="ic_launcher_background" id="0x7f0400bc" />
     <public type="drawable" name="ic_launcher_foreground" id="0x7f0400bd" />
-    <public type="drawable" name="icon_03" id="0x7f0400be" />
-    <public type="drawable" name="icon_04" id="0x7f0400bf" />
-    <public type="drawable" name="icon_05" id="0x7f0400c0" />
-    <public type="drawable" name="icon_06" id="0x7f0400c1" />
-    <public type="drawable" name="icon_07" id="0x7f0400c2" />
-    <public type="drawable" name="icon_08" id="0x7f0400c3" />
-    <public type="drawable" name="icon_09" id="0x7f0400c4" />
-    <public type="drawable" name="icon_10" id="0x7f0400c5" />
     <public type="drawable" name="icon_11" id="0x7f0400c6" />
     <public type="drawable" name="icon_11_p" id="0x7f0400c7" />
     <public type="drawable" name="icon_12" id="0x7f0400c8" />
@@ -182,6 +174,7 @@
     <public type="id" name="time" id="0x7f050059" />
     <public type="id" name="title" id="0x7f05005a" />
     <public type="id" name="top" id="0x7f05005b" />
+    <public type="id" name="ldvs_test_stub" id="0x7f05005c" />
     <public type="integer" name="cancel_button_image_alpha" id="0x7f060000" />
     <public type="integer" name="status_bar_notification_info_maxnum" id="0x7f060001" />
     <public type="layout" name="activity_fullscreen" id="0x7f070000" />
@@ -202,6 +195,7 @@
     <public type="layout" name="notification_template_part_chronometer" id="0x7f070012" />
     <public type="layout" name="notification_template_part_time" id="0x7f070013" />
     <public type="layout" name="test_layout" id="0x7f070014" />
+    <public type="layout" name="lvds_stub_content" id="0x7f070015" />
     <public type="mipmap" name="ic_launcher" id="0x7f080000" />
     <public type="mipmap" name="ic_launcher_round" id="0x7f080001" />
     <public type="mipmap" name="ic_ntg_launcher" id="0x7f080002" />

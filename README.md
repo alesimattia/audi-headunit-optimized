@@ -35,13 +35,13 @@ normale (Strada C, vedi Note).
 
 ## Struttura della cartella
 - **`NTG_062_original.apk`** — APK originale del vendor (fonte di verità, ri-decodificabile), 10.5 MB.
-- **`NTG_062_audi_it.apk`** — build modificata, zipallineata + firma **v2/v3** (da installare), **1.41 MB**.
+- **`NTG_062_audi_it.apk`** — build modificata, zipallineata + firma **v2/v3** (da installare), **~566 KB**.
 - **`NTG_062_src/`** — sorgenti decompilati:
   - `apktool/` — smali + risorse + manifest. **Qui si modifica e si ricompila.**
   - `java/` — Java leggibile (jadx), solo per consultazione (`java/com/spd/`).
 - **`compile_sign_align.sh` · `zipalign.py` · `uber-apk-signer.jar` · `debug.keystore`** — toolchain build+firma+zipalign.
 - **[`DATI_MOSTRABILI.md`](DATI_MOSTRABILI.md)** — catalogo dei dati CarInfo (`what`) mostrabili al posto del chilometraggio + come sostituirli.
-- **[`mockup.png`](mockup.png)** — mockup grafico dell'interfaccia (schermata principale + slider a **4 pagine**), allineato allo stato attuale dei sorgenti.
+- **[`mockup.png`](mockup.png)** — mockup grafico dell'interfaccia (schermata principale + slider a **pagine**), allineato allo stato attuale dei sorgenti.
 - **`.claude/memory/ntg062-*.md`** — contesto, trappole e dettagli per modifiche future.
 
 ## Layout principale (`activity_fullscreen.xml`)
@@ -56,7 +56,7 @@ con due elementi affiancati, **più** una view di test nascosta sopra a tutto:
 |---|---|---|---|
 | `androidx.viewpager.widget.ViewPager` | `id_view_page` | `0px` + `weight=1` (riempie lo spazio rimanente) | Lo **slider** con le pagine info-auto (`background=#f000` → sfondo nero). Vedi [Pagine dello slider](#pagine-dello-slider). |
 | `com.spd.xhsntg.DvrPreviewSurfaceView` | `id_preview_surface_view` | **`1280px`** fissi, `layout_gravity=right` | Il **riquadro video** del DVR/cattura (`custom:dvr_channel="0"`). Vedi sotto. |
-| `com.spd.view.LvdsTestView` | `ldvs_test_layout` | `wrap_content`, `layout_gravity=center` | Schermata di **test LVDS di fabbrica**, `visibility="gone"`. Compare con **long-press** sul riquadro video (in questa sessione: 3s, vincolo `SETTING_DEVELOPER_MODE` rimosso, vedi `.claude/memory/ntg062-slider.md`). |
+| `ViewStub` → `com.spd.view.LvdsTestView` | `ldvs_test_stub` (`inflatedId` = `ldvs_test_layout`) | `wrap_content`, `layout_gravity=center` | Schermata di **test LVDS di fabbrica**, inflata **pigramente** da un `ViewStub` (layout `lvds_stub_content.xml`) solo al primo utilizzo, così non pesa sull'avvio. Compare con **long-press 3s** sul riquadro video (vincolo `SETTING_DEVELOPER_MODE` rimosso). |
 
 Quindi a schermo: **a sinistra lo slider** (largo quanto avanza), **a destra un riquadro fisso da 1280px
 col video**. La larghezza del riquadro può diventare a tutto schermo a seconda di `SETTING_NTG_FULL_SCREEN`
@@ -66,25 +66,6 @@ Mockup grafico: [`mockup.png`](mockup.png).
 
 ![Mockup interfaccia NTG_062](mockup.png)
 
-```
- Schermata principale — display widescreen (es. 1920x720), split orizzontale
- +--------------------------+-----------------------------------+
- |  ViewPager  id_view_page |  DvrPreviewSurfaceView             |
- |  (slider, weight=1)      |  id_preview_surface_view * 1280px  |
- |  spazio rimanente        |                                    |
- |                          |   +----------------------------+   |
- |     pagina corrente      |   |  VIDEO canale 0            |   |
- |     (es. Chilometraggio) |   |                            |   |
- |   +-------------------+  |   |  marcia avanti/folle ->    |   |
- |   |   123456 km       |  |   |    bypass display LVDS     |   |
- |   |   78 km/h         |  |   |    originale dell'auto     |   |
- |   +-------------------+  |   |                            |   |
- |                          |   |  RETROMARCIA ->            |   |
- |   o * o o                |   |    video retrocamera       |   |
- |  (4 pagine, sfondo nero) |   +----------------------------+   |
- +--------------------------+-----------------------------------+
-     LvdsTestView (gone): long-press 3s sul riquadro -> compare al centro
-```
 > Le proporzioni dipendono dalla risoluzione: il riquadro video e sempre 1280px, lo slider occupa
 > lo spazio restante. A 800x480 lo spazio non basta e il pager viene nascosto (`setVisibility(GONE)`).
 
@@ -107,6 +88,8 @@ decide il servizio + l'hardware.
 - **Ciclo di vita preview**: [FullscreenActivity](NTG_062_src/java/com/spd/xhsntg/FullscreenActivity.java)
   in `onResume`+servizio connesso chiama `checkPreviewShow()` → `setDvrChannel(1, 0)`
   (→ `DvrHelper.startPreviewByChannel(0, surface)`); in `onPause` → `setDvrChannel(0, 0)` (chiude).
+  Il **binding al servizio DVR resta attivo anche con l'app in background** (sganciato solo in `onDestroy`)
+  → al ritorno dalla retromarcia la preview riparte senza un nuovo bind asincrono.
   Comandi noti via `dvrControlCmd`: `1001` stop preview · `1004` playstate · `1007` stop playback · `1010` seek.
 
 > Conseguenza pratica: da questo APK **non** si può cambiare cosa appare in retromarcia (è lato servizio),
@@ -141,7 +124,7 @@ parcheggio non sono leggibili dal CAN-box (vedi [Limiti](#limiti-onestà-tecnica
 |---|---|---|---|
 | **0** | Nera (vuota) | Vista vuota senza sfondo né funzionalità; appare **nera** perché il `ViewPager` ha `background=#f000`. Nessun listener/tocco. | **Classe**: `android.view.View` (`m_test_view_0`). **Risorse**: nessuna. **Servizi/dati**: nessuno. |
 | **1** | Chilometraggio / velocità | Chilometraggio totale e velocità istantanea (unità KM/MILE · KM/H/MPH). | **Classe**: `CarMileageSpeedView` (`m_test_view_1`). **Layout**: `mileage_layout.xml` (ID `mileage`, `speed`). **Dati CarInfo**: mileage `what=100013`, velocità `140062`, unità `10006` (push `updateMileage`/`updateSpeed`). |
-| **2** | Diagnostica (debug) | Overlay che logga a schermo i codici `what` CarInfo + scrive un file in Download. | **Classi**: `DebugLog` (+`$DumpTask`). **Dati**: legge l'intero dizionario `CarInfo$*`. **Trigger**: `FullscreenActivity$1.onPageSelected==2` → `DebugLog.dumpAll()`. **Permesso**: `WRITE_EXTERNAL_STORAGE`. |
+| **2** | Diagnostica (debug) | Overlay che logga a schermo i codici `what` CarInfo + scrive un file in Download. | **Classi**: `DebugLog` (+`$DumpTask`). **Dati**: legge l'intero dizionario `CarInfo$*`. **Trigger**: `FullscreenActivity$1.onPageSelected==2` → `DebugLog.dumpAll()`. **Permesso**: `WRITE_EXTERNAL_STORAGE` (richiesto all'avvio; vedi anche [§ Diagnostica / log su file](#diagnostica--log-su-file)). |
 | **3** | Sistema | Parametri headunit Android letti senza root, refresh ogni 1s (font 19sp, dentro `ScrollView`): **RAM** (usata/libera + barra), **RAM app** (PSS), **Carico CPU** (nascosta se negata), **Freq CPU** (cpu0 MHz), e **una riga per ogni temperatura** (`thermal_zone*`, etichetta dal `type`; fallback "Temp batteria"). | **Classi**: `SystemView` (+`$1`). **Fonti**: `ActivityManager.MemoryInfo`, `Debug.MemoryInfo` (PSS), `/proc/stat`, `/sys/.../cpufreq/scaling_cur_freq`, `/sys/class/thermal/thermal_zone*`, sticky batteria — nessun servizio CarInfo. **Trigger**: `onPageSelected==3` → `SystemView.start()`/`stop()` (timer refresh 1s). |
 
 > Le pagine 2 e 3 entrano in azione per indice nel listener `FullscreenActivity$1.onPageSelected`
@@ -199,15 +182,41 @@ ma è **irraggiungibile** via swipe (pagina nascosta di fabbrica).
    `SETTING_NAVI_APP` (es. Google Maps) — **niente più pannello live** (era alimentato solo da AMap).
 10. **Rimosse 3 stringhe navi inutilizzate** (`distance_metre_after`, `distance_kilometer_after`,
     `enter`) da `values/strings.xml`, `values-it/strings.xml` e `public.xml`.
+11. **Rimozione librerie morte `androidx`/`android.support`** (**514 classi**) — eliminati i moduli mai
+    raggiunti dal codice (`fragment`, `lifecycle`, `loader`, `coordinatorlayout`, `drawerlayout`,
+    `slidingpanelayout`, `swiperefreshlayout`, `cursoradapter`, `documentfile`, `print`, `arch`,
+    `asynclayoutinflater`, `interpolator`, `localbroadcastmanager`, `versionedparcelable`, `legacy` +
+    `android/support/v4`). È il taglio principale che porta l'APK a ~566 KB. Verificato con analisi di
+    raggiungibilità: dell'intera libreria solo **~96 classi** sono usate (`viewpager` + parti di
+    `core`/`customview`/`collection`/`annotation`); il resto è zavorra dell'umbrella `legacy-support-v4`.
+12. **Commutazione retrocamera più reattiva** — la connessione al servizio DVR resta attiva anche con
+    l'app in background (`onStop` non sgancia più il servizio; lo sgancio avviene in `onDestroy`), così
+    al ritorno dalla retromarcia si evita un nuovo bind asincrono. La preview è comunque ferma in
+    background (nessun consumo extra). I costi residui (warm-up camera/encoder) sono nel servizio esterno.
+13. **Avvio più snello** — l'enumerazione delle temperature della pagina Sistema (`/sys/class/thermal/*`)
+    è costruita **pigramente** alla prima apertura di quella pagina, non più in `onCreate`; la schermata di
+    test LVDS è inflata via `ViewStub` solo al primo utilizzo; rimossa una lettura ridondante di
+    `SETTING_NTG_FULL_SCREEN`.
+14. **PNG orfani rimossi** — `icon_03`..`icon_10` (residui di pagine rimosse) + relative voci `public.xml`.
 
-- Build consegnata `NTG_062_audi_it.apk`: dopo le ottimizzazioni di **questa** sessione (vedi sotto) è scesa a **1.41 MB** (da 10.5 MB originali), firma v2/v3 con la chiave del repo.
+- Build `NTG_062_audi_it.apk`: **~566 KB** (da 10.5 MB dell'APK originale), zipallineata + firma v2/v3 con la chiave del repo.
+
+### Diagnostica / log su file
+L'app rispecchia i propri log (oltre che su logcat) nel file **`Download/NTG_062_log.log`** — distinto
+dal dump CarInfo `ntg_carinfo_log.txt`, **sovrascritto a ogni avvio**. La scrittura passa per la classe
+`com.spd.xhsntg.NtgLog` su un **thread di background** (non rallenta l'app; protetta da `try/catch` →
+non può farla crashare). Richiede il permesso `WRITE_EXTERNAL_STORAGE`, chiesto **all'avvio** (dialog
+una-tantum al primo lancio); finché non è concesso le righe restano in buffer e vengono scritte appena
+disponibile.
 
 > **Aggiornamento sessione 2026-06-25** (oltre ai punti sopra): (a) **debloat sicuro** — rimossi `bg.png` (1.5 MB), `car.png` (orfana) e l'**isola media morta** `androidx/media`+`android/support/v4/media` (601 classi); (b) **pagina indice 3 ricostruita** — rimossa `CarKeyView` (tasti non funzionanti), aggiunta `CarSensorView` (sensori parcheggio + marcia, barre grafiche, dati da `CarInfo.ReverseAndAVM`); (c) **build+firma su Windows** validate (apktool 3.0.2, firma v2/v3 via JDK 12 con la chiave del repo).
 >
 > **Aggiornamento sessione 2026-06-29**: rimosse due pagine dello slider (`getCount()` 6→4). (a) **Porte/finestrini** (`CarDoorWindowView`): pagina + layout + 15 drawable + callback porte (`onUpdateDoors`, `what=50001`) e registrazione `CarInfo$Doors` eliminati. (b) **Sensori/marcia** (`CarSensorView`, che a giugno 25 aveva sostituito `CarKeyView`): rimossa perché sull'**Audi A5 il CAN-box non popola** marcia (`GEAR=140080`) né distanze sensori parcheggio (`RADAR_DISTANCE=140016/140017`) — restavano a 0. `CarInfoManager` non toccato (la registrazione `ReverseAndAVM` serve ancora alla velocità `140062`). Entrambe **staged**, da ricompilare.
 
 ### Non fatto / scartato
-- A2 (rimozione UI debug LVDS) e B1 (anticipo bind DVR): impatto trascurabile.
+- **Trimming chirurgico dei moduli `androidx` parziali** (`core`, `viewpager`, `customview`,
+  `collection`, `annotation`): al loro interno solo alcune classi sono morte, ma rimuoverle una a una è
+  ad alto rischio / basso ritorno → lasciati interi.
 - **Fase 2 — qualità/FPS DVR**: in attesa dell'APK del servizio esterno `com.spd.dvr` (la cattura
   video la fa quel servizio; quest'app è solo client AIDL). Vedi `.claude/memory/ntg062-dvr-tuning.md`.
 
@@ -216,12 +225,21 @@ ma è **irraggiungibile** via swipe (pagina nascosta di fabbrica).
 Mappa dei componenti rimovibili, ordinata per rapporto guadagno/rischio.
 
 ### Quadro generale
-Su **1639 classi di libreria** presenti nello smali, solo **96 sono raggiungibili** dal codice dell'app. L'app usa di fatto **solo `androidx.viewpager.widget`** (lo slider), che trascina un sottoinsieme minimo di `core`/`customview`/`collection`/`annotation`. Tutto il resto è zavorra importata dall'umbrella `legacy-support-v4`.
+Dell'intera libreria solo **~96 classi sono raggiungibili** dal codice dell'app: di fatto **solo
+`androidx.viewpager.widget`** (lo slider) + un sottoinsieme minimo di `core`/`customview`/`collection`/`annotation`.
+Tutto il resto era zavorra importata dall'umbrella `legacy-support-v4`: i moduli **interamente** non
+raggiungibili sono **già stati rimossi** (vedi Tier 1). Restano solo alcune classi morte *dentro* i
+moduli parziali, lasciate intatte per non rischiare (trimming chirurgico, vedi nota sotto).
 
-### Tier 1 — Codice libreria morto · ~11 MB smali, rischio zero
-> ✅ **Parzialmente FATTO (2026-06-25)**: rimossi `androidx/media` (434) + `android/support/v4/media` (167) = **601 classi** (isola morta, closure verificata). Gli altri moduli sotto restano da valutare (attenzione alle dipendenze transitive di `viewpager`).
+### Tier 1 — Codice libreria morto · rischio zero
+> ✅ **RIMOSSO**: tutti i moduli di libreria interamente non raggiungibili sono stati eliminati —
+> l'isola media `androidx/media`+`android/support/v4/media` (**601 classi**) e gli altri **514** in
+> moduli interi (`fragment`, `lifecycle`, `loader`, `coordinatorlayout`, `drawerlayout`,
+> `swiperefreshlayout`, ecc. + `android/support/v4`). La selezione è guidata da un'**analisi di
+> raggiungibilità** (chiusura dei riferimenti a partire dal codice dell'app), non dall'assenza di
+> import. La tabella sotto elenca i moduli rimossi.
 
-Moduli interi **0 classi raggiungibili / N totali** → cancellabili in blocco (cartelle):
+Moduli interi **0 classi raggiungibili / N totali** → rimossi in blocco (cartelle):
 
 | Modulo | classi | note |
 |---|---|---|
@@ -233,13 +251,16 @@ Moduli interi **0 classi raggiungibili / N totali** → cancellabili in blocco (
 | `androidx/loader` | 35 | — |
 | `swiperefreshlayout`, `drawerlayout`, `slidingpanelayout`, `coordinatorlayout`, `cursoradapter`, `documentfile`, `print`, `arch`, `asynclayoutinflater`, `interpolator`, `localbroadcastmanager`, `versionedparcelable` | ~290 | tutti 0-raggiungibili |
 
-Questo è il **vero grande taglio**: ~1543 classi morte → il `classes.dex` (oggi 2.2 MB) si riduce drasticamente.
+Questo è il **taglio principale**: il `classes.dex` si riduce drasticamente e l'APK scende a ~566 KB.
 
 > ⚠️ I moduli **parziali** (`core`, `viewpager`, `customview`, `collection`, `annotation`) **NON** vanno cancellati interi: solo alcune classi al loro interno sono morte, ma rimuoverle una a una è chirurgico e a basso rendimento → li lascerei intatti.
 
 ### Tier 2 — Componenti app nascosti/diagnostici
-- **`LvdsTestView`** (5 file: classe + 4 inner) — è una **schermata di test LVDS di fabbrica**, nel layout è `android:visibility="gone"` e non è referenziata da nessun'altra classe. Rimozione pulita: 5 smali + 1 riga in [activity_fullscreen.xml](NTG_062_src/apktool/res/layout/activity_fullscreen.xml#L8) + l'`@id`. Era l'opzione "A2" deprioritizzata in memoria.
-- **`DebugLog` + `DebugLog$DumpTask`** — logging di debug, agganciato a `MyViewPageAdapter` e `FullscreenActivity$1`. Rimovibile ma richiede edit ai due chiamanti; tienilo solo se ti serve per il logcat sulla testata (TODO aperto).
+- **`LvdsTestView`** — schermata di **test LVDS di fabbrica**, raggiungibile col **long-press 3s** sul
+  riquadro video. **Mantenuta**, ma inflata **pigramente** via `ViewStub` (layout `lvds_stub_content.xml`)
+  così non pesa sull'avvio.
+- **`DebugLog` + `DebugLog$DumpTask`** — pagina **diagnostica** (indice 2): dumpa i codici `what` CarInfo
+  a schermo e su file in Download. **Mantenuta**.
 
 ### Tier 3 — Feature rimovibili solo se l'hardware non c'è
 - **Stack DVR/dashcam** (~400 KB): `com/spd/dvr/*` + `DvrHelper*` + `DvrPreviewSurfaceView`, agganciato a `FullscreenActivity`. Rimovibile **solo se non hai una dashcam** collegata.
@@ -251,7 +272,9 @@ Questo è il **vero grande taglio**: ~1543 classi morte → il `classes.dex` (og
 
 ---
 
-**Raccomandazione**: il taglio principale del **Tier 1** (isola media, 601 classi) e il **Tier 4** (`bg.png`) sono **già fatti** in questa sessione → APK **10.5 MB → 1.41 MB**. Resta opzionale il **Tier 2 LvdsTestView**; il **Tier 3** dipende dall'hardware (dashcam/retrocamera).
+**Stato**: i tagli del **Tier 1** (librerie morte, ~1115 classi tra isola media e moduli interi) e del
+**Tier 4** (`bg.png`) sono **fatti** → APK **10.5 MB → ~566 KB**. Il **Tier 2** (`LvdsTestView`) è
+mantenuto ma reso pigro (`ViewStub`); il **Tier 3** dipende dall'hardware (dashcam/retrocamera) → mantenuto.
 
 ## Ricompilare → firmare → installare
 ```sh

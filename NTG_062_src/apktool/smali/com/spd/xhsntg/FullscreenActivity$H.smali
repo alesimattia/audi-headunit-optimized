@@ -76,12 +76,32 @@
     if-eqz v0, :cond_0
 
     .line 472
+    # Modifica Mattia Alesi: LvdsTestView ora inflata pigramente da ViewStub (id ldvs_test_stub=0x7f05005c).
+    # Se gia' inflata, findViewById(ldvs_test_layout=0x7f05003f) la trova; altrimenti si infla lo stub
+    # (inflatedId reimposta l'id a ldvs_test_layout). In entrambi i casi si rende visibile.
     const v1, 0x7f05003f
 
     invoke-virtual {v0, v1}, Lcom/spd/xhsntg/FullscreenActivity;->findViewById(I)Landroid/view/View;
 
     move-result-object v1
 
+    if-nez v1, :cond_show
+
+    const v2, 0x7f05005c
+
+    invoke-virtual {v0, v2}, Lcom/spd/xhsntg/FullscreenActivity;->findViewById(I)Landroid/view/View;
+
+    move-result-object v2
+
+    if-eqz v2, :cond_0
+
+    check-cast v2, Landroid/view/ViewStub;
+
+    invoke-virtual {v2}, Landroid/view/ViewStub;->inflate()Landroid/view/View;
+
+    move-result-object v1
+
+    :cond_show
     const/4 v2, 0x0
 
     invoke-virtual {v1, v2}, Landroid/view/View;->setVisibility(I)V

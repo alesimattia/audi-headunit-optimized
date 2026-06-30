@@ -50,7 +50,7 @@
 
     const-string v1, "onServiceConnected:"
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 162
     iget-object v0, p0, Lcom/spd/xhsntg/DvrHelper$1;->this$0:Lcom/spd/xhsntg/DvrHelper;
@@ -92,7 +92,7 @@
 
     move-result-object v2
 
-    invoke-static {v1, v2}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v1, v2}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 166
     :try_start_0
@@ -125,7 +125,7 @@
 
     const-string v2, "onServiceConnected: registerCallback"
 
-    invoke-static {v1, v2}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v1, v2}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 168
     iget-object v1, p0, Lcom/spd/xhsntg/DvrHelper$1;->this$0:Lcom/spd/xhsntg/DvrHelper;
@@ -199,7 +199,7 @@
 
     move-result-object v3
 
-    invoke-static {v2, v3}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v2, v3}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 174
     .end local v1    # "e":Landroid/os/RemoteException;
@@ -220,7 +220,7 @@
 
     const-string v1, "onServiceDisconnected"
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 178
     iget-object v0, p0, Lcom/spd/xhsntg/DvrHelper$1;->this$0:Lcom/spd/xhsntg/DvrHelper;

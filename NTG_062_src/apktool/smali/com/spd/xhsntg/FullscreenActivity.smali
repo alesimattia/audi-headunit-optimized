@@ -67,6 +67,9 @@
 
 .field private m_view_page_adapter:Lcom/spd/view/MyViewPageAdapter;
 
+# Modifica Mattia Alesi: riferimento al ViewPager per la rete di sicurezza della pagina Sistema in onResume
+.field private m_view_pager:Landroidx/viewpager/widget/ViewPager;
+
 
 # direct methods
 .method public constructor <init>()V
@@ -143,7 +146,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 378
     iget v0, p0, Lcom/spd/xhsntg/FullscreenActivity;->mMediaSource:I
@@ -166,21 +169,9 @@
 .method private checkPreviewMode()V
     .locals 4
 
-    .line 212
-    invoke-virtual {p0}, Lcom/spd/xhsntg/FullscreenActivity;->getContentResolver()Landroid/content/ContentResolver;
-
-    move-result-object v0
-
-    const-string v1, "SETTING_NTG_FULL_SCREEN"
-
-    const/4 v2, 0x0
-
-    invoke-static {v0, v1, v2}, Landroid/provider/Settings$System;->getInt(Landroid/content/ContentResolver;Ljava/lang/String;I)I
-
-    move-result v0
-
+    # Modifica Mattia Alesi: rimossa la lettura ridondante di SETTING_NTG_FULL_SCREEN.
+    # Serviva solo al log: il branching sotto usa il campo m_show_preview_mode gia' letto in onCreate.
     .line 213
-    .local v0, "fullScreen":I
     const-string v1, "FullscreenActivity"
 
     new-instance v2, Ljava/lang/StringBuilder;
@@ -195,17 +186,11 @@
 
     invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
 
-    const-string v3, ",fullScreen:"
-
-    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
-
     invoke-virtual {v2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
 
     move-result-object v2
 
-    invoke-static {v1, v2}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v1, v2}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 214
     iget v1, p0, Lcom/spd/xhsntg/FullscreenActivity;->m_show_preview_mode:I
@@ -303,7 +288,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 302
     iget-boolean v0, p0, Lcom/spd/xhsntg/FullscreenActivity;->m_resume_flag:Z
@@ -502,7 +487,7 @@
 
     move-result-object v2
 
-    invoke-static {v1, v2}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v1, v2}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 255
     return v0
@@ -556,7 +541,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 394
     iget-boolean v0, p0, Lcom/spd/xhsntg/FullscreenActivity;->mIsAudioFocus:Z
@@ -611,7 +596,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 383
     iget-boolean v0, p0, Lcom/spd/xhsntg/FullscreenActivity;->mIsAudioFocus:Z
@@ -684,7 +669,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 403
     iget-object v0, p0, Lcom/spd/xhsntg/FullscreenActivity;->mCarInfoManager:Lcom/spd/xhsntg/CarInfoManager;
@@ -782,7 +767,7 @@
 
     const-string v1, "onClick"
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 117
     invoke-direct {p0}, Lcom/spd/xhsntg/FullscreenActivity;->supportScreenTouch()Z
@@ -817,7 +802,17 @@
     .line 56
     invoke-super {p0, p1}, Landroid/app/Activity;->onCreate(Landroid/os/Bundle;)V
 
-    # richiesta permesso scrittura storage (per il log diagnostico in Download)
+    # Modifica Mattia Alesi (Voce 4): inizializza il logger su file il prima possibile, cosi'
+    # cattura anche i log dell'avvio (NtgLog scrive su Download/NTG_062_log.log da thread bg)
+    invoke-virtual {p0}, Lcom/spd/xhsntg/FullscreenActivity;->getApplicationContext()Landroid/content/Context;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lcom/spd/xhsntg/NtgLog;->init(Landroid/content/Context;)V
+
+    # Modifica Mattia Alesi (Voce 4): richiesta WRITE_EXTERNAL_STORAGE ripristinata all'avvio (supera
+    # la mod S2): serve al logging su file fin dal lancio + al dump diagnostico. Dialog one-time al
+    # primo avvio; concesso, NtgLog.flush() (in onRequestPermissionsResult) apre subito il file.
     const/4 v0, 0x1
 
     new-array v0, v0, [Ljava/lang/String;
@@ -984,6 +979,9 @@
 
     .line 85
     .local v2, "c_view_pager":Landroidx/viewpager/widget/ViewPager;
+    # Modifica Mattia Alesi: salva il ViewPager per la rete di sicurezza pagina Sistema (onResume)
+    iput-object v2, p0, Lcom/spd/xhsntg/FullscreenActivity;->m_view_pager:Landroidx/viewpager/widget/ViewPager;
+
     iget-object v4, p0, Lcom/spd/xhsntg/FullscreenActivity;->m_view_page_adapter:Lcom/spd/view/MyViewPageAdapter;
 
     invoke-virtual {v2, v4}, Landroidx/viewpager/widget/ViewPager;->setAdapter(Landroidx/viewpager/widget/PagerAdapter;)V
@@ -1026,7 +1024,7 @@
 
     const-string v1, "onDestroy"
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 97
     iget-object v0, p0, Lcom/spd/xhsntg/FullscreenActivity;->mHandler:Landroid/os/Handler;
@@ -1065,6 +1063,16 @@
     .line 106
     :cond_1
     invoke-static {p0}, Lcom/spd/xhsntg/ReverseBroadcast;->removeCallback(Lcom/spd/xhsntg/ReverseBroadcast$Callback;)V
+
+    # Modifica Mattia Alesi: rilascia il bind DVR alla distruzione reale dell'activity.
+    # Il bind viene mantenuto vivo durante lo stop in background (vedi onStop); qui lo si chiude
+    # per evitare un bind permanente/leak quando l'activity viene davvero distrutta (es. retro STOP
+    # con needExit → finish()).
+    invoke-static {}, Lcom/spd/xhsntg/DvrHelper;->get()Lcom/spd/xhsntg/DvrHelper;
+
+    move-result-object v0
+
+    invoke-virtual {v0, p0}, Lcom/spd/xhsntg/DvrHelper;->unregsiterCallBack(Lcom/spd/xhsntg/DvrHelper$DvrHelperCallBack;)Z
 
     .line 107
     return-void
@@ -1112,7 +1120,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 262
     return-void
@@ -1126,7 +1134,7 @@
 
     const-string v1, "onPause"
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 275
     const/4 v0, 0x0
@@ -1176,7 +1184,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 232
     const/4 v0, 0x1
@@ -1231,7 +1239,53 @@
 
     invoke-virtual {v0, v1}, Lcom/spd/system/service/SpdManager;->enterSource(Ljava/lang/String;)V
 
+    # Modifica Mattia Alesi: rete di sicurezza pagina Sistema. Se l'app riapre direttamente
+    # sull'indice 3 e onPageSelected non scatta, avvia comunque il refresh (che costruisce anche
+    # le righe temperatura via ensureTempRows). start() e' idempotente.
+    iget-object v0, p0, Lcom/spd/xhsntg/FullscreenActivity;->m_view_pager:Landroidx/viewpager/widget/ViewPager;
+
+    if-eqz v0, :cond_sysview
+
+    invoke-virtual {v0}, Landroidx/viewpager/widget/ViewPager;->getCurrentItem()I
+
+    move-result v0
+
+    const/4 v1, 0x3
+
+    if-ne v0, v1, :cond_sysview
+
+    invoke-static {}, Lcom/spd/xhsntg/SystemView;->start()V
+
+    :cond_sysview
     .line 247
+    return-void
+.end method
+
+.method public onRequestPermissionsResult(I[Ljava/lang/String;[I)V
+    .locals 1
+    .param p1, "requestCode"    # I
+    .param p2, "permissions"    # [Ljava/lang/String;
+    .param p3, "grantResults"    # [I
+
+    invoke-super {p0, p1, p2, p3}, Landroid/app/Activity;->onRequestPermissionsResult(I[Ljava/lang/String;[I)V
+
+    # Modifica Mattia Alesi (Voce 4): se WRITE_EXTERNAL_STORAGE e' stato concesso, forza l'apertura
+    # del file di log e lo svuotamento del buffer (NtgLog.flush)
+    if-eqz p3, :cond_done
+
+    array-length v0, p3
+
+    if-eqz v0, :cond_done
+
+    const/4 v0, 0x0
+
+    aget v0, p3, v0
+
+    if-nez v0, :cond_done
+
+    invoke-static {}, Lcom/spd/xhsntg/NtgLog;->flush()V
+
+    :cond_done
     return-void
 .end method
 
@@ -1263,7 +1317,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 450
     if-eqz p2, :cond_0
@@ -1314,7 +1368,7 @@
 
     const-string v1, "onStart"
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 286
     invoke-static {}, Lcom/spd/xhsntg/DvrHelper;->get()Lcom/spd/xhsntg/DvrHelper;
@@ -1340,24 +1394,17 @@
 
     const-string v1, "onStop"
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 293
     iget-object v0, p0, Lcom/spd/xhsntg/FullscreenActivity;->m_view_page_adapter:Lcom/spd/view/MyViewPageAdapter;
 
     invoke-virtual {v0}, Lcom/spd/view/MyViewPageAdapter;->uninitManager()V
 
-    .line 294
-    invoke-static {}, Lcom/spd/xhsntg/DvrHelper;->get()Lcom/spd/xhsntg/DvrHelper;
-
-    move-result-object v0
-
-    invoke-virtual {v0, p0}, Lcom/spd/xhsntg/DvrHelper;->unregsiterCallBack(Lcom/spd/xhsntg/DvrHelper$DvrHelperCallBack;)Z
-
-    .line 295
-    const/4 v0, 0x0
-
-    iput-boolean v0, p0, Lcom/spd/xhsntg/FullscreenActivity;->m_service_connect_flag:Z
+    # Modifica Mattia Alesi: bind DVR mantenuto vivo in background per commutazione retro piu' rapida.
+    # NON si chiama piu' unregsiterCallBack qui ne' si azzera m_service_connect_flag: l'unregister e'
+    # spostato in onDestroy. La preview e' comunque gia' fermata da onPause (setDvrChannel(0,0)) →
+    # nessun decode video in background; il bind resta solo un riferimento Binder inattivo.
 
     .line 296
     invoke-super {p0}, Landroid/app/Activity;->onStop()V
@@ -1669,7 +1716,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 361
     iput p1, p0, Lcom/spd/xhsntg/FullscreenActivity;->mMediaSource:I

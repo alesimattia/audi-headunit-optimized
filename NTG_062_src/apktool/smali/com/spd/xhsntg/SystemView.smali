@@ -34,6 +34,11 @@
 
 .field static sTempPaths:Ljava/util/ArrayList;
 
+# Modifica Mattia Alesi: riferimento alla tabella (per costruire le righe temp pigramente) + flag one-shot
+.field static sTable:Landroid/widget/TableLayout;
+
+.field static sTempRowsBuilt:Z
+
 .field static sHandler:Landroid/os/Handler;
 
 .field static sTicker:Ljava/lang/Runnable;
@@ -154,8 +159,9 @@
 
     sput-object v2, Lcom/spd/xhsntg/SystemView;->sFreqText:Landroid/widget/TextView;
 
-    # --- righe Temperature (una per thermal_zone leggibile) ---
-    invoke-static {v0, p0}, Lcom/spd/xhsntg/SystemView;->buildTempRows(Landroid/widget/TableLayout;Landroid/content/Context;)V
+    # Modifica Mattia Alesi: righe temperatura costruite PIGRAMENTE (ensureTempRows da start()),
+    # NON piu' qui: evita l'I/O filesystem /sys/class/thermal sul cold-start. Salvo la tabella.
+    sput-object v0, Lcom/spd/xhsntg/SystemView;->sTable:Landroid/widget/TableLayout;
 
     # handler sul main looper + ticker
     new-instance v1, Landroid/os/Handler;
@@ -404,6 +410,42 @@
     return-object v0
 .end method
 
+# Modifica Mattia Alesi: costruisce UNA SOLA VOLTA le righe temperatura (I/O /sys/class/thermal)
+# quando la pagina Sistema viene effettivamente usata. Spostato qui da createView per non pesare
+# sul cold-start. Idempotente (flag sTempRowsBuilt); no-op se tabella/contesto non pronti.
+.method private static ensureTempRows()V
+    .locals 2
+
+    sget-boolean v0, Lcom/spd/xhsntg/SystemView;->sTempRowsBuilt:Z
+
+    if-eqz v0, :cond_build
+
+    return-void
+
+    :cond_build
+    sget-object v0, Lcom/spd/xhsntg/SystemView;->sTable:Landroid/widget/TableLayout;
+
+    if-nez v0, :cond_table
+
+    return-void
+
+    :cond_table
+    sget-object v1, Lcom/spd/xhsntg/SystemView;->sCtx:Landroid/content/Context;
+
+    if-nez v1, :cond_ctx
+
+    return-void
+
+    :cond_ctx
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/SystemView;->buildTempRows(Landroid/widget/TableLayout;Landroid/content/Context;)V
+
+    const/4 v0, 0x1
+
+    sput-boolean v0, Lcom/spd/xhsntg/SystemView;->sTempRowsBuilt:Z
+
+    return-void
+.end method
+
 # Avvia il refresh periodico (idempotente). Chiamato da FullscreenActivity$1.
 .method public static start()V
     .locals 2
@@ -422,6 +464,9 @@
     return-void
 
     :cond_have
+    # Modifica Mattia Alesi: costruisce le righe temperatura alla prima apertura della pagina
+    invoke-static {}, Lcom/spd/xhsntg/SystemView;->ensureTempRows()V
+
     const/4 v0, 0x1
 
     sput-boolean v0, Lcom/spd/xhsntg/SystemView;->sRunning:Z

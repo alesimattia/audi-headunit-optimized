@@ -121,7 +121,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 28
     return-void
@@ -186,7 +186,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 107
     iget v0, p0, Lcom/spd/xhsntg/DvrPreviewSurfaceView;->m_dvr_video_mode:I
@@ -217,7 +217,7 @@
 
     const-string v1, "checkDvrChannel  setPlaybackSurface ==0=="
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 116
     invoke-static {}, Lcom/spd/xhsntg/DvrHelper;->get()Lcom/spd/xhsntg/DvrHelper;
@@ -255,7 +255,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 121
     invoke-static {}, Lcom/spd/xhsntg/DvrHelper;->get()Lcom/spd/xhsntg/DvrHelper;
@@ -334,7 +334,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 143
     invoke-static {}, Lcom/spd/xhsntg/DvrHelper;->get()Lcom/spd/xhsntg/DvrHelper;
@@ -384,7 +384,7 @@
 
     move-result-object v2
 
-    invoke-static {v0, v2}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v2}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 154
     invoke-static {}, Lcom/spd/xhsntg/DvrHelper;->get()Lcom/spd/xhsntg/DvrHelper;
@@ -433,7 +433,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 36
     iget v0, p0, Lcom/spd/xhsntg/DvrPreviewSurfaceView;->m_dvr_video_mode:I
@@ -479,7 +479,7 @@
 
     const-string v1, "setDvrChannel: dvrControlCmd ==0=="
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 48
     invoke-static {}, Lcom/spd/xhsntg/DvrHelper;->get()Lcom/spd/xhsntg/DvrHelper;
@@ -518,7 +518,7 @@
 
     const-string v1, "setDvrChannel: dvrControlCmd ==1=="
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 61
     invoke-static {}, Lcom/spd/xhsntg/DvrHelper;->get()Lcom/spd/xhsntg/DvrHelper;
@@ -586,7 +586,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 92
     iput-object p1, p0, Lcom/spd/xhsntg/DvrPreviewSurfaceView;->m_surface_holder:Landroid/view/SurfaceHolder;
@@ -609,7 +609,7 @@
 
     const-string v1, "surfaceCreated:"
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 87
     return-void
@@ -640,7 +640,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 99
     const/4 v0, 0x0

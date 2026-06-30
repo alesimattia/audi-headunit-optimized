@@ -59,6 +59,7 @@
     <id name="knob_right_l" />
     <id name="knob_right_r" />
     <id name="ldvs_test_layout" />
+    <id name="ldvs_test_stub" />
     <id name="left" />
     <id name="left_key" />
     <id name="line1" />

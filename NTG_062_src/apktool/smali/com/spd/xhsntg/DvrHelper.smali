@@ -346,7 +346,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 110
     iget-object v0, p0, Lcom/spd/xhsntg/DvrHelper;->m_dvr_ui_call_back:Ljava/util/List;
@@ -362,7 +362,7 @@
 
     const-string v1, "bindService: ==0=="
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 113
     iget-boolean v0, p0, Lcom/spd/xhsntg/DvrHelper;->m_bind_flag:Z
@@ -374,7 +374,7 @@
 
     const-string v1, "bindService: ==1=="
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 116
     iget-boolean v0, p0, Lcom/spd/xhsntg/DvrHelper;->m_bind_request_flag:Z
@@ -386,7 +386,7 @@
 
     const-string v1, "bindService: ==2=="
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 119
     const/4 v0, 0x1
@@ -411,7 +411,7 @@
 
     const-string v3, "bindService: "
 
-    invoke-static {v2, v3}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v2, v3}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 123
     iget-object v2, p0, Lcom/spd/xhsntg/DvrHelper;->m_context:Landroid/content/Context;
@@ -470,7 +470,7 @@
 
     const-string v1, "checkListChanged: "
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 292
     invoke-direct {p0, p1}, Lcom/spd/xhsntg/DvrHelper;->getDvrListRegister(I)Lcom/spd/xhsntg/DvrHelper$DvrListCallBackRegister;
@@ -691,7 +691,7 @@
 
     const-string v1, "unbindService:"
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 141
     iget-boolean v0, p0, Lcom/spd/xhsntg/DvrHelper;->m_bind_flag:Z
@@ -765,7 +765,7 @@
 
     const-string v1, "dvrControlCmd: =0="
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 449
     iget-object v0, p0, Lcom/spd/xhsntg/DvrHelper;->mDvrService:Lcom/spd/dvr/aidl/IDVRService;
@@ -802,7 +802,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 453
     iget-object v0, p0, Lcom/spd/xhsntg/DvrHelper;->mDvrService:Lcom/spd/dvr/aidl/IDVRService;
@@ -866,7 +866,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 93
     iget-boolean v0, p0, Lcom/spd/xhsntg/DvrHelper;->m_bind_flag:Z
@@ -883,7 +883,7 @@
 
     const-string v1, "enterSource: real"
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 97
     iget-object v0, p0, Lcom/spd/xhsntg/DvrHelper;->mDvrService:Lcom/spd/dvr/aidl/IDVRService;
@@ -929,7 +929,7 @@
 
     const-string v1, "getDvtState: "
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 488
     const/4 v0, -0x1
@@ -1229,7 +1229,7 @@
 
     const-string v1, "getSettingInfo: "
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 502
     const/4 v0, 0x0
@@ -1279,7 +1279,7 @@
 
     const-string v1, "initDvrHelper: "
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 50
     iget-boolean v0, p0, Lcom/spd/xhsntg/DvrHelper;->m_temp_service_init_flag:Z
@@ -1347,7 +1347,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 528
     const/4 v0, 0x0
@@ -1382,7 +1382,7 @@
 
     move-result-object v5
 
-    invoke-static {v4, v5}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v4, v5}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 530
     .end local v3    # "c_test":I
@@ -1543,7 +1543,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 304
     iget-boolean v0, p0, Lcom/spd/xhsntg/DvrHelper;->m_demo_mode:Z
@@ -1634,7 +1634,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 64
     const/4 v0, 0x0
@@ -1715,7 +1715,7 @@
 
     const-string v1, "setPlaybackSurface: "
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 475
     iget-boolean v0, p0, Lcom/spd/xhsntg/DvrHelper;->m_demo_mode:Z
@@ -1732,7 +1732,7 @@
 
     const-string v1, "Helper setPlaybackSurface ==0=="
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 479
     iget-object v0, p0, Lcom/spd/xhsntg/DvrHelper;->mDvrService:Lcom/spd/dvr/aidl/IDVRService;
@@ -1768,7 +1768,7 @@
 
     const-string v1, "setSettingInfo: "
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 516
     iget-object v0, p0, Lcom/spd/xhsntg/DvrHelper;->mDvrService:Lcom/spd/dvr/aidl/IDVRService;
@@ -1825,7 +1825,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 462
     iget-boolean v0, p0, Lcom/spd/xhsntg/DvrHelper;->m_demo_mode:Z
@@ -1860,7 +1860,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 466
     iget-object v0, p0, Lcom/spd/xhsntg/DvrHelper;->mDvrService:Lcom/spd/dvr/aidl/IDVRService;
@@ -1920,7 +1920,7 @@
 
     move-result-object v1
 
-    invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
     .line 77
     const/4 v0, 0x0

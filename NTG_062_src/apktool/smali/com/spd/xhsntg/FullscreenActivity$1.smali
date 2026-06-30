@@ -63,6 +63,8 @@
 
     if-ne p1, v0, :cond_dump
 
+    # Modifica Mattia Alesi (Voce 4): permesso storage ora richiesto all'avvio (vedi onCreate),
+    # niente piu' richiesta pigra qui (S2b superata)
     invoke-static {}, Lcom/spd/xhsntg/DebugLog;->dumpAll()V
 
     :cond_dump

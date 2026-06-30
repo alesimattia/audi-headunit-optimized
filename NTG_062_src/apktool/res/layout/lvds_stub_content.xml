@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Contenuto inflato pigramente dal ViewStub in activity_fullscreen.xml (id_view: ldvs_test_stub).
+     L'id reale dopo l'inflate e' ldvs_test_layout (impostato da android:inflatedId sullo ViewStub). -->
+<com.spd.view.LvdsTestView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/ldvs_test_layout"
+    android:visibility="gone"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
