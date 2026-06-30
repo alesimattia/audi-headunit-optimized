@@ -1,2 +1,5 @@
 # Artefatti di build apktool (rigenerabili con compilazione)
 NTG_062_src/apktool/build/
+
+# File macOS in qualsiasi posizione
+.DS_Store
