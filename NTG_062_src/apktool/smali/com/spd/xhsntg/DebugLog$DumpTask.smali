@@ -228,7 +228,7 @@
 
     invoke-virtual {v1, v4}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
 
-    const-string v2, "\ncriterio: tengo ogni coppia what+arg con almeno un valore PRESENTE (!= sentinella), inclusi gli zeri reali. arg scandito 0..5 (sedili/ruote/porte/zone/finestrini/camere). righe con arg=0 = valore globale.\n\n"
+    const-string v2, "\ncriterio: tengo what+arg solo con valore PLAUSIBILE = int diverso da 0 (e non semplice eco dell'indice arg), float diverso da 0.0, stringa non vuota e diversa da NA e da 0, oppure Bundle non vuoto (leggine il contenuto). Zeri e sentinelle scartati: qui interessa SE il parametro e leggibile dal box, non il valore live. arg scandito 0..5, righe con arg=0 = valore globale.\n\n"
 
     invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 

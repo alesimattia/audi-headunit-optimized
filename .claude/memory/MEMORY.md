@@ -4,6 +4,7 @@
 - [NTG_062 overview](ntg062-overview.md) — cos'è l'app, app di sistema + firma Zhantang, perché la ri-firma è vincolata (Strada A/B/C)
 - [Architettura slider](ntg062-slider.md) — ViewPager/MyViewPageAdapter, mappa delle 5 pagine (porte rimossa 2026-06-29), flusso dati CarInfo, DVR
 - [Dati CarInfo](ntg062-carinfo-data.md) — dizionario what codes, push/pull AIDL, classi registrate, come sostituire il dato del mileage
+- [Overlay diagnostico dump CarInfo](ntg062-debug-overlay.md) — pagina debug custom (DebugLog/DumpTask smali) che dumpa i what leggibili in Download; criterio "valore plausibile" (P5, 2026-07-08) per mappare cosa il box espone senza floodare il log
 - [Sistema immagini stato-porte](ntg062-cardoor-images.md) — STORICO (pagina porte rimossa 2026-06-29): trappole audi-vs-benz, getIdentifier, tipo default, src statico
 - [Schermata navigazione](ntg062-navigation.md) — widget info da broadcast AMap + avvio app via SETTING_NAVI_APP
 - [Tuning DVR](ntg062-dvr-tuning.md) — superficie AIDL/SettingInfo per migliorare qualità/FPS/apertura (Fase 2)

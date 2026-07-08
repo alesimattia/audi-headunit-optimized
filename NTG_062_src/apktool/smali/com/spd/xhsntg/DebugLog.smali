@@ -152,7 +152,9 @@
 
     :goto_bdone
 
-    # --- keepInt = (iv != MIN_VALUE)  [P1: rimosso filtro 'zero', ridondante con la sentinella] ---
+    # --- keepInt: valore plausibile = presente (!= MIN_VALUE) e diverso da 0.
+    #     Filtro anti-echo: con arg>0 scarto iv==arg, perche alcuni what riflettono solo
+    #     l'indice arg passato (es. 190000-190003) e non sono dati reali del box. ---
     const/4 v5, 0x0
 
 
@@ -160,11 +162,18 @@
 
     if-eq v1, v6, :cond_int
 
+    if-eqz v1, :cond_int
+
+    if-eqz v2, :cond_int_keep
+
+    if-eq v1, v2, :cond_int
+
+    :cond_int_keep
     const/4 v5, 0x1
 
     :cond_int
 
-    # --- keepFloat = !isNaN(fv)  [P1: rimosso filtro 'zero', ridondante con la sentinella NaN] ---
+    # --- keepFloat: valore plausibile = presente (non NaN) e diverso da 0.0 ---
     const/4 v6, 0x0
 
 
@@ -174,11 +183,17 @@
 
     if-nez v7, :cond_float
 
+    const/4 v7, 0x0
+
+    cmpl-float v7, v3, v7
+
+    if-eqz v7, :cond_float
+
     const/4 v6, 0x1
 
     :cond_float
 
-    # --- keepStr = sv!=null && !sv.equals("NA") && len>0  [P1: rimosso filtro 'sv=="0"'] ---
+    # --- keepStr: plausibile = non null, diversa da "NA", lunghezza>0 e diversa da "0" ---
     const/4 v7, 0x0
 
 
@@ -197,6 +212,14 @@
     move-result v8
 
     if-eqz v8, :cond_str
+
+    const-string v8, "0"
+
+    invoke-virtual {v4, v8}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v8
+
+    if-nez v8, :cond_str
 
     const/4 v7, 0x1
 
