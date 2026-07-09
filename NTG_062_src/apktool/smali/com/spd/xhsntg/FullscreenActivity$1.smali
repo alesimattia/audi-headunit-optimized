@@ -58,16 +58,17 @@
     .locals 2
     .param p1, "position"    # I
 
-    # all'apertura della pagina debug (indice 2, shiftato dopo rimozione pagine porte+sensori) genera il dump one-shot dei parametri CarInfo
+    # pagina debug (indice 2): avvia il monitor continuo CarInfo entrando.
+    # NON si ferma cambiando pagina: continua finche' l'app e' viva (stop solo a riavvio app).
     const/4 v0, 0x2
 
-    if-ne p1, v0, :cond_dump
+    if-ne p1, v0, :cond_dbg
 
     # Modifica Mattia Alesi (Voce 4): permesso storage ora richiesto all'avvio (vedi onCreate),
     # niente piu' richiesta pigra qui (S2b superata)
     invoke-static {}, Lcom/spd/xhsntg/DebugLog;->dumpAll()V
 
-    :cond_dump
+    :cond_dbg
     # pagina Sistema (indice 3, shiftato): avvia il refresh periodico entrando, fermalo uscendo
     const/4 v0, 0x3
 

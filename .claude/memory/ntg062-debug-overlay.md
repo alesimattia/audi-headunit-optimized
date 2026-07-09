@@ -1,13 +1,26 @@
 ---
 name: ntg062-debug-overlay
-description: NTG_062 — overlay diagnostico (classe custom DebugLog in smali) che dumpa tutti i what CarInfo a schermo + file Download; ora include anche i Bundle
+description: NTG_062 — pagina diagnostica custom DebugLog (smali) che dumpa i what CarInfo leggibili in Download; ora è un monitor CONTINUO PULL+PUSH (non più one-shot)
 metadata:
   type: reference
 ---
 
 Pagina diagnostica custom aggiunta al progetto (NON nell'APK originale). Classe `com.spd.xhsntg.DebugLog` + inner `DebugLog$DumpTask`, esistono **solo in smali** (`NTG_062_src/apktool/smali/com/spd/xhsntg/DebugLog*.smali`) — niente sorgente jadx in `java/`. Si modifica e si ricompila da lì (vedi [[ntg062-modding-build]]).
 
-**Cosa fa**: al `onPageSelected` della pagina debug ([[ntg062-slider]]), `DebugLog.dumpAll()` lancia un `Thread` background (`DumpTask` mMode=0). Il task:
+## ARCHITETTURA ATTUALE — monitor continuo PULL+PUSH (2026-07-09, COMPILATO; test runtime in auto da fare)
+Il dump NON è più one-shot. `DebugLog` è un **monitor continuo** che fonde due sorgenti nella STESSA `sMap` deduplicata, riscritta in sovrascrittura ogni ciclo (bounded, non cresce all'infinito). Chiave riga = `"NAME what=X [arg=Y]"`.
+- **PULL** (thread bg, loop `while(sRunning)` ogni ~3s): per ogni what×arg(0..5) → `probe` → upsert in `sMap` se "plausibile" (int!=0 non-eco / float!=0 / str non vuota·NA·0 / Bundle non vuoto). Popola anche `sNames` (what→NAME) per il PUSH.
+- **PUSH** (thread binder): `CarInfoManager.init` registra ora **tutte le 19 classi** con `CLASS_NAME` (era 4: ReverseAndAVM/General/Instruments/Vehicles); `onCarInfoDataChanged(what,val,unit)` inoltra OGNI evento a `DebugLog.onPush`, che fa upsert in `sMap` con la STESSA chiave del PULL (nome preso da `sNames`) → **dedup PUSH+PULL**. Righe push marcate `push=<val> unit=<u>`.
+
+**Campi `DebugLog`**: `sMap`+`sNames` = **`ConcurrentHashMap`** (scrivono 2 thread: monitor + binder → obbligatorio, mai LinkedHashMap/HashMap); `sRunning` (deve girare), `sBusy` (un thread vivo → anti-doppio-thread), `sArg` (indice arg corrente). `sMap`/`sNames` persistono per la vita del processo (reset = riavvio app; **ordine righe non garantito**).
+**Ciclo di vita**: avvio `dumpAll()` da `FullscreenActivity$1.onPageSelected` all'ingresso pagina debug (**indice 2**); **NON** si ferma al cambio pagina; stop = `DebugLog.stop()` da `FullscreenActivity.onDestroy` (chiusura app). Intervallo = `const-wide/16 v5, 0xbb8` (3000 ms) in `DumpTask.run`.
+**Metodi/`.locals`**: `probe(CarInfo,String,int)V` locals13 (upsert, NON più append a StringBuilder); `onPush(I,Object,I)V` locals4; `snapshot(Z)String` (header + `sMap.values()` + `elementi rilevati=size`); `run()` locals15.
+**Nota epistemica (importante)**: il PULL ritorna `0` sia per "decodificato=0" sia per "non decodificato" (il box non usa sentinella distinguibile su molti what) → **un `0` NON prova che il dato sia non leggibile**. Il PUSH è autoritativo: un what **notificato** dal box = provabilmente leggibile, e cattura i **transitori** tra due passate PULL. Per una mappa completa servono più stati (motore freddo/caldo, in marcia, retro, luci/porte).
+**File toccati (5)**: `DebugLog.smali`, `DebugLog$DumpTask.smali`, `CarInfoManager.smali` (init 4→19 + forward in onCarInfoDataChanged), `FullscreenActivity$1.smali` (start), `FullscreenActivity.smali` (stop). Handoff build dettagliato: **`IMPLEMENTAZIONE_DUMP_CARINFO.md`** (root repo). **Compilato 2026-07-09** via `./compile_sign_align.sh`: `apktool b` OK (smali valido) + firma v2+v3 + round-trip OK; resta il test a runtime sulla testata (verifica ART/comportamento).
+
+> Le sezioni sotto (one-shot, P1–P5) sono la **storia** dell'evoluzione del criterio/`probe`: la meccanica di lettura (`probe`, sentinelle, reflection 21 classi, Bundle) resta valida, ma il flusso **one-shot + `LinkedHashMap`** è **superato** dal monitor PULL+PUSH sopra.
+
+**Cosa fa (STORICO one-shot, superato)**: al `onPageSelected` della pagina debug ([[ntg062-slider]]), `DebugLog.dumpAll()` lancia un `Thread` background (`DumpTask` mMode=0). Il task:
 1. `names()` elenca ~21 nomi-classe (`com.spd.carinfo.CarInfo` + classi annidate: Instruments, ReverseAndAVM, AirCondition, Doors, Vehicles, Battery, …).
 2. Per ogni classe, reflection `getDeclaredFields()` → tiene solo i `static int` (sono i `what`).
 3. Per ogni `what` chiama `DebugLog.probe(sb, ci, name, what)`.

@@ -3,10 +3,15 @@
 .source "DebugLog.java"
 
 
-# Dump one-shot in PULL di tutti i parametri CarInfo leggibili.
-# A differenza della versione precedente (monitor live agganciato a onCarInfoDataChanged)
-# qui i valori si leggono on-demand con CarInfo.get(what,arg,def) e si scrive il file
-# UNA sola volta (sovrascrittura), all'apertura della pagina debug.
+# Monitor CONTINUO in PULL dei parametri CarInfo leggibili.
+# Non piu' one-shot: una volta aperta la pagina debug, un thread di background ri-legge
+# tutti i what (CarInfo.get) a cicli di ~3s e fa UPSERT in sMap (LinkedHashMap) con
+# chiave what+arg. I parametri nuovi (che diventano leggibili quando l'utente aziona un
+# comando DURANTE la scansione) vengono aggiunti; quelli gia' visti vengono aggiornati al
+# valore corrente. La lista e' deduplicata (non cresce all'infinito) e riscritta su file in
+# SOVRASCRITTURA ad ogni ciclo. Avvio = dumpAll() (da FullscreenActivity$1, entrando nella
+# pagina debug). Il monitor NON si ferma cambiando pagina: gira finche' l'app e' viva
+# (reset/stop solo a riavvio app). stop() esiste ma NON e' agganciato (futuro toggle manuale).
 
 # static fields
 # sText / sScroll: package-private cosi DumpTask (stesso package) puo aggiornarli.
@@ -16,32 +21,71 @@
 
 .field private static sFile:Ljava/io/File;
 
-# flag anti-rientro: evita dump sovrapposti se la pagina viene riaperta mentre uno e in corso
+# flag "il monitor deve continuare": true da dumpAll(); resta true per tutta la vita dell'app
+# (stop() lo metterebbe a false ma non e' piu' agganciato al cambio pagina).
 .field static sRunning:Z
 
-# arg corrente della scansione indicizzata: DumpTask lo imposta in un loop 0..N prima di ogni
-# probe, e probe lo usa come parametro 'arg' di CarInfo.get() (sedili/ruote/porte/zone/camere).
+# arg corrente della scansione indicizzata (0..5): sedili/ruote/porte/zone/finestrini/camere.
 .field static sArg:I
+
+# mappa accumulata: chiave "NAME what=X [arg=Y]" -> riga col valore corrente. ConcurrentHashMap
+# perche' vi scrivono sia il thread del monitor (PULL) sia il thread binder del callback (PUSH).
+# Persistente per la vita del processo (reset solo a riavvio app).
+.field static sMap:Ljava/util/concurrent/ConcurrentHashMap;
+
+# mappa what(Integer) -> nome-costante, popolata dalla scansione PULL. Serve a onPush per
+# costruire la STESSA chiave del PULL (dedup PUSH+PULL). Anch'essa ConcurrentHashMap.
+.field static sNames:Ljava/util/concurrent/ConcurrentHashMap;
+
+# flag "un thread monitor e' vivo": impedisce di avviarne due se si rientra nella pagina
+# mentre il vecchio thread sta ancora terminando. Impostato dal thread (run), non da stop().
+.field static sBusy:Z
 
 
 # direct methods
 
-# Avvia il dump su un thread di background (chiamato dal main thread).
-# Usato da: com.spd.xhsntg.FullscreenActivity$1.onPageSelected
+# Avvia (o ri-arma) il monitor continuo su un thread di background. Idempotente.
+# Usato da: com.spd.xhsntg.FullscreenActivity$1.onPageSelected (entrando nella pagina debug).
 .method public static dumpAll()V
     .locals 3
 
-    sget-boolean v0, Lcom/spd/xhsntg/DebugLog;->sRunning:Z
-
-    if-eqz v0, :cond_0
-
-    return-void
-
-    :cond_0
+    # ri-arma sempre il flag "deve girare" (vale anche se un thread e' gia' vivo)
     const/4 v0, 0x1
 
     sput-boolean v0, Lcom/spd/xhsntg/DebugLog;->sRunning:Z
 
+    # crea la mappa una sola volta (accumulo persistente tra aperture)
+    sget-object v0, Lcom/spd/xhsntg/DebugLog;->sMap:Ljava/util/concurrent/ConcurrentHashMap;
+
+    if-nez v0, :cond_map
+
+    new-instance v0, Ljava/util/concurrent/ConcurrentHashMap;
+
+    invoke-direct {v0}, Ljava/util/concurrent/ConcurrentHashMap;-><init>()V
+
+    sput-object v0, Lcom/spd/xhsntg/DebugLog;->sMap:Ljava/util/concurrent/ConcurrentHashMap;
+
+    :cond_map
+    # crea anche la mappa what->nome (serve a onPush per la dedup PUSH+PULL)
+    sget-object v0, Lcom/spd/xhsntg/DebugLog;->sNames:Ljava/util/concurrent/ConcurrentHashMap;
+
+    if-nez v0, :cond_names
+
+    new-instance v0, Ljava/util/concurrent/ConcurrentHashMap;
+
+    invoke-direct {v0}, Ljava/util/concurrent/ConcurrentHashMap;-><init>()V
+
+    sput-object v0, Lcom/spd/xhsntg/DebugLog;->sNames:Ljava/util/concurrent/ConcurrentHashMap;
+
+    :cond_names
+    # se un thread monitor e' gia' vivo, non avviarne un altro: continuera' da solo (sRunning true)
+    sget-boolean v0, Lcom/spd/xhsntg/DebugLog;->sBusy:Z
+
+    if-eqz v0, :cond_start
+
+    return-void
+
+    :cond_start
     new-instance v0, Lcom/spd/xhsntg/DebugLog$DumpTask;
 
     const/4 v1, 0x0
@@ -59,77 +103,177 @@
     return-void
 .end method
 
-# Legge un singolo what come int, float e string; se almeno uno restituisce un valore
-# "utile" (non sentinella e non zero/vuoto) accoda una riga a sb e ritorna 1, altrimenti 0.
-# I default-sentinella distinguono "il servizio ha risposto 0" da "non disponibile".
+# Ferma il monitor: il thread esce al prossimo controllo di sRunning (fine passata o sleep).
+# Attualmente NON agganciato (il monitor non si ferma cambiando pagina): lasciato pronto per
+# un eventuale toggle manuale o per un aggancio a onDestroy in futuro.
+.method public static stop()V
+    .locals 1
+
+    const/4 v0, 0x0
+
+    sput-boolean v0, Lcom/spd/xhsntg/DebugLog;->sRunning:Z
+
+    return-void
+.end method
+
+# Evento PUSH inoltrato da CarInfoManager.onCarInfoDataChanged: fonde il valore nella STESSA
+# mappa del PULL (dedup per chiave "NAME what=X"). Gira sul thread binder del callback: sMap e
+# sNames sono ConcurrentHashMap. Attivo solo mentre il monitor gira (sRunning) e solo se il
+# nome del what e' gia' noto (popolato dalla scansione PULL).
+.method static onPush(ILjava/lang/Object;I)V
+    .locals 4
+    .param p0, "what"     # I
+    .param p1, "value"    # Ljava/lang/Object;
+    .param p2, "unit"     # I
+
+    sget-boolean v0, Lcom/spd/xhsntg/DebugLog;->sRunning:Z
+
+    if-eqz v0, :cond_out
+
+    if-eqz p1, :cond_out
+
+    sget-object v0, Lcom/spd/xhsntg/DebugLog;->sMap:Ljava/util/concurrent/ConcurrentHashMap;
+
+    if-eqz v0, :cond_out
+
+    sget-object v1, Lcom/spd/xhsntg/DebugLog;->sNames:Ljava/util/concurrent/ConcurrentHashMap;
+
+    if-eqz v1, :cond_out
+
+    # name = sNames.get(Integer.valueOf(what)); se non ancora noto -> esci
+    invoke-static {p0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v2
+
+    invoke-virtual {v1, v2}, Ljava/util/concurrent/ConcurrentHashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Ljava/lang/String;
+
+    if-eqz v1, :cond_out
+
+    # key = name + " what=" + what  (identica alla chiave PULL globale -> dedup)
+    new-instance v2, Ljava/lang/StringBuilder;
+
+    invoke-direct {v2}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-virtual {v2, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    const-string v3, " what="
+
+    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v2, p0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v2
+
+    # line = key + " push=" + value + " unit=" + unit + "\n"
+    new-instance v3, Ljava/lang/StringBuilder;
+
+    invoke-direct {v3}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-virtual {v3, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    const-string v0, " push="
+
+    invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v3, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+
+    const-string v0, " unit="
+
+    invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v3, p2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    const-string v0, "\n"
+
+    invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v3}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v3
+
+    # upsert nella stessa mappa del PULL
+    sget-object v0, Lcom/spd/xhsntg/DebugLog;->sMap:Ljava/util/concurrent/ConcurrentHashMap;
+
+    invoke-virtual {v0, v2, v3}, Ljava/util/concurrent/ConcurrentHashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    :cond_out
+    return-void
+.end method
+
+# Legge un singolo what (con l'arg corrente sArg) come int/float/string/bundle; se almeno un
+# tipo ha valore PLAUSIBILE (non sentinella e non zero/vuoto) fa UPSERT in sMap: chiave
+# "NAME what=X [arg=Y]" -> riga col valore corrente. Ritorna void.
 # Chiamato da: com.spd.xhsntg.DebugLog$DumpTask.run
-.method static probe(Ljava/lang/StringBuilder;Lcom/spd/carinfo/CarInfo;Ljava/lang/String;I)I
-    .locals 12
-    .param p0, "sb"      # Ljava/lang/StringBuilder;
-    .param p1, "ci"      # Lcom/spd/carinfo/CarInfo;
-    .param p2, "name"    # Ljava/lang/String;
-    .param p3, "what"    # I
+.method static probe(Lcom/spd/carinfo/CarInfo;Ljava/lang/String;I)V
+    .locals 13
+    .param p0, "ci"      # Lcom/spd/carinfo/CarInfo;
+    .param p1, "name"    # Ljava/lang/String;
+    .param p2, "what"    # I
+
+    # arg per tutte le get() di questa probe (loop scansione indicizzata in DumpTask)
+    sget v0, Lcom/spd/xhsntg/DebugLog;->sArg:I
 
     # --- lettura int (sentinella = Integer.MIN_VALUE) ---
-    sget v0, Ljava/lang/Integer;->MIN_VALUE:I
+    sget v9, Ljava/lang/Integer;->MIN_VALUE:I
 
-    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    invoke-static {v9}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
 
-    move-result-object v1
+    move-result-object v9
 
-    # arg per tutte le get() di questa probe: impostato da DumpTask (loop scansione indicizzata).
-    sget v2, Lcom/spd/xhsntg/DebugLog;->sArg:I
+    invoke-virtual {p0, p2, v0, v9}, Lcom/spd/carinfo/CarInfo;->get(IILjava/lang/Object;)Ljava/lang/Object;
 
-    invoke-virtual {p1, p3, v2, v1}, Lcom/spd/carinfo/CarInfo;->get(IILjava/lang/Object;)Ljava/lang/Object;
+    move-result-object v9
 
-    move-result-object v1
+    check-cast v9, Ljava/lang/Integer;
 
-    check-cast v1, Ljava/lang/Integer;
-
-    invoke-virtual {v1}, Ljava/lang/Integer;->intValue()I
+    invoke-virtual {v9}, Ljava/lang/Integer;->intValue()I
 
     move-result v1
 
     # --- lettura float (sentinella = NaN) ---
-    sget v3, Ljava/lang/Float;->NaN:F
+    sget v9, Ljava/lang/Float;->NaN:F
 
-    invoke-static {v3}, Ljava/lang/Float;->valueOf(F)Ljava/lang/Float;
+    invoke-static {v9}, Ljava/lang/Float;->valueOf(F)Ljava/lang/Float;
 
-    move-result-object v3
+    move-result-object v9
 
-    invoke-virtual {p1, p3, v2, v3}, Lcom/spd/carinfo/CarInfo;->get(IILjava/lang/Object;)Ljava/lang/Object;
+    invoke-virtual {p0, p2, v0, v9}, Lcom/spd/carinfo/CarInfo;->get(IILjava/lang/Object;)Ljava/lang/Object;
 
-    move-result-object v3
+    move-result-object v9
 
-    check-cast v3, Ljava/lang/Float;
+    check-cast v9, Ljava/lang/Float;
 
-    invoke-virtual {v3}, Ljava/lang/Float;->floatValue()F
+    invoke-virtual {v9}, Ljava/lang/Float;->floatValue()F
 
-    move-result v3
+    move-result v2
 
+    # --- lettura string (sentinella = "NA") ---
+    const-string v9, "NA"
 
-    # --- lettura string (sentinella = "NA") ---
-    const-string v4, "NA"
+    invoke-virtual {p0, p2, v0, v9}, Lcom/spd/carinfo/CarInfo;->get(IILjava/lang/Object;)Ljava/lang/Object;
 
-    invoke-virtual {p1, p3, v2, v4}, Lcom/spd/carinfo/CarInfo;->get(IILjava/lang/Object;)Ljava/lang/Object;
+    move-result-object v9
 
-    move-result-object v4
+    check-cast v9, Ljava/lang/String;
 
-    check-cast v4, Ljava/lang/String;
+    move-object v3, v9
 
-
-    # --- lettura bundle (sentinella = nuovo Bundle vuoto) ---
-    # get(what,0,defBundle) ritorna un Bundle; size() forza l'unparcel del binder.
-    # keepBundle (v11) = e davvero un Bundle non vuoto. v9 = bundle utile (o null).
+    # --- lettura bundle (sentinella = Bundle vuoto); v4 = bundle utile o null, v8 = keepBundle ---
     new-instance v9, Landroid/os/Bundle;
 
     invoke-direct {v9}, Landroid/os/Bundle;-><init>()V
 
-    invoke-virtual {p1, p3, v2, v9}, Lcom/spd/carinfo/CarInfo;->get(IILjava/lang/Object;)Ljava/lang/Object;
+    invoke-virtual {p0, p2, v0, v9}, Lcom/spd/carinfo/CarInfo;->get(IILjava/lang/Object;)Ljava/lang/Object;
 
     move-result-object v9
 
-    const/4 v11, 0x0
+    const/4 v8, 0x0
 
     instance-of v10, v9, Landroid/os/Bundle;
 
@@ -143,196 +287,290 @@
 
     if-eqz v10, :cond_bdone
 
-    const/4 v11, 0x1
+    const/4 v8, 0x1
+
+    move-object v4, v9
 
     goto :goto_bdone
 
     :cond_bdone
-    const/4 v9, 0x0
+    const/4 v4, 0x0
 
     :goto_bdone
 
-    # --- keepInt: valore plausibile = presente (!= MIN_VALUE) e diverso da 0.
-    #     Filtro anti-echo: con arg>0 scarto iv==arg, perche alcuni what riflettono solo
-    #     l'indice arg passato (es. 190000-190003) e non sono dati reali del box. ---
+    # --- keepInt (v5): presente (!= MIN_VALUE) e != 0; con arg>0 scarto l'eco iv==arg ---
     const/4 v5, 0x0
 
+    sget v9, Ljava/lang/Integer;->MIN_VALUE:I
 
-    sget v6, Ljava/lang/Integer;->MIN_VALUE:I
-
-    if-eq v1, v6, :cond_int
+    if-eq v1, v9, :cond_int
 
     if-eqz v1, :cond_int
 
-    if-eqz v2, :cond_int_keep
+    if-eqz v0, :cond_int_keep
 
-    if-eq v1, v2, :cond_int
+    if-eq v1, v0, :cond_int
 
     :cond_int_keep
     const/4 v5, 0x1
 
     :cond_int
 
-    # --- keepFloat: valore plausibile = presente (non NaN) e diverso da 0.0 ---
+    # --- keepFloat (v6): non NaN e != 0.0 ---
     const/4 v6, 0x0
 
+    invoke-static {v2}, Ljava/lang/Float;->isNaN(F)Z
 
-    invoke-static {v3}, Ljava/lang/Float;->isNaN(F)Z
+    move-result v9
 
-    move-result v7
+    if-nez v9, :cond_float
 
-    if-nez v7, :cond_float
+    const/4 v9, 0x0
 
-    const/4 v7, 0x0
+    cmpl-float v9, v2, v9
 
-    cmpl-float v7, v3, v7
-
-    if-eqz v7, :cond_float
+    if-eqz v9, :cond_float
 
     const/4 v6, 0x1
 
     :cond_float
 
-    # --- keepStr: plausibile = non null, diversa da "NA", lunghezza>0 e diversa da "0" ---
+    # --- keepStr (v7): non null, != "NA", lunghezza>0 e != "0" ---
     const/4 v7, 0x0
 
+    if-eqz v3, :cond_str
 
-    if-eqz v4, :cond_str
+    const-string v9, "NA"
 
-    const-string v8, "NA"
+    invoke-virtual {v3, v9}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
-    invoke-virtual {v4, v8}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    move-result v9
 
-    move-result v8
+    if-nez v9, :cond_str
 
-    if-nez v8, :cond_str
+    invoke-virtual {v3}, Ljava/lang/String;->length()I
 
-    invoke-virtual {v4}, Ljava/lang/String;->length()I
+    move-result v9
 
-    move-result v8
+    if-eqz v9, :cond_str
 
-    if-eqz v8, :cond_str
+    const-string v9, "0"
 
-    const-string v8, "0"
+    invoke-virtual {v3, v9}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
-    invoke-virtual {v4, v8}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    move-result v9
 
-    move-result v8
-
-    if-nez v8, :cond_str
+    if-nez v9, :cond_str
 
     const/4 v7, 0x1
 
     :cond_str
 
-    # se nulla di utile -> scarta
+    # se nulla di plausibile -> non toccare la mappa
     if-nez v5, :cond_keep
 
     if-nez v6, :cond_keep
 
     if-nez v7, :cond_keep
 
-    if-nez v11, :cond_keep
+    if-nez v8, :cond_keep
 
-    const/4 v0, 0x0
-
-    return v0
+    return-void
 
     :cond_keep
-    # --- accoda riga: NAME what=<dec> int=.. float=.. str=.. ---
-    invoke-virtual {p0, p2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    # --- key = NAME + " what=" + what [+ " arg=" + arg] ---
+    new-instance v12, Ljava/lang/StringBuilder;
 
-    const-string v8, " what="
+    invoke-direct {v12}, Ljava/lang/StringBuilder;-><init>()V
 
-    invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v12, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    invoke-virtual {p0, p3}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    const-string v9, " what="
 
-    # P3: " arg=N" solo se arg>0 (le righe globali arg=0 restano nel formato originale)
-    if-eqz v2, :cond_noarg
+    invoke-virtual {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    const-string v8, " arg="
+    invoke-virtual {v12, p2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
 
-    invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    if-eqz v0, :cond_keynoarg
 
-    invoke-virtual {p0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    const-string v9, " arg="
 
-    :cond_noarg
-    const-string v8, " int="
+    invoke-virtual {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v12, v0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    :cond_keynoarg
+    invoke-virtual {v12}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v11
+
+    # --- line = key + " int=.. float=.. str=.. bundle=..\n" ---
+    new-instance v12, Ljava/lang/StringBuilder;
+
+    invoke-direct {v12}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-virtual {v12, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    const-string v9, " int="
+
+    invoke-virtual {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     if-eqz v5, :cond_pi
 
-    invoke-virtual {p0, v1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    invoke-virtual {v12, v1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
 
     goto :goto_pf
 
     :cond_pi
-    const-string v8, "-"
+    const-string v9, "-"
 
-    invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     :goto_pf
-    const-string v8, " float="
+    const-string v9, " float="
 
-    invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     if-eqz v6, :cond_pfd
 
-    invoke-virtual {p0, v3}, Ljava/lang/StringBuilder;->append(F)Ljava/lang/StringBuilder;
+    invoke-virtual {v12, v2}, Ljava/lang/StringBuilder;->append(F)Ljava/lang/StringBuilder;
 
     goto :goto_ps
 
     :cond_pfd
-    const-string v8, "-"
+    const-string v9, "-"
 
-    invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     :goto_ps
-    const-string v8, " str="
+    const-string v9, " str="
 
-    invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     if-eqz v7, :cond_psd
 
-    invoke-virtual {p0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v12, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    goto :goto_bundle
+    goto :goto_pb
 
     :cond_psd
-    const-string v8, "-"
+    const-string v9, "-"
 
-    invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    :goto_bundle
-    const-string v8, " bundle="
+    :goto_pb
+    const-string v9, " bundle="
 
-    invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    if-eqz v11, :cond_pbd
+    if-eqz v8, :cond_pbd
 
-    invoke-virtual {v9}, Landroid/os/Bundle;->toString()Ljava/lang/String;
+    invoke-virtual {v4}, Landroid/os/Bundle;->toString()Ljava/lang/String;
 
-    move-result-object v8
+    move-result-object v9
 
-    invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    goto :goto_nl
+    goto :goto_pnl
 
     :cond_pbd
-    const-string v8, "-"
+    const-string v9, "-"
 
-    invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    :goto_nl
-    const-string v8, "\n"
+    :goto_pnl
+    const-string v9, "\n"
 
-    invoke-virtual {p0, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    const/4 v0, 0x1
+    invoke-virtual {v12}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
 
-    return v0
+    move-result-object v10
+
+    # --- upsert nella mappa: put(key, line) (nuovo = aggiunge, esistente = aggiorna) ---
+    sget-object v9, Lcom/spd/xhsntg/DebugLog;->sMap:Ljava/util/concurrent/ConcurrentHashMap;
+
+    if-eqz v9, :cond_ret
+
+    invoke-virtual {v9, v11, v10}, Ljava/util/concurrent/ConcurrentHashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    :cond_ret
+    return-void
+.end method
+
+# Costruisce il testo completo del file dalla mappa accumulata (header + righe + conteggio).
+# Chiamato ad ogni ciclo da com.spd.xhsntg.DebugLog$DumpTask.run.
+.method static snapshot(Z)Ljava/lang/String;
+    .locals 3
+    .param p0, "connected"    # Z
+
+    new-instance v0, Ljava/lang/StringBuilder;
+
+    invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v1, "=== NTG_062 CarInfo LIVE monitor ===\nconnected="
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v0, p0}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+
+    const-string v1, "\ncriterio: monitor continuo. Ogni what+arg con valore PLAUSIBILE (int!=0 non-eco, float!=0.0, stringa non vuota/NA/0, oppure Bundle non vuoto) viene aggiunto la prima volta e aggiornato ai giri successivi. I comandi attivati durante la scansione compaiono appena leggibili. Lista deduplicata per what+arg: non cresce all'infinito. arg 0..5, righe con arg=0 = valore globale.\n\n"
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    # righe accumulate (valori correnti)
+    sget-object v1, Lcom/spd/xhsntg/DebugLog;->sMap:Ljava/util/concurrent/ConcurrentHashMap;
+
+    if-eqz v1, :cond_nomap
+
+    invoke-virtual {v1}, Ljava/util/concurrent/ConcurrentHashMap;->values()Ljava/util/Collection;
+
+    move-result-object v1
+
+    invoke-interface {v1}, Ljava/util/Collection;->iterator()Ljava/util/Iterator;
+
+    move-result-object v1
+
+    :goto_it
+    invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v2
+
+    if-eqz v2, :cond_itend
+
+    invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, Ljava/lang/String;
+
+    invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    goto :goto_it
+
+    :cond_itend
+    const-string v2, "\nelementi rilevati="
+
+    invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    sget-object v2, Lcom/spd/xhsntg/DebugLog;->sMap:Ljava/util/concurrent/ConcurrentHashMap;
+
+    invoke-virtual {v2}, Ljava/util/concurrent/ConcurrentHashMap;->size()I
+
+    move-result v2
+
+    invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    const-string v2, "\n"
+
+    invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    :cond_nomap
+    invoke-virtual {v0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
 .end method
 
 # Costruisce la vista della pagina debug (ScrollView nero + TextView bianca).
@@ -365,7 +603,7 @@
 
     invoke-virtual {v1, v2, v2, v2, v2}, Landroid/widget/TextView;->setPadding(IIII)V
 
-    const-string v2, "Dump parametri CarInfo: generato all'apertura di questa pagina.\nAttendere il completamento..."
+    const-string v2, "Monitor CarInfo live: aggiornamento continuo mentre la pagina e' aperta.\nAziona luci/marce/comandi per vederli comparire. Log in Download/ntg_carinfo_log.txt.\nAttendere il primo ciclo..."
 
     invoke-virtual {v1, v2}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 
@@ -378,8 +616,9 @@
     return-object v0
 .end method
 
-# Scrive l'intero contenuto sul file in SOVRASCRITTURA (un solo snapshot, niente append).
-# Tutto in try/catchall: se il permesso storage e negato il dump resta comunque a schermo.
+# Scrive l'intero contenuto sul file in SOVRASCRITTURA (niente append: la mappa e' gia'
+# deduplicata, cosi il file non cresce all'infinito). Tutto in try/catchall: se il permesso
+# storage e negato il monitor resta comunque a schermo.
 # Chiamato da: com.spd.xhsntg.DebugLog$DumpTask.run
 .method static writeFileOverwrite(Ljava/lang/String;)V
     .locals 4

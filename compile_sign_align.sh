@@ -44,7 +44,11 @@ sign_apk() {
   # --allowResign: consente di ri-firmare un APK gia' firmato (utile in --signOnly).
   echo "[*] uber-apk-signer: zipalign (built-in) + firma v2+v3"
   local OUTDIR; OUTDIR="$(mktemp -d)"
-  "$JAVA" -jar "$UBER" --apks "$IN" \
+  # --enable-native-access=ALL-UNNAMED: concede (non silenzia) l'accesso nativo al codice sul
+  # classpath. uber-apk-signer usa conscrypt che fa System.loadLibrary; da JDK 24 (JEP 472)
+  # l'uso implicito e' solo avvisato ora ma verra' BLOCCATO in un JDK futuro. Dichiararlo qui
+  # tiene la firma funzionante anche dopo l'enforcement (oltre a ripulire l'output).
+  "$JAVA" --enable-native-access=ALL-UNNAMED -jar "$UBER" --apks "$IN" \
     --ks "$KS" --ksAlias "$ALIAS" --ksPass "$PW" --ksKeyPass "$PW" \
     --allowResign --out "$OUTDIR"
 

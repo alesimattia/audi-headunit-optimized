@@ -1,124 +1,173 @@
-# Implementazione dump one-shot parametri CarInfo — handoff per la build
+# Monitor continuo parametri CarInfo (PULL + PUSH) — handoff per la build
 
-> Documento di passaggio: tutte le modifiche sotto sono **staged** in `NTG_062_src/`,
-> **NON ancora compilate** (data lavoro: 2026-06-24). Serve per riprendere il contesto
-> sul PC che compila l'APK.
+> Modifiche in `NTG_062_src/`, **compilate il 2026-07-09** (build `apktool b` + firma v2+v3 OK,
+> `NTG_062_audi_it.apk`). Resta da fare il **test a runtime sulla testata**. Documento di
+> contesto per chi assembla/firma. Riflette lo stato attuale della funzione.
 
 ## Obiettivo della funzione
-Scrivere nel file `Download/ntg_carinfo_log.txt` **tutti i parametri CarInfo leggibili**
-con il **valore istantaneo**, **una sola volta** (snapshot in sovrascrittura, niente
-monitor live che cicla). Scopo: capire quali parametri dell'auto (Audi A5) sono
-realmente monitorabili.
+Scrivere in `Download/ntg_carinfo_log.txt` tutti i parametri CarInfo **leggibili** dal
+CAN-box, per **dedurre** cosa è realmente monitorabile sull'Audi A5. Non è uno snapshot
+unico: è un **monitor continuo** che unisce due sorgenti nella **stessa mappa deduplicata**
+`what[+arg] → valore corrente`:
 
-## Idea architetturale (perché funziona)
-- PULL universale: `CarInfo.instance().get(int what, int arg, Object def)`
-  ([CarInfo.smali:949](NTG_062_src/apktool/smali/com/spd/carinfo/CarInfo.smali)).
-  Sceglie `getInt/getFloat/getString/getBundle` in base al **tipo runtime del `def`**;
-  se `!isConnected()` o `RemoteException` ritorna `def`.
-- Le ~2260 costanti `what` stanno in 20+ classi annidate di `com.spd.carinfo.CarInfo`
-  con **nomi NON offuscati** → enumerabili via reflection
-  (`Class.forName` + `getDeclaredFields` + `getInt(null)`, filtrando
-  `getType()==Integer.TYPE && Modifier.isStatic`).
-- Per ogni `what` si legge come **int** (sentinella `Integer.MIN_VALUE`), **float**
-  (sentinella `NaN`), **string** (sentinella `"NA"`). La sentinella distingue
-  "il servizio ha risposto 0" da "non disponibile/disconnesso".
+- **PULL** periodico (~3 s): interroga on-demand tutti i `what` conosciuti;
+- **PUSH** live: riceve ogni cambiamento che il box **notifica** spontaneamente.
 
-## File modificati / creati (4)
+Un parametro nuovo (anche se **azionato durante la scansione** — luci, marcia, freccia…)
+viene aggiunto; uno già visto viene aggiornato; la lista è deduplicata e riscritta in
+**sovrascrittura** ad ogni ciclo → **non cresce all'infinito**.
 
-### 1. `NTG_062_src/apktool/smali/com/spd/xhsntg/DebugLog.smali` — RISCRITTO
-- **Rimossi**: metodo `add(I,Object,I)` e field statico `sBuf` + `<clinit>`
-  (era l'accumulo del monitor live).
-- **Aggiunti**:
-  - `dumpAll()` (public static): guard anti-rientro `sRunning`, avvia un `Thread`
-    con `DebugLog$DumpTask` in modo 0.
-  - `probe(StringBuilder, CarInfo, String name, int what):int` (package-private):
-    legge int+float+string del `what`; **filtro** = tiene solo se
-    `int!=0` oppure `float!=0` oppure `stringa non vuota e !="0"`; accoda riga
-    `NAME what=<dec> int=.. float=.. str=..` (con `-` per i tipi scartati);
-    ritorna 1 se tenuto, 0 altrimenti.
-  - `writeFileOverwrite(String)` (package-private): `FileWriter(file, false)` =
-    **SOVRASCRITTURA** (un solo snapshot), tutto in `try/catchall`.
-  - `createView(Context):View` invariato nello scopo ma ora mostra solo un testo-hint
-    (non usa più `sBuf`).
-- `sText`, `sScroll`, `sRunning` resi **package-private** (erano `private`) per accesso
-  da `DumpTask`.
+> **Perché il PULL da solo non basta (nota epistemica).** Il box risponde `0` sia per un
+> `what` "decodificato ma ora a 0" sia per uno "non decodificato" (su moltissimi `what` non
+> usa una sentinella distinguibile). Quindi **un `0` nel PULL NON dimostra che il dato sia
+> non leggibile.** Il PUSH risolve: se il box **invia** spontaneamente un `what`, quel dato è
+> **provabilmente leggibile** — e cattura anche i **transitori** che cadono tra due passate
+> PULL. Per una conclusione affidabile servono comunque più stati (motore freddo/caldo, in
+> marcia, retromarcia, luci/porte aperte, dopo rifornimento).
 
-### 2. `NTG_062_src/apktool/smali/com/spd/xhsntg/DebugLog$DumpTask.smali` — NUOVO
-- `implements Runnable`. Field `mMode:I`, `mText:String`.
-- `names()` (private static): array dei 21 nomi-classe da scandire
-  (`com.spd.carinfo.CarInfo` + 20 classi annidate con costanti).
+## Architettura
+- **PULL universale**: `CarInfo.instance().get(int what, int arg, Object def)` sceglie
+  `getInt/getFloat/getString/getBundle` dal **tipo runtime del `def`**; se `!isConnected()`
+  o `RemoteException` ritorna `def`. Bypassa l'iscrizione alle classi → raggiunge ogni `what`.
+- **PUSH**: callback unico `CarInfo$Callback.onCarInfoDataChanged(int what, Object value,
+  int unit)`. C'è **un solo** callback registrabile (`CarInfo.mCallback`), ed è l'app
+  (`CarInfoManager`) → il monitor **deriva** da lì: `CarInfoManager` inoltra ogni evento a
+  `DebugLog.onPush`.
+- **Enumerazione via reflection** (per il PULL): ~2271 costanti `what` in 21 classi annidate
+  di `com.spd.carinfo.CarInfo`, nomi non offuscati → `Class.forName` + `getDeclaredFields` +
+  `getInt(null)`, filtrando `getType()==Integer.TYPE && Modifier.isStatic`.
+- **Scansione indicizzata** `arg=0..5` (sedili/ruote/porte/zone/finestrini/camere); `arg=0`
+  = valore globale.
+- **Criterio "valore plausibile"** (solo per il PULL, per non salvare migliaia di zeri):
+  tiene un `what` se `int!=0` (e non semplice **eco** dell'indice `arg`, es. what
+  190000-190003), oppure `float!=0.0`, oppure stringa non vuota/`"NA"`/`"0"`, oppure
+  **Bundle non vuoto**. Il PUSH invece è accettato comunque (l'arrivo stesso è il segnale).
+- **Upsert in `ConcurrentHashMap sMap`**, chiave `"NAME what=X [arg=Y]"`: PULL e PUSH
+  scrivono nella **stessa** mappa con la **stessa** chiave → **dedup PUSH+PULL**.
+  `ConcurrentHashMap` perché vi scrivono **due thread** (monitor + thread binder del
+  callback). Conseguenza: **ordine righe non garantito** (stabile tra refresh).
+- **Mappa nomi `sNames`** (`what` Integer → nome-costante), popolata dallo sweep PULL:
+  consente a `onPush` di costruire la **stessa chiave** del PULL (quindi la fusione).
+
+## File modificati (5) — stato attuale
+
+### 1. `com/spd/xhsntg/DebugLog.smali`
+- Campi: `sMap` + `sNames` (`ConcurrentHashMap`, thread-safe, persistenti per la vita del
+  processo), `sBusy` (un thread monitor è vivo → evita doppioni), `sRunning` (il monitor
+  deve continuare), `sArg` (indice arg corrente), `sText`/`sScroll` (UI).
+- `dumpAll()`: avvio/ri-arma idempotente. `sRunning=true`, crea `sMap` e `sNames` una volta
+  sola, avvia `Thread(DumpTask mMode=0)` **solo se** `sBusy==false`.
+- `stop()`: `sRunning=false`. Agganciato **solo** a `FullscreenActivity.onDestroy` (file 5).
+- `probe(CarInfo, String name, int what)V` (PULL): legge int/float/string/bundle con `sArg`,
+  criterio plausibile + anti-eco, e in caso di keep `sMap.put(key, riga)`. `.locals 13`.
+- `onPush(int what, Object value, int unit)V` (PUSH): se `sRunning` e il nome del `what` è
+  già noto (`sNames`), fa upsert in `sMap` con chiave identica al PULL globale → dedup.
+  Gira sul **thread binder** del callback. `.locals 4`.
+- `snapshot(Z)Ljava/lang/String;`: header + `sMap.values()` + `elementi rilevati=<size>`.
+- `writeFileOverwrite(String)`: `FileWriter(file, false)` = **sovrascrittura**, try/catchall.
+- `createView(Context)`: ScrollView nero + TextView bianca (hint iniziale).
+
+### 2. `com/spd/xhsntg/DebugLog$DumpTask.smali`
+- `implements Runnable`. Field `mMode:I`, `mText:String`. `names()` = 21 nomi-classe.
 - `run()`:
-  - `mMode==0` → **dump in background**: header (`connected=<bool>` + criterio),
-    doppio loop (classi × campi) con reflection, per ogni costante chiama
-    `DebugLog.probe(...)`, footer (`scansionati=N tenuti=M`),
-    `DebugLog.writeFileOverwrite(out)`, poi rimanda l'update UI con
-    `sText.post(new DumpTask(1, out))`.
-  - `mMode==1` → applica `mText` a `sText` + `fullScroll` (sul main thread).
-- ~6800 chiamate binder (2260 × 3 letture): per questo gira su `Thread`, **mai** sul
-  main thread (evita ANR).
+  - `mMode==0` → monitor background: `sBusy=true`, loop `while(sRunning)`: passata PULL
+    completa (classi × campi × arg 0..5, ogni costante → `probe`; e **popola `sNames`**
+    what→nome), poi `snapshot()` → `writeFileOverwrite()` → update UI `sText.post(new
+    DumpTask(1, testo))` → `Thread.sleep(~3s)` → ripete. All'uscita `sBusy=false`.
+  - `mMode==1` → applica `mText` a `sText` + `fullScroll` (main thread). `.locals 15`.
+- Costo PULL: ~54.000 chiamate binder per passata (≈2271 campi × 6 arg × 4 letture), ogni
+  ~3 s. Gira su `Thread`, **mai** sul main thread (niente ANR).
 
-### 3. `NTG_062_src/apktool/smali/com/spd/xhsntg/CarInfoManager.smali` — 1 RIGA RIMOSSA
-- In `onCarInfoDataChanged(ILjava/lang/Object;I)V` **rimosso**
-  `invoke-static {p1,p2,p3} DebugLog->add` (stop al monitor live che scriveva a ogni
-  callback). `.locals 11` invariato.
+### 3. `com/spd/xhsntg/CarInfoManager.smali` — sorgente PUSH
+- `init()`: registrazione PUSH **allargata da 4 a 19 classi** (tutte quelle con `CLASS_NAME`)
+  → il box può notificare qualunque parametro. `.locals 4`. (NB: `Battery.CLASS_NAME` ha un
+  valore errato a monte che duplica `Wipers` → registrazione innocua.)
+- `onCarInfoDataChanged(int what, Object value, int unit)`: prima del proprio switch,
+  **inoltra ogni evento** con `invoke-static DebugLog->onPush(what, value, unit)`. `onPush`
+  è no-op se il monitor non gira, quindi il costo a monitor spento è trascurabile.
 
-### 4. `NTG_062_src/apktool/smali/com/spd/xhsntg/FullscreenActivity$1.smali` — TRIGGER
-- In `onPageSelected(I)V`, prima della logica esistente:
-  `if position==4 → DebugLog.dumpAll()`. La pagina debug è l'indice **4**
-  (`pswitch_4` → `m_test_view_4` in `MyViewPageAdapter`). Ogni riapertura rigenera lo
-  snapshot (sovrascrive).
+### 4. `com/spd/xhsntg/FullscreenActivity$1.smali` — TRIGGER (avvio)
+- `onPageSelected(I)`: se `position==2` (pagina debug, indice shiftato dopo la rimozione
+  delle pagine porte e sensori) → `DebugLog.dumpAll()`. **Non** si ferma cambiando pagina.
 
-## Trappole smali gestite (per non re-incapparci alla build)
-1. **Niente `.local`/`.end local`** quando si riusano i registri tra branch → usate
-   solo `.locals N` (le `.local` sono solo debug-info e davano rischio di errore).
-2. **Verifier Dalvik**: una reg letta in un handler `.catch` (es. `cn`) deve essere
-   assegnata **prima** del `:try_start` → spostato `aget-object v14` fuori dal try.
-3. **invoke non-range** → tutti i registri devono essere `<16`. Con `.locals 12` + 4
-   parametri, i param finiscono in `p0..p3 = v12..v15` (ok perché <16).
-4. Commenti smali con `#`, mai con `.line <testo>` (`.line` vuole solo un numero).
-5. `fullScroll(0x82)` = `View.FOCUS_DOWN` (130).
+### 5. `com/spd/xhsntg/FullscreenActivity.smali` — STOP (chiusura app)
+- `onDestroy()`: `DebugLog.stop()`. Unico punto d'arresto → il monitor gira attraverso i
+  cambi pagina e si ferma solo alla chiusura reale dell'app (o alla morte del processo).
 
-## Validazione già fatta su questo PC (NON di build)
-Solo **statica** (manca un assembler smali qui): script Python che verifica
-bilanciamento `.method/.end method`, risoluzione di tutte le label
-(`goto`/`if-*`/`.catch`/switch) e registri `<16` nelle invoke → **tutto OK**.
-L'assemblaggio reale e la verifica DEX avvengono alla build.
+## Ciclo di vita
+| Evento | Effetto |
+|---|---|
+| Apertura pagina debug (indice 2) | avvia il monitor (idempotente); da qui il PUSH accumula |
+| Cambio pagina | **continua** in background (PULL + PUSH) |
+| Chiusura app (`onDestroy`) | **stop** (`sRunning=false`, il thread esce) |
 
-## PASSI DA ESEGUIRE SUL PC DI BUILD
+`sMap`/`sNames` persistono finché vive il processo: uscendo/rientrando nella pagina i dati
+raccolti non si perdono. Reset = riavvio dell'app.
+
+## Trappole smali gestite
+1. **Niente `.local`/`.end local`** riusando registri tra branch → solo `.locals N`.
+2. **Verifier Dalvik**: una reg letta in un handler `.catch` (es. `cn`/v14) va assegnata
+   **prima** del `:try_start` → `aget-object v14` è fuori dal try.
+3. **invoke non-range** → registri `<16`. `probe` `.locals 13` (param `p0..p2 = v13..v15`),
+   `run()` `.locals 15` (`p0 = v15`), `onPush` `.locals 4`.
+4. Commenti smali con `#`, mai `.line <testo>` (`.line` vuole solo un numero).
+5. `Thread.sleep(J)` in `try/catch InterruptedException`; `const-wide/16 v5, 0xbb8` = 3000 ms.
+6. `fullScroll(0x82)` = `View.FOCUS_DOWN` (130).
+7. `put/values/size/get` chiamati su `Ljava/util/concurrent/ConcurrentHashMap;`.
+8. **Concorrenza**: `sMap`/`sNames` scritti da due thread → devono essere `ConcurrentHashMap`
+   (mai `LinkedHashMap`/`HashMap` semplici, che si corromperebbero).
+
+## Validazione
+- **Statica** sui 5 file: `.method/.end method`, label, `try_start/try_end`, registri `<16` → OK.
+- **Build reale (2026-07-09)**: `apktool b` assembla `classes.dex` senza errori (⇒ smali valido),
+  zipalign + firma v2+v3 verificata, e la ri-decodifica dell'APK compilato (round-trip) riesce
+  (⇒ DEX strutturalmente valido). **Manca solo** la verifica DEX di ART + il comportamento a
+  runtime, che si controllano installando sulla testata.
+
+## Passi sul PC di build
 ```sh
-# dalla root del progetto (dove c'e compile_sign_align.sh)
-./compile_sign_align.sh                   # pulizia cache + apktool b + zipalign + firma v1/v2/v3 (debug key)
+# dalla root del progetto (dove c'è compile_sign_align.sh)
+./compile_sign_align.sh    # pulizia cache + apktool b + zipalign + firma v2+v3 (uber-apk-signer)
 ```
-NB: in questo branch sono presenti anche le modifiche precedenti non ancora compilate
-(package distinto `com.spd.xhsntg.audi`, minSdk 26, label "Audi functions", icona di
-default, rimozione AMap punto 10). Vedi `.claude/memory/ntg062-applied-mods.md`.
 
 ## Verifica post-build
-1. `aapt dump badging <apk> | grep -E "package|sdkVersion|label"`
-   → `com.spd.xhsntg.audi`, `sdkVersion:'26'`, `label:'Audi functions'`.
-2. Installa con `adb install <apk>` (deve installarsi affianco all'originale).
-3. In auto / con quadro acceso: apri l'app, scorri fino alla **5ª pagina**.
-   Parte il dump (qualche secondo). Riapri per uno snapshot fresco.
+1. Installa l'APK sulla testata.
+2. A quadro acceso, apri l'app e vai alla **pagina debug (indice 2, la 3ª)**: parte il
+   monitor. Puoi poi cambiare pagina / guidare: continua a girare (PULL + PUSH).
+3. **Aziona** i comandi da testare (luci, marce, frecce, clima…): compaiono nel file appena
+   il box li notifica (PUSH) o li espone al PULL.
 4. Copia `Download/ntg_carinfo_log.txt` e controlla:
-   - `connected=true` (se `false` → CarInfo non connesso, riprova o effetto Strada C);
-   - le righe `tenute` = parametri realmente monitorabili sull'Audi.
+   - `connected=true` (se `false` → CarInfo non connesso);
+   - le righe presenti = parametri leggibili dal box su questa Audi. Le righe con `push=` sono
+     quelle **notificate** dal box: la prova più forte di leggibilità.
+5. Ripeti in stati diversi (motore caldo, in marcia, retro, luci) per completare la mappa.
+6. Chiudi l'app per fermare il monitor.
 
-## Formato atteso del file
+## Formato del file
 ```
-=== NTG_062 CarInfo PULL dump (one-shot) ===
+=== NTG_062 CarInfo LIVE monitor ===
 connected=true
-criterio: solo i what con almeno un valore non nullo (int!=0 / float!=0 / stringa non vuota)
+criterio: monitor continuo. Ogni what+arg con valore PLAUSIBILE ... arg 0..5.
 
-INSTANTANEOUS_FUEL what=100002 int=72 float=7.2 str=-
-COOLANT_TEMPERATURE what=100059 int=89 float=89.0 str=-
-...
-scansionati=2261 tenuti=37
+ENGINE_TACHOMETER what=100042 int=640 float=- str=- bundle=-
+TOTAL_RECHARGE_MILEAGE what=100013 int=- float=- str=- bundle=Bundle[{unit=0, value=220412}]
+TEMPERATURE what=30006 int=- float=- str=- bundle=Bundle[{max=30.5, min=16.0, step=0.5, unit=0, value=23.0}]
+TURN_SIGNAL_LAMP what=140058 push=1 unit=0      <- riga da PUSH (notificata dal box)
+CANBOX_VERSION what=10004 int=- float=- str=YT-A4Q5-GD-Hx V212,... bundle=-
+
+elementi rilevati=NN
 ```
+Le righe `int=/float=/str=/bundle=` vengono dal PULL; le righe `push=… unit=…` dal PUSH
+(stesso `what` → una sola voce, aggiornata dall'ultima sorgente).
 
-## Possibili aggiustamenti se il dump non e utile
-- File enorme / tutto a 0 → il servizio risponde 0 a ogni what: stringere il filtro o
-  ridurre i tipi letti.
-- File vuoto con `connected=false` → trigger troppo presto: spostare/duplicare il
-  trigger (es. anche dopo un ritardo in `FullscreenActivity.onCreate`).
-- Servono i Bundle (porte/finestrini raggruppati) → aggiungere in `probe` una 4ª
-  lettura con `def = new Bundle()` e `bundle.toString()`.
+## Possibili aggiustamenti
+- **Carico**: ~54k chiamate binder ogni ~3 s (PULL) + il flusso PUSH, finché l'app è aperta.
+  Se pesa: alzare l'intervallo (`const-wide/16 v5` in `DumpTask.run`) o ridurre `arg` a `0..0`
+  per le classi non indicizzate.
+- **Registrazione PUSH a 19 classi sempre attiva**: più IPC anche in uso normale. Accettabile
+  in build di debug; per una build "pulita" si potrebbe registrare largo solo mentre il
+  monitor gira.
+- **Ordine righe non garantito** (`ConcurrentHashMap`): se serve un file ordinato, ordinare le
+  chiavi in `snapshot` prima di scrivere.
+- **Reset accumulo senza riavvio app**: non c'è; si potrebbe agganciare `sMap.clear()` +
+  `sNames.clear()` a un gesto sulla pagina debug.

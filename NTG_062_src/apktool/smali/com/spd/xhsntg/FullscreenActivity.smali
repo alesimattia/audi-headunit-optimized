@@ -1026,6 +1026,10 @@
 
     invoke-static {v0, v1}, Lcom/spd/xhsntg/NtgLog;->d(Ljava/lang/String;Ljava/lang/String;)I
 
+    # Modifica Mattia Alesi: ferma il monitor CarInfo live (DebugLog) SOLO alla chiusura reale
+    # dell'app, non al cambio pagina. Il thread di background esce al prossimo controllo di sRunning.
+    invoke-static {}, Lcom/spd/xhsntg/DebugLog;->stop()V
+
     .line 97
     iget-object v0, p0, Lcom/spd/xhsntg/FullscreenActivity;->mHandler:Landroid/os/Handler;
 

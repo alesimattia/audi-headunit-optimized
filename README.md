@@ -292,14 +292,14 @@ cp a:/tmp/out-aligned-signed.apk NTG_062_audi_it.apk
 Dettagli completi dello script: vedi [§ Script `compile_sign_align.sh`](#script-compile_sign_alignsh).
 
 ## Script `compile_sign_align.sh`
-> ⚠️ **`compile_sign_align.sh` è macOS-only** (cerca il JDK di Homebrew + `apksigner` dell'SDK) → **non gira su Windows/PC-030**: lì si usa la procedura manuale della sezione precedente (apktool jar in `a:/tmp` + firma via JDK 12). Inoltre la versione **attuale** dello script firma **SOLO v2** (via `apksigner`), non più v1/v2/v3: il testo qui sotto descrive la logica storica con `uber-apk-signer`.
+> ⚠️ **`compile_sign_align.sh` è macOS-only** (cerca il JDK di Homebrew) → **non gira su Windows/PC-030**: lì si usa la procedura manuale della sezione precedente (apktool jar in `a:/tmp` + firma via JDK 12). È **autocontenuto**: richiede solo un JDK (Homebrew) e `apktool` nel PATH, **nessun Android SDK/build-tools** — zipalign e firma sono gestiti da `uber-apk-signer.jar` (incluso nel repo).
 
 Script unico per la toolchain di build (macOS): **pulizia cache → `apktool b` → zipalign → firma**.
 
 ### Modalità d'uso
 | Comando | Cosa fa | Output |
 |---|---|---|
-| `./compile_sign_align.sh` | Build completa: pulizia cache + `apktool b` + zipalign + firma | `NTG_062_audi_it_aligned.apk` (default) |
+| `./compile_sign_align.sh` | Build completa: pulizia cache + `apktool b` + zipalign + firma | `NTG_062_audi_it.apk` (default) |
 | `./compile_sign_align.sh <output.apk>` | Build completa con **nome di output scelto da te** | `<output.apk>` |
 | `./compile_sign_align.sh --signOnly <in.apk> [out.apk]` | **Solo** zipalign + firma di un APK già costruito (no ricompilazione) | `out.apk`, o `<in>-aligned-signed.apk` |
 
@@ -309,8 +309,7 @@ unicamente con il flag esplicito `--signOnly` → nessuna ambiguità sul nome di
 ### Cosa fa nel dettaglio
 1. **Pulizia cache** — `rm -rf NTG_062_src/apktool/build NTG_062_src/apktool/dist` (evita che i file eliminati riappaiano).
 2. **Compilazione** — `apktool b NTG_062_src/apktool` su un APK temporaneo non firmato.
-3. **Firma** — se `uber-apk-signer.jar` è presente: **zipalign + firma v1/v2/v3** (consigliato);
-   altrimenti fallback auto-contenuto: `jarsigner` (solo v1) + `zipalign.py`.
+3. **Firma** — `uber-apk-signer.jar` (incluso nel repo): **zipalign built-in + firma v2+v3** in un solo passo (schemi adatti ad Android 9 / API 28). Autocontenuto: serve solo un JDK, nessun Android SDK.
 4. La `debug.keystore` (password `android`) viene creata una volta e riusata → firma coerente tra le build.
 
 ### Note

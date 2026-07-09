@@ -17,9 +17,10 @@
 .end annotation
 
 
-# Worker del dump CarInfo. mMode=0 -> esegue il dump in background (reflection + letture
-# PULL su CarInfo, migliaia di chiamate binder: NON sul main thread). mMode=1 -> applica
-# il testo prodotto alla TextView (rimesso sul main thread via View.post).
+# Worker del monitor CarInfo. mMode=0 -> loop continuo in background (reflection + letture
+# PULL su CarInfo, migliaia di chiamate binder: NON sul main thread) finche' DebugLog.sRunning;
+# ad ogni giro fa upsert in DebugLog.sMap e riscrive il file. mMode=1 -> applica il testo
+# prodotto alla TextView (rimesso sul main thread via View.post).
 
 # instance fields
 .field mMode:I
@@ -208,30 +209,24 @@
     :goto_ret
     return-void
 
-    # --- mMode==0: dump in background ---
+    # --- mMode==0: monitor CONTINUO in background ---
     :goto_dump
+    const/4 v1, 0x1
+
+    sput-boolean v1, Lcom/spd/xhsntg/DebugLog;->sBusy:Z
+
     invoke-static {}, Lcom/spd/carinfo/CarInfo;->instance()Lcom/spd/carinfo/CarInfo;
 
     move-result-object v0
 
-    invoke-virtual {v0}, Lcom/spd/carinfo/CarInfo;->isConnected()Z
+    # v0 = CarInfo, persistente per tutta la durata del monitor
 
-    move-result v4
+    :goto_loop
+    sget-boolean v1, Lcom/spd/xhsntg/DebugLog;->sRunning:Z
 
-    new-instance v1, Ljava/lang/StringBuilder;
+    if-eqz v1, :goto_stop
 
-    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
-
-    const-string v2, "=== NTG_062 CarInfo PULL dump (one-shot) ===\nconnected="
-
-    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    invoke-virtual {v1, v4}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
-
-    const-string v2, "\ncriterio: tengo what+arg solo con valore PLAUSIBILE = int diverso da 0 (e non semplice eco dell'indice arg), float diverso da 0.0, stringa non vuota e diversa da NA e da 0, oppure Bundle non vuoto (leggine il contenuto). Zeri e sentinelle scartati: qui interessa SE il parametro e leggibile dal box, non il valore live. arg scandito 0..5, righe con arg=0 = valore globale.\n\n"
-
-    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
+    # === una passata completa: probe fa upsert in DebugLog.sMap per ogni what+arg ===
     invoke-static {}, Lcom/spd/xhsntg/DebugLog$DumpTask;->names()[Ljava/lang/String;
 
     move-result-object v2
@@ -240,16 +235,12 @@
 
     const/4 v4, 0x0
 
-    const/4 v5, 0x0
-
-    const/4 v6, 0x0
-
     sget-object v7, Ljava/lang/Integer;->TYPE:Ljava/lang/Class;
 
     :goto_outer
     if-ge v4, v3, :goto_outer_end
 
-    # aget fuori dal try: garantisce v14 (cn) inizializzato anche all'handler catch_class
+    # aget fuori dal try: v14 (cn) resta inizializzato anche all'handler catch_class
     aget-object v14, v2, v4
 
     :try_start_0
@@ -297,14 +288,23 @@
     :try_end_1
     .catch Ljava/lang/Throwable; {:try_start_1 .. :try_end_1} :catch_field
 
-    add-int/lit8 v5, v5, 0x1
-
     invoke-virtual {v11}, Ljava/lang/reflect/Field;->getName()Ljava/lang/String;
 
     move-result-object v14
 
-    # P3: scansione indicizzata arg=0..5 (cattura sedili/ruote/porte/zone/finestrini/camere AVM).
-    # v11 (Field, ormai inutilizzato dopo getName) riusato come contatore arg; arg -> DebugLog.sArg.
+    # popola la mappa what->nome per onPush (dedup PUSH+PULL); v12 libero qui
+    sget-object v12, Lcom/spd/xhsntg/DebugLog;->sNames:Ljava/util/concurrent/ConcurrentHashMap;
+
+    if-eqz v12, :cond_nonames
+
+    invoke-static {v13}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v11
+
+    invoke-virtual {v12, v11, v14}, Ljava/util/concurrent/ConcurrentHashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    :cond_nonames
+    # v11 (Field, ormai inutile dopo getName) riusato come contatore arg 0..5 -> DebugLog.sArg
     const/4 v11, 0x0
 
     :goto_arg
@@ -314,13 +314,9 @@
 
     sput v11, Lcom/spd/xhsntg/DebugLog;->sArg:I
 
-    # P2: un singolo what malformato (es. ClassCastException) non deve abortire l'intero dump.
+    # un singolo what malformato non deve abortire la passata
     :try_start_probe
-    invoke-static {v1, v0, v14, v13}, Lcom/spd/xhsntg/DebugLog;->probe(Ljava/lang/StringBuilder;Lcom/spd/carinfo/CarInfo;Ljava/lang/String;I)I
-
-    move-result v12
-
-    add-int/2addr v6, v12
+    invoke-static {v0, v14, v13}, Lcom/spd/xhsntg/DebugLog;->probe(Lcom/spd/carinfo/CarInfo;Ljava/lang/String;I)V
     :try_end_probe
     .catch Ljava/lang/Throwable; {:try_start_probe .. :try_end_probe} :catch_probe
 
@@ -350,61 +346,58 @@
     :catch_class
     move-exception v12
 
-    const-string v13, "ERR "
-
-    invoke-virtual {v1, v13}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    invoke-virtual {v1, v14}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    const-string v13, "\n"
-
-    invoke-virtual {v1, v13}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
     :goto_outer_next
     add-int/lit8 v4, v4, 0x1
 
     goto :goto_outer
 
     :goto_outer_end
-    const-string v2, "\nwhat scansionati="
+    # === fine passata: riscrive il file dalla mappa aggiornata + aggiorna UI ===
+    invoke-virtual {v0}, Lcom/spd/carinfo/CarInfo;->isConnected()Z
 
-    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result v1
 
-    invoke-virtual {v1, v5}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    invoke-static {v1}, Lcom/spd/xhsntg/DebugLog;->snapshot(Z)Ljava/lang/String;
 
-    const-string v2, " righe tenute (what+arg)="
+    move-result-object v1
 
-    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    invoke-virtual {v1, v6}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
-
-    const-string v2, "\n"
-
-    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-
-    move-result-object v0
-
-    invoke-static {v0}, Lcom/spd/xhsntg/DebugLog;->writeFileOverwrite(Ljava/lang/String;)V
+    invoke-static {v1}, Lcom/spd/xhsntg/DebugLog;->writeFileOverwrite(Ljava/lang/String;)V
 
     # rimanda l'aggiornamento UI sul main thread
-    sget-object v1, Lcom/spd/xhsntg/DebugLog;->sText:Landroid/widget/TextView;
+    sget-object v2, Lcom/spd/xhsntg/DebugLog;->sText:Landroid/widget/TextView;
 
-    if-eqz v1, :goto_flag
+    if-eqz v2, :goto_sleep
 
-    new-instance v2, Lcom/spd/xhsntg/DebugLog$DumpTask;
+    new-instance v5, Lcom/spd/xhsntg/DebugLog$DumpTask;
 
-    const/4 v3, 0x1
+    const/4 v6, 0x1
 
-    invoke-direct {v2, v3, v0}, Lcom/spd/xhsntg/DebugLog$DumpTask;-><init>(ILjava/lang/String;)V
+    invoke-direct {v5, v6, v1}, Lcom/spd/xhsntg/DebugLog$DumpTask;-><init>(ILjava/lang/String;)V
 
-    invoke-virtual {v1, v2}, Landroid/widget/TextView;->post(Ljava/lang/Runnable;)Z
+    invoke-virtual {v2, v5}, Landroid/widget/TextView;->post(Ljava/lang/Runnable;)Z
 
-    :goto_flag
-    const/4 v0, 0x0
+    :goto_sleep
+    # pausa ~3s tra una passata e l'altra
+    const-wide/16 v5, 0xbb8
 
-    sput-boolean v0, Lcom/spd/xhsntg/DebugLog;->sRunning:Z
+    :try_start_sleep
+    invoke-static {v5, v6}, Ljava/lang/Thread;->sleep(J)V
+    :try_end_sleep
+    .catch Ljava/lang/InterruptedException; {:try_start_sleep .. :try_end_sleep} :catch_sleep
+
+    goto :goto_aftersleep
+
+    :catch_sleep
+    move-exception v5
+
+    :goto_aftersleep
+    goto :goto_loop
+
+    :goto_stop
+    # uscita: segnala che nessun thread monitor e' piu' vivo
+    const/4 v1, 0x0
+
+    sput-boolean v1, Lcom/spd/xhsntg/DebugLog;->sBusy:Z
 
     return-void
 .end method

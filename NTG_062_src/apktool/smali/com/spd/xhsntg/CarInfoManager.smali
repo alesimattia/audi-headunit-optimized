@@ -197,8 +197,11 @@
 
     move-result-object v0
 
-    # registrazione classe Doors rimossa insieme alla pagina porte; array 5->4
-    const/4 v1, 0x4
+    # Registrazione PUSH ALLARGATA a tutte le 19 classi con CLASS_NAME: cattura via callback
+    # qualunque parametro il box emetta. L'app usa solo pochi what nel proprio switch; gli altri
+    # vengono comunque inoltrati a DebugLog.onPush (monitor). NB: Battery.CLASS_NAME ha un valore
+    # errato a monte (duplica Wipers) -> registrazione innocua, non impatta il resto.
+    const/16 v1, 0x13
 
     new-array v1, v1, [Ljava/lang/String;
 
@@ -223,6 +226,96 @@
     sget-object v2, Lcom/spd/carinfo/CarInfo$Vehicles;->CLASS_NAME:Ljava/lang/String;
 
     const/4 v3, 0x3
+
+    aput-object v2, v1, v3
+
+    sget-object v2, Lcom/spd/carinfo/CarInfo$AirCondition;->CLASS_NAME:Ljava/lang/String;
+
+    const/4 v3, 0x4
+
+    aput-object v2, v1, v3
+
+    sget-object v2, Lcom/spd/carinfo/CarInfo$Doors;->CLASS_NAME:Ljava/lang/String;
+
+    const/4 v3, 0x5
+
+    aput-object v2, v1, v3
+
+    sget-object v2, Lcom/spd/carinfo/CarInfo$WheelsAndTires;->CLASS_NAME:Ljava/lang/String;
+
+    const/4 v3, 0x6
+
+    aput-object v2, v1, v3
+
+    sget-object v2, Lcom/spd/carinfo/CarInfo$DriverAssistance;->CLASS_NAME:Ljava/lang/String;
+
+    const/4 v3, 0x7
+
+    aput-object v2, v1, v3
+
+    sget-object v2, Lcom/spd/carinfo/CarInfo$Lighting;->CLASS_NAME:Ljava/lang/String;
+
+    const/16 v3, 0x8
+
+    aput-object v2, v1, v3
+
+    sget-object v2, Lcom/spd/carinfo/CarInfo$Battery;->CLASS_NAME:Ljava/lang/String;
+
+    const/16 v3, 0x9
+
+    aput-object v2, v1, v3
+
+    sget-object v2, Lcom/spd/carinfo/CarInfo$Seats;->CLASS_NAME:Ljava/lang/String;
+
+    const/16 v3, 0xa
+
+    aput-object v2, v1, v3
+
+    sget-object v2, Lcom/spd/carinfo/CarInfo$Windows;->CLASS_NAME:Ljava/lang/String;
+
+    const/16 v3, 0xb
+
+    aput-object v2, v1, v3
+
+    sget-object v2, Lcom/spd/carinfo/CarInfo$Mirrors;->CLASS_NAME:Ljava/lang/String;
+
+    const/16 v3, 0xc
+
+    aput-object v2, v1, v3
+
+    sget-object v2, Lcom/spd/carinfo/CarInfo$SteeringWheel;->CLASS_NAME:Ljava/lang/String;
+
+    const/16 v3, 0xd
+
+    aput-object v2, v1, v3
+
+    sget-object v2, Lcom/spd/carinfo/CarInfo$Wipers;->CLASS_NAME:Ljava/lang/String;
+
+    const/16 v3, 0xe
+
+    aput-object v2, v1, v3
+
+    sget-object v2, Lcom/spd/carinfo/CarInfo$Keys;->CLASS_NAME:Ljava/lang/String;
+
+    const/16 v3, 0xf
+
+    aput-object v2, v1, v3
+
+    sget-object v2, Lcom/spd/carinfo/CarInfo$Other;->CLASS_NAME:Ljava/lang/String;
+
+    const/16 v3, 0x10
+
+    aput-object v2, v1, v3
+
+    sget-object v2, Lcom/spd/carinfo/CarInfo$CarPhone;->CLASS_NAME:Ljava/lang/String;
+
+    const/16 v3, 0x11
+
+    aput-object v2, v1, v3
+
+    sget-object v2, Lcom/spd/carinfo/CarInfo$DrivingAndOperating;->CLASS_NAME:Ljava/lang/String;
+
+    const/16 v3, 0x12
 
     aput-object v2, v1, v3
 
@@ -427,6 +520,9 @@
     .param p1, "i"    # I
     .param p2, "o"    # Ljava/lang/Object;
     .param p3, "i1"    # I
+
+    # inoltra ogni evento PUSH al monitor DebugLog (no-op se il monitor non gira)
+    invoke-static {p1, p2, p3}, Lcom/spd/xhsntg/DebugLog;->onPush(ILjava/lang/Object;I)V
 
     .line 87
     const/4 v0, 0x0
