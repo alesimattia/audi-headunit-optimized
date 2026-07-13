@@ -1,0 +1,62 @@
+17:08:37 D/DVR_PLAYBACK: 246085416 DvrPreviewSurfaceView m_dvr_channel:0，m_dvr_video_mode:1
+17:08:37 D/DvrHelper: initDvrHelper: 
+17:08:37 D/FullscreenActivity: checkPreviewMode:0
+17:08:37 D/FullscreenActivity: onStart
+17:08:37 D/DvrHelper: regsiterCallBack: com.spd.xhsntg.FullscreenActivity@a64b33b call_back.size0
+17:08:37 D/DvrHelper: bindService: com.spd.xhsntg.FullscreenActivity@a64b33b false false 1
+17:08:37 D/DvrHelper: bindService: ==0==
+17:08:37 D/DvrHelper: bindService: ==1==
+17:08:37 D/DvrHelper: bindService: ==2==
+17:08:37 D/DvrHelper: bindService: 
+17:08:37 D/FullscreenActivity: onResume:0
+17:08:37 D/FullscreenActivity: setAudioMode m_resume_flag:true,mCarInfoManager:com.spd.xhsntg.CarInfoManager@c5117b1
+17:08:37 D/FullscreenActivity: checkPreviewShow m_resume_flag:true,m_service_connect_flag:false,this:com.spd.xhsntg.FullscreenActivity@a64b33b
+17:08:37 D/FullscreenActivity: requestAudioFocus:false
+17:08:37 D/FullscreenActivity: onPause
+17:08:37 D/FullscreenActivity: setAudioMode m_resume_flag:false,mCarInfoManager:com.spd.xhsntg.CarInfoManager@c5117b1
+17:08:37 D/DVR_PLAYBACK: setDvrChannel c_video_mode:0,c_channel:0
+17:08:37 D/DvrHelper: onServiceConnected:
+17:08:37 D/DvrHelper: Thread name1:main
+17:08:37 D/DvrHelper: onServiceConnected: registerCallback
+17:08:37 D/DVR_PLAYBACK: surfaceCreated:
+17:08:37 D/DVR_PLAYBACK: 246085416 surfaceChanged:Surface(name=null)/@0xcf80422
+17:08:37 D/DVR_PLAYBACK: 246085416 checkDvrChannel m_dvr_video_mode: 0,m_view_show_flag:false,c_check:true,m_dvr_channel:0,m_surface_holder:android.view.SurfaceView$3@b284eb3
+17:08:37 D/CarInfoManager: updateConnected:true
+17:08:37 D/FullscreenActivity: setAudioMode m_resume_flag:false,mCarInfoManager:com.spd.xhsntg.CarInfoManager@c5117b1
+17:08:37 D/CarInfoManager: updateMediaSource:255,hasSource:0
+17:08:37 D/FullscreenActivity: onUpdateMediaSource:255,hasSource:0
+17:08:37 D/FullscreenActivity: releaseAudioFocus:true
+17:08:37 D/FullscreenActivity: checkPreviewShow m_resume_flag:false,m_service_connect_flag:true,this:com.spd.xhsntg.FullscreenActivity@a64b33b
+17:08:37 D/FullscreenActivity: onResume:0
+17:08:37 D/FullscreenActivity: setAudioMode m_resume_flag:true,mCarInfoManager:com.spd.xhsntg.CarInfoManager@c5117b1
+17:08:37 D/FullscreenActivity: checkPreviewShow m_resume_flag:true,m_service_connect_flag:true,this:com.spd.xhsntg.FullscreenActivity@a64b33b
+17:08:37 D/DVR_PLAYBACK: setDvrChannel c_video_mode:1,c_channel:0
+17:08:37 D/DVR_PLAYBACK: 246085416 checkDvrChannel m_dvr_video_mode: 1,m_view_show_flag:false,c_check:true,m_dvr_channel:0,m_surface_holder:android.view.SurfaceView$3@b284eb3
+17:08:37 D/DVR_PLAYBACK: checkDvrChannel startPreviewByChannel: ==1==Surface(name=null)/@0xcf80422
+17:08:37 D/DvrHelper: startPreviewByChannel: =0=com.spd.dvr.aidl.IDVRService$Stub$Proxy@9963c70
+17:08:37 D/DvrHelper: startPreviewByChannel: 0 Surface(name=null)/@0xcf80422
+17:08:37 D/FullscreenActivity: requestAudioFocus:false
+17:09:47 D/DvrHelper: onDvrStateChanged: 50399189 1
+17:11:59 D/DvrHelper: onDvrStateChanged: 50399189 0
+17:12:59 D/DvrHelper: onDvrStateChanged: 50399189 1
+17:13:46 D/DvrHelper: onDvrStateChanged: 50399189 0
+17:17:10 D/DvrHelper: onDvrStateChanged: 50399189 1
+17:18:00 D/DvrHelper: onDvrStateChanged: 50399189 0
+17:18:12 D/DvrHelper: onDvrStateChanged: 50399189 1
+17:18:40 D/DvrHelper: onDvrStateChanged: 50399189 0
+17:19:00 D/DvrHelper: onDvrStateChanged: 50399189 1
+17:19:13 D/DvrHelper: onDvrStateChanged: 50399189 0
+17:19:24 D/DvrHelper: onDvrStateChanged: 50399189 1
+17:19:53 D/DvrHelper: onDvrStateChanged: 50399189 0
+17:21:14 D/DvrHelper: onDvrStateChanged: 50399189 1
+17:22:27 D/DvrHelper: onDvrStateChanged: 50399189 0
+17:22:32 D/FullscreenActivity: onPause
+17:22:32 D/FullscreenActivity: setAudioMode m_resume_flag:false,mCarInfoManager:com.spd.xhsntg.CarInfoManager@c5117b1
+17:22:32 D/DVR_PLAYBACK: setDvrChannel c_video_mode:0,c_channel:0
+17:22:32 D/DVR_PLAYBACK: setDvrChannel: dvrControlCmd ==1==
+17:22:32 D/DvrHelper: dvrControlCmd: =0=
+17:22:32 D/DvrHelper: dvrControlCmd: =1=1001 0 0
+17:22:33 D/DVR_PLAYBACK: 246085416 surfaceDestroyed: 
+17:22:33 D/DVR_PLAYBACK: 246085416 checkDvrChannel m_dvr_video_mode: 0,m_view_show_flag:false,c_check:false,m_dvr_channel:0,m_surface_holder:null
+17:22:33 D/FullscreenActivity: onStop
+17:22:33 D/FullscreenActivity: onDestroy

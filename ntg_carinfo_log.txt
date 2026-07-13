@@ -1,0 +1,378 @@
+=== NTG_062 CarInfo LIVE monitor ===
+connected=true
+criterio: monitor continuo. Ogni what+arg con valore PLAUSIBILE (int!=0 non-eco, float!=0.0, stringa non vuota/NA/0, oppure Bundle non vuoto) viene aggiunto la prima volta e aggiornato ai giri successivi. I comandi attivati durante la scansione compaiono appena leggibili. Lista deduplicata per what+arg: non cresce all'infinito. arg 0..5, righe con arg=0 = valore globale.
+
+BENZ_FUNCTION_SEAT_WELCOME what=120263 arg=3 int=- float=- str=- bundle=Bundle[{level=0, workState=0}]
+BATTERY_INFO what=160050 arg=4 int=- float=- str=- bundle=Bundle[{batteryInfo=null}]
+BENZ_FUNCTION_SEAT_WELCOME what=120263 arg=4 int=- float=- str=- bundle=Bundle[{level=0, workState=0}]
+CURRENT_SPEED what=140062 arg=1 int=- float=1.0 str=- bundle=-
+BATTERY_INFO what=160050 arg=5 int=- float=- str=- bundle=Bundle[{batteryInfo=null}]
+BENZ_FUNCTION_SEAT_WELCOME what=120263 arg=5 int=- float=- str=- bundle=Bundle[{level=0, workState=0}]
+BATTERY_INFO what=160050 arg=2 int=- float=- str=- bundle=Bundle[{batteryInfo=null}]
+BATTERY_INFO what=160050 arg=3 int=- float=- str=- bundle=Bundle[{batteryInfo=null}]
+CURRENT_SPEED what=140062 arg=4 int=- float=1.0 str=- bundle=-
+TEMPERATURE what=30006 arg=5 int=- float=- str=- bundle=Bundle[{max=30.5, min=16.0, step=0.5, unit=0}]
+CURRENT_SPEED what=140062 arg=5 int=- float=1.0 str=- bundle=-
+BATTERY_INFO what=160050 arg=1 int=- float=- str=- bundle=Bundle[{batteryInfo=null}]
+BENZ_FUNCTION_SEAT_WELCOME what=120263 arg=1 int=- float=- str=- bundle=Bundle[{level=0, workState=0}]
+CURRENT_SPEED what=140062 arg=2 int=- float=1.0 str=- bundle=-
+TEMPERATURE what=30006 arg=3 int=- float=- str=- bundle=Bundle[{max=30.5, min=16.0, step=0.5, unit=0}]
+BENZ_FUNCTION_SEAT_WELCOME what=120263 arg=2 int=- float=- str=- bundle=Bundle[{level=0, workState=0}]
+CURRENT_SPEED what=140062 arg=3 int=- float=1.0 str=- bundle=-
+TEMPERATURE what=30006 arg=4 int=- float=- str=- bundle=Bundle[{max=0.0, min=0.0, step=0.0, unit=0, value=0.0}]
+FRONT_RADAR_LEVEL what=140007 arg=1 int=- float=- str=- bundle=Bundle[{enable=0, radarNum=0, value=[I@5f4ec5e, maxValue=0, displayType=0}]
+TEMPERATURE what=30006 arg=1 int=- float=- str=- bundle=Bundle[{max=30.5, min=16.0, step=0.5, unit=0, value=24.0}]
+FRONT_RADAR_LEVEL what=140007 arg=2 int=- float=- str=- bundle=Bundle[{enable=0, radarNum=0, value=[I@801783f, maxValue=0, displayType=0}]
+TEMPERATURE what=30006 arg=2 int=- float=- str=- bundle=Bundle[{max=30.5, min=16.0, step=0.5, unit=0}]
+FRONT_RADAR_LEVEL what=140007 arg=5 int=- float=- str=- bundle=Bundle[{enable=0, radarNum=0, value=[I@b1f706a, maxValue=0, displayType=0}]
+REAR_RADAR_LEVEL what=140006 arg=5 int=- float=- str=- bundle=Bundle[{enable=0, radarNum=0, value=[I@4e3290e, maxValue=0, displayType=0}]
+FRONT_RADAR_LEVEL what=140007 arg=3 int=- float=- str=- bundle=Bundle[{enable=0, radarNum=0, value=[I@afd950c, maxValue=0, displayType=0}]
+FRONT_RADAR_LEVEL what=140007 arg=4 int=- float=- str=- bundle=Bundle[{enable=0, radarNum=0, value=[I@4aa4e55, maxValue=0, displayType=0}]
+FUEL_RECHARGE_MILEAGE what=100011 arg=5 int=- float=- str=- bundle=Bundle[{unit=0, value=-0.1}]
+FUEL_RECHARGE_MILEAGE what=100011 arg=4 int=- float=- str=- bundle=Bundle[{unit=0, value=-0.1}]
+TIME what=10001 int=- float=- str=- bundle=Bundle[{minute=22, second=0, hour=17, mode=0}]
+HEADLAMP_HIGH_BEAMS what=110000 arg=3 int=1 float=- str=- bundle=-
+HEADLAMP_HIGH_BEAMS what=110000 arg=2 int=1 float=- str=- bundle=-
+REVERSE what=140011 push=0 unit=1
+ALL_MODEL what=170003 int=- float=- str=- bundle=Bundle[{values=[I@30469e9, names=[Ljava.lang.String;@45c466e}]
+CURRENT_MODE what=100278 int=- float=- str=- bundle=Bundle[{auxSecondRow=0, auxChange=0, mode=1, auxFirstRow=2}]
+HEADLAMP_HIGH_BEAMS what=110000 arg=5 int=1 float=- str=- bundle=-
+HEADLAMP_HIGH_BEAMS what=110000 arg=4 int=1 float=- str=- bundle=-
+INSTANTANEOUS_FUEL what=100002 arg=3 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+INSTANTANEOUS_FUEL what=100002 arg=2 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+POSITON_LIGHT what=140059 push=0 unit=0
+OPENED what=50001 arg=1 int=- float=- str=- bundle=Bundle[{sunroof=0, rearLeft=0, rearRight=0, frontRight=0, hood=0, trunk=0, frontLeft=0}]
+INSTANTANEOUS_FUEL what=100002 arg=5 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+OPENED what=50001 arg=2 int=- float=- str=- bundle=Bundle[{sunroof=0, rearLeft=0, rearRight=0, frontRight=0, hood=0, trunk=0, frontLeft=0}]
+INSTANTANEOUS_FUEL what=100002 arg=4 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+INSTANTANEOUS_FUEL what=100002 arg=1 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+BENZ_FUNCTION_SEAT_MASSAGE what=120262 arg=1 int=- float=- str=- bundle=Bundle[{direction=0, time=0, workState=0}]
+AVERAGE_SPEED what=100001 arg=5 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+FUEL_RECHARGE_MILEAGE what=100011 arg=1 int=- float=- str=- bundle=Bundle[{unit=0, value=-0.1}]
+TRIP_A_DISTANCE what=100150 arg=1 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+BENZ_FUNCTION_SEAT_MASSAGE what=120262 arg=2 int=- float=- str=- bundle=Bundle[{direction=0, time=0, workState=0}]
+CURRENT_SPEED what=140062 push=0.0 unit=0
+FUEL_RECHARGE_MILEAGE what=100011 arg=3 int=- float=- str=- bundle=Bundle[{unit=0, value=-0.1}]
+FUEL_RECHARGE_MILEAGE what=100011 arg=2 int=- float=- str=- bundle=Bundle[{unit=0, value=-0.1}]
+BENZ_FUNCTION_SEAT_MASSAGE what=120262 arg=5 int=- float=- str=- bundle=Bundle[{direction=0, time=0, workState=0}]
+TRIP_A_DISTANCE what=100150 arg=4 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+AVERAGE_SPEED what=100001 arg=1 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+TRIP_A_DISTANCE what=100150 arg=5 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+AVERAGE_SPEED what=100001 arg=2 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+TRIP_A_DISTANCE what=100150 arg=2 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+BENZ_FUNCTION_SEAT_MASSAGE what=120262 arg=3 int=- float=- str=- bundle=Bundle[{direction=0, time=0, workState=0}]
+AVERAGE_SPEED what=100001 arg=3 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+TRIP_A_DISTANCE what=100150 arg=3 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+BENZ_FUNCTION_SEAT_MASSAGE what=120262 arg=4 int=- float=- str=- bundle=Bundle[{direction=0, time=0, workState=0}]
+AVERAGE_SPEED what=100001 arg=4 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+MEDIA_SOURCE what=100085 int=255 float=- str=- bundle=-
+LEFT_RADAR_LEVEL what=140008 int=- float=- str=- bundle=Bundle[{enable=1, radarNum=0, value=[I@c9f595b, maxValue=0, displayType=0}]
+DUAL what=30057 int=2 float=- str=- bundle=-
+POWER what=30000 arg=5 int=1 float=- str=- bundle=-
+POWER what=30000 arg=4 int=1 float=- str=- bundle=-
+POWER what=30000 arg=3 int=1 float=- str=- bundle=-
+POWER what=30000 arg=2 int=1 float=- str=- bundle=-
+MOTOR_INFO what=160049 arg=3 int=- float=- str=- bundle=Bundle[{motorInfo=null}]
+MOTOR_INFO what=160049 arg=2 int=- float=- str=- bundle=Bundle[{motorInfo=null}]
+MOTOR_INFO what=160049 arg=1 int=- float=- str=- bundle=Bundle[{motorInfo=null}]
+ANGLE what=140057 arg=3 int=- float=-0.0129629625 str=- bundle=-
+ANGLE what=140057 arg=2 int=- float=-0.0129629625 str=- bundle=-
+ANGLE what=140057 arg=5 int=- float=-0.0129629625 str=- bundle=-
+MOTOR_INFO what=160049 arg=5 int=- float=- str=- bundle=Bundle[{motorInfo=null}]
+ANGLE what=140057 arg=4 int=- float=-0.0129629625 str=- bundle=-
+MOTOR_INFO what=160049 arg=4 int=- float=- str=- bundle=Bundle[{motorInfo=null}]
+ANGLE what=140057 arg=1 int=- float=-0.0129629625 str=- bundle=-
+DUAL what=30057 arg=5 int=2 float=- str=- bundle=-
+ACC what=140086 int=1 float=- str=- bundle=-
+VERTICAL_CAR_UI_COLOR what=140067 arg=1 int=- float=- str=- bundle=Bundle[{up=0, down=0, left=0, right=0, downRight=0, downLeft=0}]
+DUAL what=30057 arg=4 int=2 float=- str=- bundle=-
+WIND_MODE what=30003 int=128 float=- str=- bundle=-
+DUAL what=30057 arg=3 int=2 float=- str=- bundle=-
+VERTICAL_CAR_UI_COLOR what=140067 arg=3 int=- float=- str=- bundle=Bundle[{up=0, down=0, left=0, right=0, downRight=0, downLeft=0}]
+BENZ_FUNCTION_CLOCK what=120265 int=- float=- str=- bundle=Bundle[{minute=0, showType=0, hour=0, angle=0, brightness=0, workState=0}]
+VERTICAL_CAR_UI_COLOR what=140067 arg=2 int=- float=- str=- bundle=Bundle[{up=0, down=0, left=0, right=0, downRight=0, downLeft=0}]
+DUAL what=30057 arg=1 int=2 float=- str=- bundle=-
+VERTICAL_CAR_UI_COLOR what=140067 arg=5 int=- float=- str=- bundle=Bundle[{up=0, down=0, left=0, right=0, downRight=0, downLeft=0}]
+VERTICAL_CAR_UI_COLOR what=140067 arg=4 int=- float=- str=- bundle=Bundle[{up=0, down=0, left=0, right=0, downRight=0, downLeft=0}]
+OPENED what=50001 arg=3 int=- float=- str=- bundle=Bundle[{sunroof=0, rearLeft=0, rearRight=0, frontRight=0, hood=0, trunk=0, frontLeft=0}]
+OPENED what=50001 arg=4 int=- float=- str=- bundle=Bundle[{sunroof=0, rearLeft=0, rearRight=0, frontRight=0, hood=0, trunk=0, frontLeft=0}]
+OPENED what=50001 arg=5 int=- float=- str=- bundle=Bundle[{sunroof=0, rearLeft=0, rearRight=0, frontRight=0, hood=0, trunk=0, frontLeft=0}]
+BENZ_FUNCTION_FOCUS_SMALL_SPEAKER what=120278 arg=4 int=1 float=- str=- bundle=-
+BENZ_FUNCTION_FOCUS_SMALL_SPEAKER what=120278 arg=3 int=1 float=- str=- bundle=-
+BENZ_FUNCTION_FOCUS_SMALL_SPEAKER what=120278 arg=2 int=1 float=- str=- bundle=-
+WIND_MODE what=30003 arg=5 int=128 float=- str=- bundle=-
+BENZ_FUNCTION_FOCUS_SMALL_SPEAKER what=120278 arg=5 int=1 float=- str=- bundle=-
+WIND_MODE what=30003 arg=4 int=128 float=- str=- bundle=-
+REAR_RADAR_LEVEL what=140006 arg=2 int=- float=- str=- bundle=Bundle[{enable=0, radarNum=0, value=[I@50d98d3, maxValue=0, displayType=0}]
+WIND_MODE what=30003 arg=3 int=128 float=- str=- bundle=-
+KEY_BRIGHTNESS what=100006 arg=1 int=27 float=- str=- bundle=-
+REAR_RADAR_LEVEL what=140006 arg=1 int=- float=- str=- bundle=Bundle[{enable=0, radarNum=0, value=[I@99a2c2, maxValue=0, displayType=0}]
+WIND_MODE what=30003 arg=2 int=128 float=- str=- bundle=-
+REAR_RADAR_LEVEL what=140006 arg=4 int=- float=- str=- bundle=Bundle[{enable=0, radarNum=0, value=[I@fe4b309, maxValue=0, displayType=0}]
+KEY_BRIGHTNESS what=100006 arg=3 int=27 float=- str=- bundle=-
+REAR_RADAR_LEVEL what=140006 arg=3 int=- float=- str=- bundle=Bundle[{enable=0, radarNum=0, value=[I@18c8c10, maxValue=0, displayType=0}]
+KEY_BRIGHTNESS what=100006 arg=2 int=27 float=- str=- bundle=-
+KEY_BRIGHTNESS what=100006 arg=5 int=27 float=- str=- bundle=-
+KEY_BRIGHTNESS what=100006 arg=4 int=27 float=- str=- bundle=-
+AVERAGE_FUEL what=100003 arg=5 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+AVERAGE_FUEL what=100003 arg=4 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+AUTO_PARKING_HINT what=140066 arg=3 int=- float=- str=- bundle=Bundle[{active=0, hints=0}]
+ENGINE_TACHOMETER what=100042 arg=4 int=630 float=- str=- bundle=-
+BENZ_FUNCTION_KUAI_CHONG_POP what=120276 arg=5 int=1 float=- str=- bundle=-
+AUTO_PARKING_HINT what=140066 arg=4 int=- float=- str=- bundle=Bundle[{active=0, hints=0}]
+ENGINE_TACHOMETER what=100042 arg=5 int=630 float=- str=- bundle=-
+AUTO_PARKING_HINT what=140066 arg=1 int=- float=- str=- bundle=Bundle[{active=0, hints=0}]
+AUTO_PARKING_HINT what=140066 arg=2 int=- float=- str=- bundle=Bundle[{active=0, hints=0}]
+AVERAGE_FUEL what=100003 arg=3 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+AVERAGE_FUEL what=100003 arg=2 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+ENGINE_TACHOMETER what=100042 arg=1 int=630 float=- str=- bundle=-
+AVERAGE_FUEL what=100003 arg=1 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+ENGINE_TACHOMETER what=100042 arg=2 int=630 float=- str=- bundle=-
+ENGINE_TACHOMETER what=100042 arg=3 int=630 float=- str=- bundle=-
+BENZ_FUNCTION_SEAT_MASSAGE what=120262 int=- float=- str=- bundle=Bundle[{direction=0, time=0, workState=0}]
+CARBODY_FAULT_INFO what=160048 arg=1 int=- float=- str=- bundle=Bundle[{carBodyFaultInfo=null}]
+DATE what=10002 int=- float=- str=- bundle=Bundle[{day=13, year=26, month=7}]
+CARBODY_FAULT_INFO what=160048 arg=2 int=- float=- str=- bundle=Bundle[{carBodyFaultInfo=null}]
+CARBODY_FAULT_INFO what=160048 arg=3 int=- float=- str=- bundle=Bundle[{carBodyFaultInfo=null}]
+CARBODY_FAULT_INFO what=160048 arg=4 int=- float=- str=- bundle=Bundle[{carBodyFaultInfo=null}]
+BENZ_FUNCTION_KUAI_CHONG_POP what=120276 arg=2 int=1 float=- str=- bundle=-
+CARBODY_FAULT_INFO what=160048 arg=5 int=- float=- str=- bundle=Bundle[{carBodyFaultInfo=null}]
+BENZ_FUNCTION_KUAI_CHONG_POP what=120276 arg=4 int=1 float=- str=- bundle=-
+AUTO_PARKING_HINT what=140066 arg=5 int=- float=- str=- bundle=Bundle[{active=0, hints=0}]
+BENZ_FUNCTION_KUAI_CHONG_POP what=120276 arg=3 int=1 float=- str=- bundle=-
+SYNC_LEFT_AND_RIGHT_TEMPERATURE_ZONES what=30040 push=0 unit=0
+ALL_MAKE what=170002 arg=3 int=- float=- str=- bundle=Bundle[{values=[I@35a1617, names=[Ljava.lang.String;@ce09a04}]
+ALL_MAKE what=170002 arg=2 int=- float=- str=- bundle=Bundle[{values=[I@81db5b1, names=[Ljava.lang.String;@9e87a96}]
+ALL_MAKE what=170002 arg=5 int=- float=- str=- bundle=Bundle[{values=[I@6dffcb3, names=[Ljava.lang.String;@1cf5270}]
+ALL_MAKE what=170002 arg=4 int=- float=- str=- bundle=Bundle[{values=[I@da6fbed, names=[Ljava.lang.String;@729aa22}]
+TOTAL_RECHARGE_MILEAGE what=100013 arg=3 int=- float=- str=- bundle=Bundle[{unit=0, value=220675}]
+TOTAL_RECHARGE_MILEAGE what=100013 arg=2 int=- float=- str=- bundle=Bundle[{unit=0, value=220675}]
+TOTAL_RECHARGE_MILEAGE what=100013 arg=1 int=- float=- str=- bundle=Bundle[{unit=0, value=220675}]
+AUDI_FUNCITON_ORIGIN_CAR_TYPE what=120298 arg=5 int=2 float=- str=- bundle=-
+ALL_MAKE what=170002 arg=1 int=- float=- str=- bundle=Bundle[{values=[I@acca13b, names=[Ljava.lang.String;@e2d058}]
+AUDI_FUNCITON_ORIGIN_CAR_TYPE what=120298 arg=3 int=2 float=- str=- bundle=-
+AUDI_FUNCITON_ORIGIN_CAR_TYPE what=120298 arg=4 int=2 float=- str=- bundle=-
+AUDI_FUNCITON_ORIGIN_CAR_TYPE what=120298 arg=1 int=2 float=- str=- bundle=-
+TOTAL_RECHARGE_MILEAGE what=100013 arg=5 int=- float=- str=- bundle=Bundle[{unit=0, value=220675}]
+TOTAL_RECHARGE_MILEAGE what=100013 arg=4 int=- float=- str=- bundle=Bundle[{unit=0, value=220675}]
+BENZ_FUNCTION_KUAI_CHONG_POP what=120276 int=1 float=- str=- bundle=-
+TURN_SIGNAL_LAMP what=140058 arg=1 int=2 float=- str=- bundle=-
+TURN_SIGNAL_LAMP what=140058 arg=4 int=2 float=- str=- bundle=-
+TURN_SIGNAL_LAMP what=140058 arg=3 int=2 float=- str=- bundle=-
+TURN_SIGNAL_LAMP what=140058 arg=5 int=2 float=- str=- bundle=-
+CURRENT_MODEL what=170004 arg=1 int=135790594 float=- str=- bundle=-
+CURRENT_MODEL what=170004 arg=2 int=135790594 float=- str=- bundle=-
+CURRENT_MODEL what=170004 arg=3 int=135790594 float=- str=- bundle=-
+CURRENT_MODEL what=170004 arg=4 int=135790594 float=- str=- bundle=-
+CURRENT_MODEL what=170004 arg=5 int=135790594 float=- str=- bundle=-
+TRIP_B_DISTANCE what=100249 arg=4 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+TRIP_B_DISTANCE what=100249 arg=5 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+MOTOR_FAULT_INFO what=160046 int=- float=- str=- bundle=Bundle[{motorFaultInfo=null}]
+TRIP_B_DISTANCE what=100249 arg=2 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+TRIP_B_DISTANCE what=100249 arg=3 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+CANBOX_VERSION what=10004 push=YT-A4Q5-GD-Hx V212,L-5,9A8,L33,0261  unit=0
+CARBODY_FAULT_INFO what=160048 int=- float=- str=- bundle=Bundle[{carBodyFaultInfo=null}]
+TRIP_B_DISTANCE what=100249 arg=1 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+BENZ_FUNCTION_SEAT_WELCOME what=120263 int=- float=- str=- bundle=Bundle[{level=0, workState=0}]
+ANGLE what=140057 int=- float=-0.0129629625 str=- bundle=-
+DATE what=10002 arg=1 int=- float=- str=- bundle=Bundle[{day=13, year=26, month=7}]
+DATE what=10002 arg=2 int=- float=- str=- bundle=Bundle[{day=13, year=26, month=7}]
+BENZ_FUNCTION_CLOCK what=120265 arg=4 int=- float=- str=- bundle=Bundle[{minute=0, showType=0, hour=0, angle=0, brightness=0, workState=0}]
+BENZ_FUNCTION_CLOCK what=120265 arg=3 int=- float=- str=- bundle=Bundle[{minute=0, showType=0, hour=0, angle=0, brightness=0, workState=0}]
+BENZ_FUNCTION_CLOCK what=120265 arg=2 int=- float=- str=- bundle=Bundle[{minute=0, showType=0, hour=0, angle=0, brightness=0, workState=0}]
+BENZ_FUNCTION_CLOCK what=120265 arg=1 int=- float=- str=- bundle=Bundle[{minute=0, showType=0, hour=0, angle=0, brightness=0, workState=0}]
+BENZ_FUNCTION_PM_25 what=120261 arg=2 int=- float=- str=- bundle=Bundle[{dataValid=0, time=0, level=0, value=0, workState=0}]
+BENZ_FUNCTION_PM_25 what=120261 arg=3 int=- float=- str=- bundle=Bundle[{dataValid=0, time=0, level=0, value=0, workState=0}]
+BENZ_FUNCTION_PM_25 what=120261 arg=4 int=- float=- str=- bundle=Bundle[{dataValid=0, time=0, level=0, value=0, workState=0}]
+BENZ_FUNCTION_KUAI_CHONG what=120275 int=1 float=- str=- bundle=-
+BENZ_FUNCTION_PM_25 what=120261 arg=5 int=- float=- str=- bundle=Bundle[{dataValid=0, time=0, level=0, value=0, workState=0}]
+DATE what=10002 arg=3 int=- float=- str=- bundle=Bundle[{day=13, year=26, month=7}]
+DATE what=10002 arg=4 int=- float=- str=- bundle=Bundle[{day=13, year=26, month=7}]
+DATE what=10002 arg=5 int=- float=- str=- bundle=Bundle[{day=13, year=26, month=7}]
+PARKING what=140010 push=1 unit=0
+BENZ_FUNCTION_PM_25 what=120261 int=- float=- str=- bundle=Bundle[{dataValid=0, time=0, level=0, value=0, workState=0}]
+BENZ_FUNCTION_PM_25 what=120261 arg=1 int=- float=- str=- bundle=Bundle[{dataValid=0, time=0, level=0, value=0, workState=0}]
+TRIP_A_DISTANCE what=100150 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+CARBODY_INFO what=160051 arg=3 int=- float=- str=- bundle=Bundle[{carBodyInfo=null}]
+CARBODY_INFO what=160051 arg=2 int=- float=- str=- bundle=Bundle[{carBodyInfo=null}]
+CARBODY_INFO what=160051 arg=5 int=- float=- str=- bundle=Bundle[{carBodyInfo=null}]
+CARBODY_INFO what=160051 arg=4 int=- float=- str=- bundle=Bundle[{carBodyInfo=null}]
+BATTERY_FAULT_INFO what=160047 int=- float=- str=- bundle=Bundle[{batteryFaultInfo=null}]
+CARBODY_INFO what=160051 arg=1 int=- float=- str=- bundle=Bundle[{carBodyInfo=null}]
+FUEL_RECHARGE_MILEAGE what=100011 int=- float=- str=- bundle=Bundle[{unit=0, value=-0.1}]
+BENZ_FUNCTION_FOCUS_SMALL_SPEAKER what=120278 int=1 float=- str=- bundle=-
+EQ_FADER_BALANCE what=10013 int=- float=- str=- bundle=Bundle[{balance=0, fader=0}]
+HEADLAMP_HIGH_BEAMS what=110000 int=1 float=- str=- bundle=-
+AUDI_FUNCITON_ORIGIN_CAR_TYPE what=120298 int=2 float=- str=- bundle=-
+OFFSET what=30000 int=1 float=- str=- bundle=-
+AUDI_STEER_WHELL_STAR_KEY_FUNCTION what=120267 arg=5 int=1 float=- str=- bundle=-
+ALL_CANBOX what=170001 arg=2 int=- float=- str=- bundle=Bundle[{values=[I@8cfb97d, names=[Ljava.lang.String;@ea44072}]
+AUDI_STEER_WHELL_STAR_KEY_FUNCTION what=120267 arg=4 int=1 float=- str=- bundle=-
+ALL_CANBOX what=170001 arg=3 int=- float=- str=- bundle=Bundle[{values=[I@1be5cc3, names=[Ljava.lang.String;@231940}]
+ALL_CANBOX what=170001 arg=4 int=- float=- str=- bundle=Bundle[{values=[I@8237079, names=[Ljava.lang.String;@9f1f1be}]
+ALL_CANBOX what=170001 arg=5 int=- float=- str=- bundle=Bundle[{values=[I@aa0021f, names=[Ljava.lang.String;@9c0896c}]
+ALL_CANBOX what=170001 arg=1 int=- float=- str=- bundle=Bundle[{values=[I@7f79527, names=[Ljava.lang.String;@70693d4}]
+OPENED what=50001 int=- float=- str=- bundle=Bundle[{sunroof=0, rearLeft=0, rearRight=0, frontRight=0, hood=0, trunk=0, frontLeft=0}]
+CURRENT_MODEL what=170004 int=135790594 float=- str=- bundle=-
+WIND_LEVEL what=30004 int=3 float=- str=- bundle=-
+TRIP_B_DISTANCE what=100249 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+AUDI_STEER_WHELL_STAR_KEY_FUNCTION what=120267 arg=3 int=1 float=- str=- bundle=-
+AUDI_STEER_WHELL_STAR_KEY_FUNCTION what=120267 arg=2 int=1 float=- str=- bundle=-
+HAND_BRAKE what=120080 push=1 unit=0
+BENZ_FUNCTION_LIGHT what=120264 arg=1 int=- float=- str=- bundle=Bundle[{supplier=0, green1=0, green2=0, red1=0, red2=0, workMode=0, blue1=0, blue2=0, brightness=0, channel=0, workState=0}]
+BENZ_FUNCTION_LIGHT what=120264 arg=3 int=- float=- str=- bundle=Bundle[{supplier=0, green1=0, green2=0, red1=0, red2=0, workMode=0, blue1=0, blue2=0, brightness=0, channel=0, workState=0}]
+MEDIA_SOURCE what=100085 arg=2 int=255 float=- str=- bundle=-
+BENZ_FUNCTION_LIGHT what=120264 arg=2 int=- float=- str=- bundle=Bundle[{supplier=0, green1=0, green2=0, red1=0, red2=0, workMode=0, blue1=0, blue2=0, brightness=0, channel=0, workState=0}]
+MEDIA_SOURCE what=100085 arg=3 int=255 float=- str=- bundle=-
+BENZ_FUNCTION_LIGHT what=120264 arg=5 int=- float=- str=- bundle=Bundle[{supplier=0, green1=0, green2=0, red1=0, red2=0, workMode=0, blue1=0, blue2=0, brightness=0, channel=0, workState=0}]
+BENZ_FUNCTION_LIGHT what=120264 arg=4 int=- float=- str=- bundle=Bundle[{supplier=0, green1=0, green2=0, red1=0, red2=0, workMode=0, blue1=0, blue2=0, brightness=0, channel=0, workState=0}]
+MEDIA_SOURCE what=100085 arg=1 int=255 float=- str=- bundle=-
+MOTOR_FAULT_INFO what=160046 arg=1 int=- float=- str=- bundle=Bundle[{motorFaultInfo=null}]
+MEDIA_SOURCE what=100085 arg=4 int=255 float=- str=- bundle=-
+MEDIA_SOURCE what=100085 arg=5 int=255 float=- str=- bundle=-
+AVERAGE_SPEED what=100001 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+BENZ_FUNCTION_CLOCK what=120265 arg=5 int=- float=- str=- bundle=Bundle[{minute=0, showType=0, hour=0, angle=0, brightness=0, workState=0}]
+FRONT_RADAR_LEVEL what=140007 int=- float=- str=- bundle=Bundle[{enable=0, radarNum=0, value=[I@f013199, maxValue=0, displayType=0}]
+CANBOX_VERSION what=10004 arg=2 int=- float=- str=YT-A4Q5-GD-Hx V212,L-5,BA8,L33,0261  bundle=-
+CANBOX_VERSION what=10004 arg=1 int=- float=- str=YT-A4Q5-GD-Hx V212,L-5,BA8,L33,0261  bundle=-
+CANBOX_VERSION what=10004 arg=4 int=- float=- str=YT-A4Q5-GD-Hx V212,L-5,BA8,L33,0261  bundle=-
+ALL_MODEL what=170003 arg=1 int=- float=- str=- bundle=Bundle[{values=[I@fd3b10f, names=[Ljava.lang.String;@daf259c}]
+CANBOX_VERSION what=10004 arg=3 int=- float=- str=YT-A4Q5-GD-Hx V212,L-5,BA8,L33,0261  bundle=-
+CANBOX_VERSION what=10004 arg=5 int=- float=- str=YT-A4Q5-GD-Hx V212,L-5,BA8,L33,0261  bundle=-
+BENZ_FUNCTION_KUAI_CHONG what=120275 arg=5 int=1 float=- str=- bundle=-
+CARBODY_INFO what=160051 int=- float=- str=- bundle=Bundle[{carBodyInfo=null}]
+ALL_MODEL what=170003 arg=5 int=- float=- str=- bundle=Bundle[{values=[I@996b307, names=[Ljava.lang.String;@e208c34}]
+BENZ_FUNCTION_KUAI_CHONG what=120275 arg=4 int=1 float=- str=- bundle=-
+ALL_MODEL what=170003 arg=4 int=- float=- str=- bundle=Bundle[{values=[I@e166d21, names=[Ljava.lang.String;@d52b546}]
+ALL_MODEL what=170003 arg=3 int=- float=- str=- bundle=Bundle[{values=[I@a44f2b, names=[Ljava.lang.String;@c56ff88}]
+ALL_MODEL what=170003 arg=2 int=- float=- str=- bundle=Bundle[{values=[I@3b0bba5, names=[Ljava.lang.String;@20a5b7a}]
+KEY_BRIGHTNESS what=100006 push=0 unit=0
+BENZ_FUNCTION_KUAI_CHONG what=120275 arg=3 int=1 float=- str=- bundle=-
+TOTAL_RECHARGE_MILEAGE what=100013 int=- float=- str=- bundle=Bundle[{unit=0, value=220675}]
+BENZ_FUNCTION_KUAI_CHONG what=120275 arg=2 int=1 float=- str=- bundle=-
+EQ_SETTINGS what=10015 int=- float=- str=- bundle=Bundle[{treble=0, bass=0, midtone=0}]
+BENZ_FUNCTION_AUTO_BRAKE what=120260 arg=5 int=- float=- str=- bundle=Bundle[{startSpeed=0, rearRadarLevel=0, overSpeed=0, workState=0, stopSpeed=0, frontRadarLevel=0, safeBelt=0}]
+IN_PM25 what=30060 int=- float=- str=- bundle=Bundle[{level=0, value=0}]
+BENZ_FUNCTION_AUTO_BRAKE what=120260 arg=3 int=- float=- str=- bundle=Bundle[{startSpeed=0, rearRadarLevel=0, overSpeed=0, workState=0, stopSpeed=0, frontRadarLevel=0, safeBelt=0}]
+BENZ_FUNCTION_AUTO_BRAKE what=120260 arg=4 int=- float=- str=- bundle=Bundle[{startSpeed=0, rearRadarLevel=0, overSpeed=0, workState=0, stopSpeed=0, frontRadarLevel=0, safeBelt=0}]
+BENZ_FUNCTION_AUTO_BRAKE what=120260 arg=1 int=- float=- str=- bundle=Bundle[{startSpeed=0, rearRadarLevel=0, overSpeed=0, workState=0, stopSpeed=0, frontRadarLevel=0, safeBelt=0}]
+MOTOR_FAULT_INFO what=160046 arg=4 int=- float=- str=- bundle=Bundle[{motorFaultInfo=null}]
+BENZ_FUNCTION_AUTO_BRAKE what=120260 arg=2 int=- float=- str=- bundle=Bundle[{startSpeed=0, rearRadarLevel=0, overSpeed=0, workState=0, stopSpeed=0, frontRadarLevel=0, safeBelt=0}]
+MOTOR_FAULT_INFO what=160046 arg=5 int=- float=- str=- bundle=Bundle[{motorFaultInfo=null}]
+MOTOR_FAULT_INFO what=160046 arg=2 int=- float=- str=- bundle=Bundle[{motorFaultInfo=null}]
+MOTOR_FAULT_INFO what=160046 arg=3 int=- float=- str=- bundle=Bundle[{motorFaultInfo=null}]
+REAR_RADAR_LEVEL what=140006 int=- float=- str=- bundle=Bundle[{enable=0, radarNum=0, value=[I@baef30d, maxValue=0, displayType=0}]
+OUT_PM25 what=30061 arg=5 int=- float=- str=- bundle=Bundle[{level=0, value=0}]
+ALL_CANBOX what=170001 int=- float=- str=- bundle=Bundle[{values=[I@752ba41, names=[Ljava.lang.String;@23f4be6}]
+OFFSET what=110000 arg=2 int=1 float=- str=- bundle=-
+OUT_PM25 what=30061 arg=4 int=- float=- str=- bundle=Bundle[{level=0, value=0}]
+OUT_PM25 what=30061 arg=3 int=- float=- str=- bundle=Bundle[{level=0, value=0}]
+OFFSET what=110000 arg=5 int=1 float=- str=- bundle=-
+OUT_TEMPERATURE what=30023 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+OFFSET what=110000 arg=3 int=1 float=- str=- bundle=-
+OFFSET what=110000 arg=4 int=1 float=- str=- bundle=-
+TURN_SIGNAL_LAMP what=140058 push=0 unit=1
+TIME what=10001 arg=2 int=- float=- str=- bundle=Bundle[{minute=22, second=0, hour=17, mode=0}]
+RIGHT_RADAR_LEVEL what=140009 arg=1 int=- float=- str=- bundle=Bundle[{enable=1, radarNum=0, value=[I@296593c, maxValue=0, displayType=0}]
+TIME what=10001 arg=1 int=- float=- str=- bundle=Bundle[{minute=22, second=0, hour=17, mode=0}]
+BENZ_FUNCTION_AUTO_BRAKE what=120260 int=- float=- str=- bundle=Bundle[{startSpeed=0, rearRadarLevel=0, overSpeed=0, workState=0, stopSpeed=0, frontRadarLevel=0, safeBelt=0}]
+RIGHT_RADAR_LEVEL what=140009 arg=4 int=- float=- str=- bundle=Bundle[{enable=1, radarNum=0, value=[I@7254f4b, maxValue=0, displayType=0}]
+RIGHT_RADAR_LEVEL what=140009 arg=5 int=- float=- str=- bundle=Bundle[{enable=1, radarNum=0, value=[I@80dcd28, maxValue=0, displayType=0}]
+TIME what=10001 arg=5 int=- float=- str=- bundle=Bundle[{minute=22, second=0, hour=17, mode=0}]
+RIGHT_RADAR_LEVEL what=140009 arg=2 int=- float=- str=- bundle=Bundle[{enable=1, radarNum=0, value=[I@99c76c5, maxValue=0, displayType=0}]
+BATTERY_INFO what=160050 int=- float=- str=- bundle=Bundle[{batteryInfo=null}]
+TIME what=10001 arg=4 int=- float=- str=- bundle=Bundle[{minute=22, second=0, hour=17, mode=0}]
+RIGHT_RADAR_LEVEL what=140009 arg=3 int=- float=- str=- bundle=Bundle[{enable=1, radarNum=0, value=[I@52cc81a, maxValue=0, displayType=0}]
+TIME what=10001 arg=3 int=- float=- str=- bundle=Bundle[{minute=22, second=0, hour=17, mode=0}]
+OUT_PM25 what=30061 arg=2 int=- float=- str=- bundle=Bundle[{level=0, value=0}]
+OUT_PM25 what=30061 arg=1 int=- float=- str=- bundle=Bundle[{level=0, value=0}]
+POWER what=30000 int=1 float=- str=- bundle=-
+OFFSET what=30000 arg=3 int=1 float=- str=- bundle=-
+OFFSET what=30000 arg=2 int=1 float=- str=- bundle=-
+BENZ_FUNCTION_LIGHT what=120264 int=- float=- str=- bundle=Bundle[{supplier=0, green1=0, green2=0, red1=0, red2=0, workMode=0, blue1=0, blue2=0, brightness=0, channel=0, workState=0}]
+ACC what=140086 arg=3 int=1 float=- str=- bundle=-
+OFFSET what=30000 arg=5 int=1 float=- str=- bundle=-
+ACC what=140086 arg=2 int=1 float=- str=- bundle=-
+OFFSET what=30000 arg=4 int=1 float=- str=- bundle=-
+ACC what=140086 arg=5 int=1 float=- str=- bundle=-
+ACC what=140086 arg=4 int=1 float=- str=- bundle=-
+RIGHT_RADAR_LEVEL what=140009 int=- float=- str=- bundle=Bundle[{enable=1, radarNum=0, value=[I@a0eef2f, maxValue=0, displayType=0}]
+OUT_PM25 what=30061 int=- float=- str=- bundle=Bundle[{level=0, value=0}]
+TIRE_TEMP_MONITORING_INFO what=70007 arg=1 int=- float=- str=- bundle=Bundle[{rearLeft=0.0, rearRight=0.0, frontRight=0.0, frontLeft=0.0}]
+TIRE_TEMP_MONITORING_INFO what=70007 arg=2 int=- float=- str=- bundle=Bundle[{rearLeft=0.0, rearRight=0.0, frontRight=0.0, frontLeft=0.0}]
+OFFSET what=110000 push=0 unit=0
+TIRE_PRESS_WARNING_INFO what=70002 int=- float=- str=- bundle=Bundle[{rearLeft=0, rearRight=0, frontRight=0, frontLeft=0}]
+MOTOR_INFO what=160049 int=- float=- str=- bundle=Bundle[{motorInfo=null}]
+TIRE_TEMP_MONITORING_INFO what=70007 arg=3 int=- float=- str=- bundle=Bundle[{rearLeft=0.0, rearRight=0.0, frontRight=0.0, frontLeft=0.0}]
+TIRE_TEMP_MONITORING_INFO what=70007 arg=4 int=- float=- str=- bundle=Bundle[{rearLeft=0.0, rearRight=0.0, frontRight=0.0, frontLeft=0.0}]
+TIRE_TEMP_MONITORING_INFO what=70007 arg=5 int=- float=- str=- bundle=Bundle[{rearLeft=0.0, rearRight=0.0, frontRight=0.0, frontLeft=0.0}]
+AUTO_PARKING_HINT what=140066 int=- float=- str=- bundle=Bundle[{active=0, hints=0}]
+INSTANTANEOUS_FUEL what=100002 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+VERTICAL_CAR_UI_COLOR what=140067 int=- float=- str=- bundle=Bundle[{up=0, down=0, left=0, right=0, downRight=0, downLeft=0}]
+WIND_LEVEL what=30004 arg=2 int=3 float=- str=- bundle=-
+WIND_LEVEL what=30004 arg=3 int=5 float=- str=- bundle=-
+WIND_LEVEL what=30004 arg=4 int=3 float=- str=- bundle=-
+TIRE_PRESS_MONITORING_INFO what=70001 arg=1 int=- float=- str=- bundle=Bundle[{rearLeft=0.0, rearRight=0.0, frontRight=0.0, frontLeft=0.0}]
+WIND_LEVEL what=30004 arg=5 int=3 float=- str=- bundle=-
+EQ_FADER_BALANCE what=10013 arg=5 int=- float=- str=- bundle=Bundle[{balance=0, fader=0}]
+WIND_LEVEL what=30004 arg=1 int=3 float=- str=- bundle=-
+EQ_FADER_BALANCE what=10013 arg=3 int=- float=- str=- bundle=Bundle[{balance=0, fader=0}]
+ENGINE_TACHOMETER what=100042 push=646 unit=0
+EQ_FADER_BALANCE what=10013 arg=4 int=- float=- str=- bundle=Bundle[{balance=0, fader=0}]
+EQ_FADER_BALANCE what=10013 arg=1 int=- float=- str=- bundle=Bundle[{balance=0, fader=0}]
+EQ_FADER_BALANCE what=10013 arg=2 int=- float=- str=- bundle=Bundle[{balance=0, fader=0}]
+TIRE_PRESS_MONITORING_INFO what=70001 arg=2 int=- float=- str=- bundle=Bundle[{rearLeft=0.0, rearRight=0.0, frontRight=0.0, frontLeft=0.0}]
+TIRE_PRESS_MONITORING_INFO what=70001 arg=3 int=- float=- str=- bundle=Bundle[{rearLeft=0.0, rearRight=0.0, frontRight=0.0, frontLeft=0.0}]
+TIRE_PRESS_MONITORING_INFO what=70001 arg=4 int=- float=- str=- bundle=Bundle[{rearLeft=0.0, rearRight=0.0, frontRight=0.0, frontLeft=0.0}]
+TIRE_PRESS_MONITORING_INFO what=70001 arg=5 int=- float=- str=- bundle=Bundle[{rearLeft=0.0, rearRight=0.0, frontRight=0.0, frontLeft=0.0}]
+REVERSE what=140011 arg=5 int=1 float=- str=- bundle=-
+REVERSE what=140011 arg=2 int=1 float=- str=- bundle=-
+CURRENT_MODE what=100278 arg=2 int=- float=- str=- bundle=Bundle[{auxSecondRow=0, auxChange=0, mode=1, auxFirstRow=2}]
+REVERSE what=140011 arg=4 int=1 float=- str=- bundle=-
+CURRENT_MODE what=100278 arg=1 int=- float=- str=- bundle=Bundle[{auxSecondRow=0, auxChange=0, mode=1, auxFirstRow=2}]
+REVERSE what=140011 arg=3 int=1 float=- str=- bundle=-
+AVERAGE_FUEL what=100003 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+CURRENT_MODE what=100278 arg=4 int=- float=- str=- bundle=Bundle[{auxSecondRow=0, auxChange=0, mode=1, auxFirstRow=2}]
+CURRENT_MODE what=100278 arg=3 int=- float=- str=- bundle=Bundle[{auxSecondRow=0, auxChange=0, mode=1, auxFirstRow=2}]
+EQ_SETTINGS what=10015 arg=5 int=- float=- str=- bundle=Bundle[{treble=0, bass=0, midtone=0}]
+CURRENT_MODE what=100278 arg=5 int=- float=- str=- bundle=Bundle[{auxSecondRow=0, auxChange=0, mode=1, auxFirstRow=2}]
+EQ_SETTINGS what=10015 arg=4 int=- float=- str=- bundle=Bundle[{treble=0, bass=0, midtone=0}]
+TEMPERATURE what=30006 int=- float=- str=- bundle=Bundle[{max=30.5, min=16.0, step=0.5, unit=0, value=24.0}]
+EQ_SETTINGS what=10015 arg=3 int=- float=- str=- bundle=Bundle[{treble=0, bass=0, midtone=0}]
+EQ_SETTINGS what=10015 arg=2 int=- float=- str=- bundle=Bundle[{treble=0, bass=0, midtone=0}]
+EQ_SETTINGS what=10015 arg=1 int=- float=- str=- bundle=Bundle[{treble=0, bass=0, midtone=0}]
+IN_PM25 what=30060 arg=5 int=- float=- str=- bundle=Bundle[{level=0, value=0}]
+ALL_MAKE what=170002 int=- float=- str=- bundle=Bundle[{values=[I@6619b35, names=[Ljava.lang.String;@4d76bca}]
+OUT_TEMPERATURE what=30023 arg=1 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+OUT_TEMPERATURE what=30023 arg=2 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+BATTERY_FAULT_INFO what=160047 arg=5 int=- float=- str=- bundle=Bundle[{batteryFaultInfo=null}]
+IN_PM25 what=30060 arg=2 int=- float=- str=- bundle=Bundle[{level=0, value=0}]
+OUT_TEMPERATURE what=30023 arg=5 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+BATTERY_FAULT_INFO what=160047 arg=3 int=- float=- str=- bundle=Bundle[{batteryFaultInfo=null}]
+IN_PM25 what=30060 arg=1 int=- float=- str=- bundle=Bundle[{level=0, value=0}]
+BATTERY_FAULT_INFO what=160047 arg=4 int=- float=- str=- bundle=Bundle[{batteryFaultInfo=null}]
+IN_PM25 what=30060 arg=4 int=- float=- str=- bundle=Bundle[{level=0, value=0}]
+OUT_TEMPERATURE what=30023 arg=3 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+BATTERY_FAULT_INFO what=160047 arg=1 int=- float=- str=- bundle=Bundle[{batteryFaultInfo=null}]
+IN_PM25 what=30060 arg=3 int=- float=- str=- bundle=Bundle[{level=0, value=0}]
+OUT_TEMPERATURE what=30023 arg=4 int=- float=- str=- bundle=Bundle[{unit=0, value=0.0}]
+BATTERY_FAULT_INFO what=160047 arg=2 int=- float=- str=- bundle=Bundle[{batteryFaultInfo=null}]
+TIRE_TEMP_MONITORING_INFO what=70007 int=- float=- str=- bundle=Bundle[{rearLeft=0.0, rearRight=0.0, frontRight=0.0, frontLeft=0.0}]
+AUDI_STEER_WHELL_STAR_KEY_FUNCTION what=120267 int=1 float=- str=- bundle=-
+TIRE_PRESS_WARNING_INFO what=70002 arg=2 int=- float=- str=- bundle=Bundle[{rearLeft=0, rearRight=0, frontRight=0, frontLeft=0}]
+TIRE_PRESS_WARNING_INFO what=70002 arg=1 int=- float=- str=- bundle=Bundle[{rearLeft=0, rearRight=0, frontRight=0, frontLeft=0}]
+TIRE_PRESS_WARNING_INFO what=70002 arg=4 int=- float=- str=- bundle=Bundle[{rearLeft=0, rearRight=0, frontRight=0, frontLeft=0}]
+POSITON_LIGHT what=140059 arg=5 int=1 float=- str=- bundle=-
+TIRE_PRESS_WARNING_INFO what=70002 arg=3 int=- float=- str=- bundle=Bundle[{rearLeft=0, rearRight=0, frontRight=0, frontLeft=0}]
+POSITON_LIGHT what=140059 arg=4 int=1 float=- str=- bundle=-
+LEFT_RADAR_LEVEL what=140008 arg=4 int=- float=- str=- bundle=Bundle[{enable=1, radarNum=0, value=[I@c703037, maxValue=0, displayType=0}]
+POSITON_LIGHT what=140059 arg=3 int=1 float=- str=- bundle=-
+LEFT_RADAR_LEVEL what=140008 arg=5 int=- float=- str=- bundle=Bundle[{enable=1, radarNum=0, value=[I@bff79a4, maxValue=0, displayType=0}]
+TIRE_PRESS_MONITORING_INFO what=70001 int=- float=- str=- bundle=Bundle[{rearLeft=0.0, rearRight=0.0, frontRight=0.0, frontLeft=0.0}]
+TIRE_PRESS_WARNING_INFO what=70002 arg=5 int=- float=- str=- bundle=Bundle[{rearLeft=0, rearRight=0, frontRight=0, frontLeft=0}]
+POSITON_LIGHT what=140059 arg=2 int=1 float=- str=- bundle=-
+LEFT_RADAR_LEVEL what=140008 arg=2 int=- float=- str=- bundle=Bundle[{enable=1, radarNum=0, value=[I@e8e7ad1, maxValue=0, displayType=0}]
+LEFT_RADAR_LEVEL what=140008 arg=3 int=- float=- str=- bundle=Bundle[{enable=1, radarNum=0, value=[I@abc2936, maxValue=0, displayType=0}]
+LEFT_RADAR_LEVEL what=140008 arg=1 int=- float=- str=- bundle=Bundle[{enable=1, radarNum=0, value=[I@474f5f8, maxValue=0, displayType=0}]
+
+elementi rilevati=372

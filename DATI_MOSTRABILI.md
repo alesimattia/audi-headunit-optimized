@@ -1,4 +1,4 @@
-# Dati leggibili dal CAN-box — riscontro REALE (dump a motore acceso)
+# Dati leggibili dal CAN-box — riscontro REALE
 
 Documento di riferimento per decidere **quale informazione mostrare al posto del
 chilometraggio** nella seconda pagina dello slider
@@ -6,38 +6,46 @@ chilometraggio** nella seconda pagina dello slider
 
 Target: **Audi A5 coupé diesel**, testata Android NTG (`com.spd.xhsntg`).
 
-> ⚠️ **Questo documento non è più teorico.** È basato sul **dump reale** del servizio
-> CarInfo (`canbus_listener_log.txt` → `Download/ntg_carinfo_log.txt`), un PULL one-shot
-> su **2271 codici `what`**, acquisito **con motore acceso** e auto ferma. Le disponibilità
-> qui sotto sono ciò che il CAN-box **restituisce davvero**, non ciò che l'app *potrebbe*
-> ricevere in teoria.
+> Il riscontro proviene dal **monitor continuo PULL+PUSH** descritto in
+> [IMPLEMENTAZIONE_DUMP_CARINFO.md](IMPLEMENTAZIONE_DUMP_CARINFO.md) (sorgente
+> `ntg_carinfo_log.txt`): unisce PULL periodico + **PUSH live** in una mappa deduplicata,
+> filtrando gli zeri. Le righe **`push=`** sono valori **notificati spontaneamente dal box** →
+> la prova più forte che quel dato è decodificato. Rilievo con motore acceso e **auto in
+> movimento**, `elementi rilevati=372`. I valori `push=` riflettono l'**ultima notifica**
+> ricevuta dal box (il PUSH aggiorna solo al cambiamento): un valore può risalire a un istante
+> precedente del percorso.
 
 ---
 
 ## 0. Esito in breve (TL;DR)
 
-Il CAN-box montato è un **`YT-A4Q5-GD-Hx V212`**: un decoder con **profilo generico Audi
-A4/Q5** (corretto per l'A5, stessa piattaforma) che però **decodifica pochissimo** della
-telemetria di questa vettura.
+Il CAN-box montato è un **`YT-A4Q5-GD-Hx V212`** con codifica `…,BA8,L33,0261`: decoder con
+**profilo generico Audi A4/Q5** (corretto per l'A5, stessa piattaforma).
 
-- ✅ **Leggibili davvero:** velocità, **giri motore**, stato climatizzatore (temperatura
-  impostata, ventola, modalità), **chilometraggio totale** (già mostrato), orologio/data,
-  stato porte, abilitazione radar laterali, identità veicolo.
-- ❌ **NON leggibili** (tornano `0`/vuoto **anche a motore acceso**): tutto il **carburante**
-  (consumo istantaneo/medio, livello, residuo, **autonomia**), **tutte le temperature**
-  (liquido refrigerante, olio, **esterna**), **tensione batteria**, **marcia**,
-  **retromarcia**, **luci** (anabbaglianti/posizione/fendinebbia/DRL), **frecce/indicatori**,
-  freno a mano/pedale, trip parziali, pressione gomme (TPMS), manutenzione.
+- ✅ **Leggibili:** velocità, **giri motore**, **chilometraggio totale** (già mostrato), clima
+  completo (temp impostata, ventola, modalità, doppia zona, sync zone), orologio/data, stato
+  porte, **radar laterali** (flag presenza), identità veicolo/modello, versione CAN-box,
+  **retromarcia** (`REVERSE`), **freno a mano** (`HAND_BRAKE`), **freno stazionamento**
+  (`PARKING`), **frecce** (`TURN_SIGNAL_LAMP`), **luci di posizione** (`POSITON_LIGHT`),
+  **abbaglianti/canale 110000** (`HEADLAMP_HIGH_BEAMS`), **angolo sterzo** (`ANGLE`),
+  luminosità tasti (`KEY_BRIGHTNESS`).
+- ❌ **NON leggibili** (`0.0` / `-0.1` / `null`): tutto il **carburante** (consumo
+  istantaneo/medio, livello, residuo, **autonomia** = `-0.1`), **tutte le temperature**
+  (refrigerante, olio, **esterna**), **tensione batteria**, **marcia (selettore GEAR)**, trip
+  parziali A/B, velocità media, **pressione/temp gomme (TPMS)**, PM2.5, radar
+  anteriore/posteriore (`enable=0`), info/fault di batteria-motore-carrozzeria (tutti `null`),
+  manutenzione.
 
-> **Test attivo (auto accesa, ferma).** Durante il rilievo sono state inserite le marce
-> **R / D / N**, accese **luci e frecce** e acceso il **clima**. Nel dump **il clima compare**
-> (→ il box lo decodifica), mentre **marcia, retromarcia, luci e frecce restano a `0`** pur
-> essendo state azionate: è la prova che il box **non li decodifica**, non un semplice "valore
-> a riposo".
+> **Distinzione importante:** è decodificato il **segnale di retromarcia** (`REVERSE 140011`),
+> **non** il **selettore di marcia** (`GEAR 140080`, non popolato). `HAND_BRAKE` e `PARKING`
+> sono notificati via PUSH (valore osservato `=1`): il valore risale probabilmente all'avvio da
+> fermo, prima della marcia (il PUSH non ri-notifica finché non cambia). Che carburante,
+> consumi e temperature restino a `0` **in movimento** è la prova più netta che non sono
+> decodificati.
 
-**Conseguenza diretta:** le quattro sostituzioni consigliate nella vecchia versione di
-questo documento (autonomia residua, consumo, temperatura acqua, temperatura esterna)
-**sono tutte morte su questo box**. Vanno abbandonate. Vedi §3.
+**Conseguenza pratica:** con `REVERSE` leggibile, l'attivazione automatica di **telecamera
+posteriore / PDC in retromarcia** è plausibile (da confermare con un rilievo a marcia
+effettivamente inserita: nel rilievo `push=0` = non in retro).
 
 ---
 
@@ -46,154 +54,152 @@ questo documento (autonomia residua, consumo, temperatura acqua, temperatura est
 I valori arrivano dal servizio di sistema **CarInfo** via AIDL (`ICarInfoAidlInterface`).
 Ogni dato ha un **codice `what`** (classe `com.spd.carinfo.CarInfo`). Due meccanismi:
 
-- **PUSH** — l'app si iscrive a *classi* di dati e riceve `onCarInfoDataChanged(what, valore,
-  unità)` ad ogni cambiamento. `CarInfoManager` è iscritto a poche classi ma **usa solo pochi
-  `what`** (velocità, mileage totale, sorgente media, modello, unità) e ignora il resto.
-- **PULL** — `getInt / getFloat / getString / getBundle(what, arg)` interroga un valore
-  on-demand. **Il PULL bypassa l'iscrizione alle classi**: il dump qui usato è un PULL, quindi
-  raggiunge *qualsiasi* `what` a prescindere dalle classi registrate.
+- **PUSH** — il box notifica `onCarInfoDataChanged(what, valore, unità)` ad ogni cambiamento.
+  Il monitor lo intercetta (registrazione allargata a 19 classi) → **ogni riga `push=` è la
+  prova che il box decodifica quel `what`**, anche se il suo valore corrente è 0.
+- **PULL** — `getInt / getFloat / getString / getBundle(what, arg)` interroga on-demand.
+  **Bypassa l'iscrizione alle classi** → raggiunge qualsiasi `what`.
 
-> **Perché il dump è la verità:** siccome il PULL raggiunge tutti i `what`, se un codice torna
-> `0`/vuoto **non è un problema lato app né di iscrizione** → è il **CAN-box che non lo
-> decodifica** per questa Audi. Il servizio CarInfo **si collega** (confermato:
-> `connected=true`, e chilometraggio `220412` + stato porte arrivano reali) → l'unica
-> incertezza è **per-`what`**.
-
-> **Attenzione al vecchio ✅.** Nella versione precedente "✅ già ricevuto" significava solo
-> *"l'app è iscritta alla classe"*, **non** *"il valore è popolato"*. Il dump dimostra che quasi
-> tutti quei ✅ erano in realtà a zero.
+> **Perché il PUSH è dirimente:** un `0` nel solo PULL non distingue "decodificato ma a riposo"
+> da "non decodificato". Se il box **invia** un `what`, quel dato è **provabilmente leggibile**,
+> e cattura i **transitori** (freccia, retro, luci) che cadono tra due passate PULL. Il servizio
+> CarInfo **si collega** (`connected=true`; chilometraggio, porte, clima reali) → l'unica
+> incertezza resta **per-`what`**.
 
 ---
 
-## 2. Cosa il box legge DAVVERO (valori popolati nel dump)
+## 2. Cosa il box legge (valori presenti nel monitor)
 
-Valori effettivamente presenti nel dump a motore acceso. Unità di sistema = metriche
-(`UNIT_* = 0` → km/h, km, °C).
+Unità di sistema = metriche (`UNIT_* = 0` → km/h, km, °C).
 
-> **Riscontro dall'app originale.** L'app di fabbrica mostra correttamente **giri, velocità,
-> contachilometri e stato porte** — esattamente i canali che qui risultano popolati. Conferma
-> indipendente che questi (e solo questi) sono decodificati dal box.
+> **Riscontro dall'app originale.** L'app di fabbrica mostra correttamente giri, velocità,
+> contachilometri e stato porte — coerente coi canali qui popolati.
 
 ### 2.1 Telemetria viva
-| Informazione | `what` | Costante | Valore nel dump | Note |
+| Informazione | `what` | Costante | Valore nel monitor | Note |
 |---|---|---|---|---|
-| **Giri motore** | `100042` | `ENGINE_TACHOMETER` | **640** | RPM, minimo a caldo. Unico dato *motore* vivo. |
-| **Velocità** | `140062` | `CURRENT_SPEED` | 0.0 (auto ferma) | L'app la legge da qui (come Float) per la TextView `speed` — confermato in `CarInfoManager` (case `140062`). Nel dump è 0 perché l'auto è ferma → **questo dump non dimostra se la velocità sia viva in marcia**: serve un dump in movimento. |
-| **Chilometraggio totale** | `100013` | `TOTAL_RECHARGE_MILEAGE` (Bundle) | **value=220412** | Odometro. **È il dato già mostrato** al posto `mileage`. |
+| **Giri motore** | `100042` | `ENGINE_TACHOMETER` | **630** (push `646`) | RPM. Unico dato *motore* vivo. Ha riga `push=` → notificato. |
+| **Velocità** | `140062` | `CURRENT_SPEED` | `float=1.0` (push `0.0`) | Ha riga `push=` → decodificata. Il valore nel dump è basso pur in movimento (istante catturato a bassa velocità): la velocità è comunque letta (l'app di fabbrica la mostra). |
+| **Chilometraggio totale** | `100013` | `TOTAL_RECHARGE_MILEAGE` (Bundle) | **value=220675** | Odometro. **È il dato già mostrato** al posto `mileage`. |
 
-### 2.2 Climatizzatore (classe `AirCondition`, 30xxx) — l'unico blocco "ricco" popolato
+### 2.2 Climatizzatore (classe `AirCondition`, 30xxx)
 | Informazione | `what` | Costante | Valore | Note |
 |---|---|---|---|---|
-| **Temperatura impostata** | `30006` | `TEMPERATURE` (Bundle) | **value=23.0** (min 16, max 30.5, step 0.5) | È il *setpoint* scelto dall'utente, **non** un sensore. |
+| **Temperatura impostata** | `30006` | `TEMPERATURE` (Bundle) | **value=24.0** (min 16, max 30.5, step 0.5) | *Setpoint* utente, **non** un sensore. |
 | Climatizzatore acceso | `30000` | `POWER` / `OFFSET` | 1 | |
-| Velocità ventola | `30004` | `WIND_LEVEL` | 3 | |
+| Velocità ventola | `30004` | `WIND_LEVEL` | 3 (un arg=5) | |
 | Distribuzione aria | `30003` | `WIND_MODE` | 128 | bitmask bocchette |
 | Doppia zona | `30057` | `DUAL` | 2 | |
+| Sync zone temp. | `30040` | `SYNC_LEFT_AND_RIGHT_TEMPERATURE_ZONES` | push=0 | notificato → decodificato |
 
 ### 2.3 Stato veicolo / sistema
 | Informazione | `what` | Costante | Valore | Note |
 |---|---|---|---|---|
-| Stato porte/cofano/baule | `50001` | `OPENED` (Bundle) | tutti 0 = **chiusi** | Il box lo espone (lettura valida, auto chiusa). Ma l'app **non lo mostra più**: la classe `Doors` non è più registrata (`init` a 4 classi) e il case `50001` è stato rimosso con la pagina porte. |
-| Orologio | `10001` | `TIME` (Bundle) | 07:48 | |
-| Data | `10002` | `DATE` (Bundle) | 2026-06-29 | |
-| Radar parcheggio laterali | `140008`/`140009` | `LEFT/RIGHT_RADAR_LEVEL` | `enable=1` | Solo *flag di presenza*: le **distanze non sono popolate**. |
+| Stato porte/cofano/baule | `50001` | `OPENED` (Bundle) | tutti 0 = **chiusi** | Il box lo espone. L'app **non lo mostra**: classe `Doors` non registrata e nessun case `50001`. |
+| Orologio | `10001` | `TIME` (Bundle) | 17:22 | |
+| Data | `10002` | `DATE` (Bundle) | 2026-07-13 | |
+| Radar parcheggio **laterali** | `140008`/`140009` | `LEFT/RIGHT_RADAR_LEVEL` | `enable=1` | Solo *flag di presenza*: **distanze non popolate**. Anteriore/posteriore (`140007`/`140006`) `enable=0`. |
 | Accensione / ACC | `140086` | `ACC` | 1 | |
 | Modello veicolo | `170004` | `CURRENT_MODEL` | 135790594 | id interno |
-| Versione CAN-box | `10004` | `CANBOX_VERSION` | `YT-A4Q5-GD-Hx V212,L-5,9A8,L33,0211` | identifica hardware/profilo |
+| Tipo auto originale | `120298` | `AUDI_FUNCITON_ORIGIN_CAR_TYPE` | 2 | flag config Audi |
+| Versione CAN-box | `10004` | `CANBOX_VERSION` | `YT-A4Q5-GD-Hx V212,L-5,BA8,L33,0261` | identifica hardware/codifica |
+
+### 2.4 Segnali discreti
+Tutti confermati da riga `push=` (notifica del box) e/o PULL non nullo.
+
+| Informazione | `what` | Costante | Valore nel monitor | Note |
+|---|---|---|---|---|
+| **Freno a mano** | `120080` | `HAND_BRAKE` | **push=1** | Notificato → decodificato. Valore risalente probabilmente all'avvio da fermo (PUSH non ri-notificato). |
+| **Freno stazionamento/parcheggio** | `140010` | `PARKING` | **push=1** | Notificato → decodificato. Come sopra. |
+| **Retromarcia** | `140011` | `REVERSE` | push=0 · PULL int=1 | Notificato → decodificato. `push=0` = non in retro al momento. **Sblocca potenzialmente cam. posteriore/PDC.** |
+| **Frecce / indicatori** | `140058` | `TURN_SIGNAL_LAMP` | push=0 · PULL int=2 | Notificato → decodificato. |
+| **Luci di posizione** | `140059` | `POSITON_LIGHT` | push=0 · PULL int=1 | Notificato → decodificato. |
+| **Abbaglianti / canale 110000** | `110000` | `HEADLAMP_HIGH_BEAMS` / `OFFSET` | int=1 (OFFSET push=0) | Collisione nomi sul `what` 110000; comunque non nullo/notificato. |
+| **Angolo sterzo** | `140057` | `ANGLE` | float=-0.0129… | Ruote ~dritte. Dato continuo, potenzialmente utile. |
+| Luminosità tasti | `100006` | `KEY_BRIGHTNESS` | int=27 (push=0) | Dimmer pulsantiera. |
 
 ---
 
 ## 3. Cosa il box NON legge (per non perderci tempo)
 
-Tutti tornano `0`/vuoto **con motore acceso** → il box **non li decodifica** per questa Audi.
+Compaiono con `0.0` / `-0.1` / `null`, oppure **assenti** dal monitor (filtro zeri) pur col
+PUSH attivo → il box **non li decodifica** per questa Audi.
 
-### 3.1 Carburante e consumi — *tutti morti*
-| Informazione | `what` | Costante | Valore nel dump |
+### 3.1 Carburante e consumi
+| Informazione | `what` | Costante | Valore |
 |---|---|---|---|
 | Consumo istantaneo | `100002` | `INSTANTANEOUS_FUEL` | Bundle value=0.0 |
 | Consumo medio | `100003` | `AVERAGE_FUEL` | Bundle value=0.0 |
 | **Autonomia residua** | `100011` | `FUEL_RECHARGE_MILEAGE` | Bundle **value=-0.1** (= non disponibile) |
-| Carburante residuo | `100045` | `REMAIN_FUEL` | 0 |
-| Livello carburante | `100232` | `FUEL_LEVEL` | 0 |
-| Range consumo | `100148` | `FUEL_CONSUMPTION_RANGE` | 0 |
+| Carburante residuo | `100045` | `REMAIN_FUEL` | assente (0) |
+| Livello carburante | `100232` | `FUEL_LEVEL` | assente (0) |
 
-### 3.2 Temperature — *tutte morte*
+### 3.2 Temperature
 | Informazione | `what` | Costante | Valore |
 |---|---|---|---|
-| Temp. liquido refrigerante | `100059` | `COOLANT_TEMPERATURE` | 0 (nessun Bundle) — **decisivo: a motore acceso salirebbe** |
-| Temp. olio motore | `100058` | `OIL_TEMPERATURE` | 0 |
+| Temp. liquido refrigerante | `100059` | `COOLANT_TEMPERATURE` | assente (0) — non decodificata |
+| Temp. olio motore | `100058` | `OIL_TEMPERATURE` | assente (0) |
 | **Temperatura esterna** | `30023` | `OUT_TEMPERATURE` | Bundle value=0.0 |
 
-### 3.3 Comandi/segnali discreti — *azionati nel test, comunque a `0`*
-Sono stati **fisicamente azionati** durante il rilievo e sono comunque rimasti a `0`: non è
-uno "stato a riposo", è **assenza di decodifica**.
-
+### 3.3 Discreti non popolati
 | Informazione | `what` | Costante | Valore | Nota |
 |---|---|---|---|---|
-| **Marcia** | `140080` | `GEAR` | 0 | Inserite **R / D / N** → sempre 0. |
-| **Retromarcia** | `140011` | `REVERSE` | 0 | Retromarcia inserita → 0. ⚠️ Impatta l'attivazione automatica della **telecamera posteriore / PDC**. |
-| **Luci** | `110000`/`110001`/`110045`/`110002` | `HEADLAMP_HIGH/LOW_BEAMS`, `POSITON_LIGHT`, `DAYTIME_RUNNING_LAMPS` | 0 | Luci accese → **tutti** i canali luci (110xxx) a 0. |
-| **Frecce / indicatori** | `140058` | `TURN_SIGNAL_LAMP` | 0 | Frecce azionate → 0. |
-| Quadro / accensione | `140061` | `IG_STATUS` | 0 | Risponde solo `ACC` (`140086`) = 1. |
-| Freno a mano / pedale | `120080`/`140030` | `HAND_BRAKE` / `FOOT_BRAKE` | 0 | |
+| **Marcia (selettore)** | `140080` | `GEAR` | assente (0) | ≠ `REVERSE`: la posizione D/N/R **non** è decodificata. |
+| Quadro / accensione | `140061` | `IG_STATUS` | assente (0) | Risponde solo `ACC` (`140086`) = 1. |
+| Anabbaglianti / DRL | `110001`/`110002` | `HEADLAMP_LOW_BEAMS`, `DAYTIME_RUNNING_LAMPS` | assenti | Solo posizione + canale 110000 attivi. |
 
 ### 3.4 Altri dati non popolati
 | Informazione | `what` | Costante | Valore |
 |---|---|---|---|
-| Tensione batteria | `160013` | `VOLTAGE` | 0 |
+| Tensione batteria | `160013` | `VOLTAGE` | assente (0) |
 | Velocità media | `100001` | `AVERAGE_SPEED` | Bundle value=0.0 |
-| Distanza dal rifornimento | `100015` | `SINCE_REFUELING_DISTANCE` | 0 |
 | Trip A / Trip B | `100150`/`100249` | `TRIP_A/B_DISTANCE` | Bundle value=0.0 |
-| Pressione/temp gomme (TPMS) | `70001`/`70007` | `TIRE_PRESS/TEMP_MONITORING_INFO` | Bundle tutti 0.0 |
-| Manutenzione (km al tagliando) | — | — | *La classe `Maintenance` non esiste*; `120081` = `ASSIST_AUTO_BRAKE` (ADAS), = 0. |
+| Pressione/temp/warning gomme (TPMS) | `70001`/`70007`/`70002` | `TIRE_PRESS/TEMP_MONITORING_INFO`, `TIRE_PRESS_WARNING_INFO` | Bundle tutti 0.0 / 0 |
+| PM2.5 interno/esterno | `30060`/`30061` | `IN_PM25`/`OUT_PM25` | Bundle level=0 value=0 |
+| Info/fault batteria-motore-carrozzeria | `160050`/`160049`/`160051`/`160046`-`160048` | `BATTERY/MOTOR/CARBODY_INFO`, `*_FAULT_INFO` | Bundle `null` (telemetria EV, irrilevante diesel) |
+| Manutenzione (km al tagliando) | — | — | *Classe `Maintenance` inesistente*; `120081` = `ASSIST_AUTO_BRAKE`. |
 
 ---
 
-## 4. Raccomandazione (rivista sui dati reali)
+## 4. Raccomandazione
 
-La vecchia classifica (autonomia → consumo → temp acqua → temp esterna) **non è più
-proponibile**: nessuno di quei dati è leggibile su questo box.
+I dati "ricchi" mancanti (carburante, temperature, autonomia) sono **morti**: non sbloccabili
+via APK. Candidati da instradare nello slot `mileage`/`speed` (in ordine di utilità reale):
 
-**Cosa si può realmente mostrare di nuovo e utile:**
+1. **Giri motore** (`100042`, vivo, con `push`) — dato motore vivo. **Questo APK non lo legge**
+   (nessun `case 100042` in `CarInfoManager`) → candidato più pulito. L'app di fabbrica lo
+   mostra altrove, ma dentro *questo* slider sarebbe nuovo.
+2. **Angolo sterzo** (`140057`, float continuo) — dinamico; utile solo come gadget.
+3. **Stato retromarcia / freno a mano / frecce / luci** (§2.4) — leggibili: più che come testo
+   nello slot mileage, sono utili come **logica** (es. auto-attivazione telecamera in retro via
+   `REVERSE 140011`, indicatori luci).
+4. *(Marginale)* **Temperatura impostata clima** (`30006`, 24.0 °C) — è il setpoint utente,
+   basso valore informativo.
 
-1. **Giri motore** (`100042` = 640 nel dump) — dato motore vivo. **Questo APK non lo legge**
-   (nessun `case 100042` in `CarInfoManager`, nessun altro lettore nei sorgenti), quindi è il
-   candidato più pulito da instradare nello slot `mileage`/`speed`. NB: l'app **di fabbrica**
-   lo mostra già altrove → non è un dato "invisibile", ma dentro lo slider di *questa* app
-   sarebbe nuovo.
-2. *(Marginale)* **Temperatura impostata clima** (`30006`, 23.0 °C) — leggibile, ma è il
-   valore che l'utente ha appena impostato: informazione a basso valore.
-3. Il resto dei dati vivi è **già mostrato** (chilometraggio, velocità) o **triviale**
-   (orologio/data).
+> **In pratica:** ciò che è utile e *vivo* (velocità, giri, contachilometri, porte) l'app di
+> fabbrica lo mostra già; il valore aggiunto da APK sui numeri di telemetria è limitato, mentre
+> i **segnali discreti** (retro, freni, luci, frecce) sono sfruttabili per logiche/automazioni.
 
-> **In pratica le opzioni sono poche:** tutto ciò che è davvero utile (velocità, giri,
-> contachilometri, porte) l'app di fabbrica **lo mostra già**; ciò che manca (carburante,
-> temperature, autonomia) **non è decodificato**. Il valore aggiunto realistico modificando
-> l'APK è quindi limitato → vedi le strade hardware qui sotto.
-
-**Per ottenere carburante / temperature / consumi servirebbe hardware o firmware, non
-l'APK:**
-- un **CAN-box con profilo Audi più completo** o un **box diverso**;
+**Per ottenere carburante / temperature / consumi servirebbe hardware o firmware, non l'APK:**
+- un **CAN-box con profilo Audi più completo** o una **codifica diversa** del box (la codifica
+  incide su cosa viene decodificato: altre codifiche potrebbero esporre più telemetria);
 - un **dongle OBD-II** (BLE) letto da un percorso companion, in parallelo al CAN-box.
-
-Nessuna di queste strade si sblocca modificando solo l'applicazione.
 
 ---
 
 ## 5. Metodo (come rifare/estendere il rilievo)
 
-Il dump usato adotta il criterio dichiarato nel suo header ("tengo ogni coppia `what`+`arg`
-con almeno un valore presente, zeri inclusi"): utile per la mappatura ma verboso
-(~13.600 righe). Per una **mappa di sola leggibilità** conviene un criterio che scarti gli
-zeri (tenendo solo valori non nulli/non-default).
+Il monitor continuo PULL+PUSH ([IMPLEMENTAZIONE_DUMP_CARINFO.md](IMPLEMENTAZIONE_DUMP_CARINFO.md))
+tiene ogni `what+arg` con valore **plausibile** (non nullo) e accetta **sempre** i PUSH: le
+righe `push=` sono la prova di leggibilità più forte e catturano i transitori.
 
-Uno **zero non è distinguibile da "non supportato"** in un singolo dump: un `what` che
-compare popolato in **almeno uno** stato è leggibile. Per completare la mappa, ripetere il
-dump in stati diversi:
-- **motore acceso** (fatto — questo dump);
-- **in marcia** (velocità/trip/consumo se mai popolati);
-- **in retromarcia** (radar/telecamere);
-- **porte/luci aperte** (stato carrozzeria).
+Uno **zero (o l'assenza) in un singolo rilievo non è distinguibile da "non supportato"**: un
+`what` che compare popolato in **almeno uno** stato è leggibile. Per completare la mappa,
+rilevare in stati diversi:
+- **motore acceso, auto in movimento** (stato del rilievo attuale);
+- **da fermo a motore acceso** (per leggere freni/stazionamento nello stato di riposo);
+- **in retromarcia effettiva** (per confermare polarità di `REVERSE` → radar/telecamere);
+- **luci/frecce/porte azionate** (in parte catturate via PUSH).
 
 ---
 
@@ -202,10 +208,9 @@ dump in stati diversi:
 1. In `CarInfoManager.onCarInfoDataChanged(what, obj, unit)` aggiungere/modificare il `case`
    con il `what` voluto (**vivo**, es. `ENGINE_TACHOMETER` = `100042`).
 2. Instradarlo alla view (`updateTotalMileage`/`updateMileage`); la view formatta
-   `"<valore> <unità>"` → adattare l'unità (es. `RPM`, `°C`).
+   `"<valore> <unità>"` → adattare l'unità (es. `RPM`, `°C`, `°` per l'angolo).
 3. Se il dato è un **Bundle** (mileage `100013`, clima `30006`, porte `50001`), leggere le
    chiavi del Bundle (`value` + `KEY_UNIT`), non `getInt`.
-4. Se il dato è in una classe **non registrata** (es. `AirCondition` 30xxx per il clima),
-   aggiungere il relativo `CLASS_NAME` all'array `ids[]` nella `init(...)` di
-   `CarInfoManager` **oppure** leggerlo in PULL on-demand.
+4. Se il dato è in una classe **non registrata**, aggiungere il relativo `CLASS_NAME` all'array
+   `ids[]` nella `init(...)` di `CarInfoManager` **oppure** leggerlo in PULL on-demand.
 5. (Opzionale) Tradurre l'etichetta in `res/values/strings.xml`.
