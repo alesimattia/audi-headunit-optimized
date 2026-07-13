@@ -41,6 +41,19 @@
 # mentre il vecchio thread sta ancora terminando. Impostato dal thread (run), non da stop().
 .field static sBusy:Z
 
+# mappa chiave-riga -> [min, max] (float[2]) dei valori NUMERICI visti nella sessione.
+# Permette di mostrare l'intervallo (es. picco RPM, velocita' massima in marcia) invece del
+# solo ultimo valore. ConcurrentHashMap: scritta dal thread monitor (probe).
+.field static sNum:Ljava/util/concurrent/ConcurrentHashMap;
+
+# file del log eventi PUSH con timestamp (append). Separato dal file dedup: cattura la
+# SEQUENZA temporale dei transitori (freccia/retro/freni) per provarne semantica e polarita'.
+.field private static sEventFile:Ljava/io/File;
+
+# true all'avvio del monitor: il primo evento riscrive il file eventi (sessione pulita), poi
+# si passa in append. Cosi' ogni sessione di diagnosi riparte da un file vuoto.
+.field static sEventFresh:Z
+
 
 # direct methods
 
@@ -78,6 +91,23 @@
     sput-object v0, Lcom/spd/xhsntg/DebugLog;->sNames:Ljava/util/concurrent/ConcurrentHashMap;
 
     :cond_names
+    # crea la mappa min/max dei valori numerici (una sola volta)
+    sget-object v0, Lcom/spd/xhsntg/DebugLog;->sNum:Ljava/util/concurrent/ConcurrentHashMap;
+
+    if-nez v0, :cond_num
+
+    new-instance v0, Ljava/util/concurrent/ConcurrentHashMap;
+
+    invoke-direct {v0}, Ljava/util/concurrent/ConcurrentHashMap;-><init>()V
+
+    sput-object v0, Lcom/spd/xhsntg/DebugLog;->sNum:Ljava/util/concurrent/ConcurrentHashMap;
+
+    :cond_num
+    # ogni avvio monitor riparte con un file eventi pulito (il primo write sovrascrive)
+    const/4 v0, 0x1
+
+    sput-boolean v0, Lcom/spd/xhsntg/DebugLog;->sEventFresh:Z
+
     # se un thread monitor e' gia' vivo, non avviarne un altro: continuera' da solo (sRunning true)
     sget-boolean v0, Lcom/spd/xhsntg/DebugLog;->sBusy:Z
 
@@ -121,7 +151,7 @@
 # sNames sono ConcurrentHashMap. Attivo solo mentre il monitor gira (sRunning) e solo se il
 # nome del what e' gia' noto (popolato dalla scansione PULL).
 .method static onPush(ILjava/lang/Object;I)V
-    .locals 4
+    .locals 8
     .param p0, "what"     # I
     .param p1, "value"    # Ljava/lang/Object;
     .param p2, "unit"     # I
@@ -132,75 +162,165 @@
 
     if-eqz p1, :cond_out
 
-    sget-object v0, Lcom/spd/xhsntg/DebugLog;->sMap:Ljava/util/concurrent/ConcurrentHashMap;
+    # --- valStr (v1): espande i Bundle (array inclusi), altrimenti String.valueOf ---
+    instance-of v0, p1, Landroid/os/Bundle;
 
-    if-eqz v0, :cond_out
+    if-eqz v0, :cond_notbundle
 
-    sget-object v1, Lcom/spd/xhsntg/DebugLog;->sNames:Ljava/util/concurrent/ConcurrentHashMap;
+    move-object v0, p1
 
-    if-eqz v1, :cond_out
+    check-cast v0, Landroid/os/Bundle;
 
-    # name = sNames.get(Integer.valueOf(what)); se non ancora noto -> esci
-    invoke-static {p0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
-
-    move-result-object v2
-
-    invoke-virtual {v1, v2}, Ljava/util/concurrent/ConcurrentHashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    invoke-static {v0}, Lcom/spd/xhsntg/DebugLog;->bundleStr(Landroid/os/Bundle;)Ljava/lang/String;
 
     move-result-object v1
 
-    check-cast v1, Ljava/lang/String;
+    goto :goto_haveval
 
-    if-eqz v1, :cond_out
+    :cond_notbundle
+    invoke-static {p1}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;
 
-    # key = name + " what=" + what  (identica alla chiave PULL globale -> dedup)
-    new-instance v2, Ljava/lang/StringBuilder;
+    move-result-object v1
 
-    invoke-direct {v2}, Ljava/lang/StringBuilder;-><init>()V
+    :goto_haveval
+    # --- name (v2): sNames.get(what), puo' restare null (PUSH precoce non perso: va comunque nel log eventi) ---
+    const/4 v2, 0x0
 
-    invoke-virtual {v2, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    sget-object v3, Lcom/spd/xhsntg/DebugLog;->sNames:Ljava/util/concurrent/ConcurrentHashMap;
 
-    const-string v3, " what="
+    if-eqz v3, :cond_noname
 
-    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-static {p0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
 
-    invoke-virtual {v2, p0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    move-result-object v4
 
-    invoke-virtual {v2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-
-    move-result-object v2
-
-    # line = key + " push=" + value + " unit=" + unit + "\n"
-    new-instance v3, Ljava/lang/StringBuilder;
-
-    invoke-direct {v3}, Ljava/lang/StringBuilder;-><init>()V
-
-    invoke-virtual {v3, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    const-string v0, " push="
-
-    invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    invoke-virtual {v3, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
-
-    const-string v0, " unit="
-
-    invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    invoke-virtual {v3, p2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
-
-    const-string v0, "\n"
-
-    invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    invoke-virtual {v3}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+    invoke-virtual {v3, v4}, Ljava/util/concurrent/ConcurrentHashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
 
     move-result-object v3
 
-    # upsert nella stessa mappa del PULL
-    sget-object v0, Lcom/spd/xhsntg/DebugLog;->sMap:Ljava/util/concurrent/ConcurrentHashMap;
+    check-cast v3, Ljava/lang/String;
 
-    invoke-virtual {v0, v2, v3}, Ljava/util/concurrent/ConcurrentHashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    move-object v2, v3
+
+    :cond_noname
+    # --- timestamp (v3) HH:mm:ss.SSS ---
+    new-instance v3, Ljava/text/SimpleDateFormat;
+
+    const-string v4, "HH:mm:ss.SSS"
+
+    invoke-direct {v3, v4}, Ljava/text/SimpleDateFormat;-><init>(Ljava/lang/String;)V
+
+    new-instance v4, Ljava/util/Date;
+
+    invoke-direct {v4}, Ljava/util/Date;-><init>()V
+
+    invoke-virtual {v3, v4}, Ljava/text/DateFormat;->format(Ljava/util/Date;)Ljava/lang/String;
+
+    move-result-object v3
+
+    # --- riga evento: "<ts> <name|?> what=X push=<val> unit=U\n" -> writeEvent (append) ---
+    new-instance v4, Ljava/lang/StringBuilder;
+
+    invoke-direct {v4}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-virtual {v4, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    const-string v5, " "
+
+    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    if-eqz v2, :cond_qmark
+
+    invoke-virtual {v4, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    goto :goto_lbl
+
+    :cond_qmark
+    const-string v5, "?"
+
+    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    :goto_lbl
+    const-string v5, " what="
+
+    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v4, p0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    const-string v5, " push="
+
+    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v4, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    const-string v5, " unit="
+
+    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v4, p2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    const-string v5, "\n"
+
+    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v4}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v5
+
+    invoke-static {v5}, Lcom/spd/xhsntg/DebugLog;->writeEvent(Ljava/lang/String;)V
+
+    # --- dedup in sMap solo se il nome e' noto (chiave identica al PULL) ---
+    if-eqz v2, :cond_out
+
+    sget-object v6, Lcom/spd/xhsntg/DebugLog;->sMap:Ljava/util/concurrent/ConcurrentHashMap;
+
+    if-eqz v6, :cond_out
+
+    # key (v7) = name + " what=" + what
+    new-instance v4, Ljava/lang/StringBuilder;
+
+    invoke-direct {v4}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-virtual {v4, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    const-string v0, " what="
+
+    invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v4, p0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v4}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v7
+
+    # line (v5) = key + " push=" + val + " unit=" + unit + "\n"
+    new-instance v4, Ljava/lang/StringBuilder;
+
+    invoke-direct {v4}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-virtual {v4, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    const-string v0, " push="
+
+    invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v4, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    const-string v0, " unit="
+
+    invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v4, p2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    const-string v0, "\n"
+
+    invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v4}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v5
+
+    invoke-virtual {v6, v7, v5}, Ljava/util/concurrent/ConcurrentHashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 
     :cond_out
     return-void
@@ -465,7 +585,8 @@
 
     if-eqz v8, :cond_pbd
 
-    invoke-virtual {v4}, Landroid/os/Bundle;->toString()Ljava/lang/String;
+    # feature1: espande gli array int[]/float[]/Object[] dentro il Bundle (non piu' [I@hash)
+    invoke-static {v4}, Lcom/spd/xhsntg/DebugLog;->bundleStr(Landroid/os/Bundle;)Ljava/lang/String;
 
     move-result-object v9
 
@@ -479,6 +600,27 @@
     invoke-virtual {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     :goto_pnl
+    # feature3: suffisso min/max se e' stato tenuto un valore numerico (int o float).
+    # v0 (ex sArg, non piu' usato) riusato come float del valore corrente.
+    if-eqz v5, :cond_mm_flt
+
+    int-to-float v0, v1
+
+    goto :goto_mm_call
+
+    :cond_mm_flt
+    if-eqz v6, :cond_mm_none
+
+    move v0, v2
+
+    :goto_mm_call
+    invoke-static {v11, v0}, Lcom/spd/xhsntg/DebugLog;->minMaxStr(Ljava/lang/String;F)Ljava/lang/String;
+
+    move-result-object v9
+
+    invoke-virtual {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    :cond_mm_none
     const-string v9, "\n"
 
     invoke-virtual {v12, v9}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
@@ -673,4 +815,289 @@
     move-exception v0
 
     return-void
+.end method
+
+# Serializza un Bundle espandendo gli array (int[]/float[]/Object[]): Bundle.toString() stampa
+# solo il riferimento (es. value=[I@5f4ec5e) perdendo il contenuto. Cosi' emergono livelli
+# radar e i cataloghi ALL_MAKE/ALL_MODEL/ALL_CANBOX (names[]/values[]).
+.method static bundleStr(Landroid/os/Bundle;)Ljava/lang/String;
+    .locals 6
+    .param p0, "b"    # Landroid/os/Bundle;
+
+    new-instance v0, Ljava/lang/StringBuilder;
+
+    invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v1, "Bundle[{"
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    # v1 = first (1 = prima chiave, niente separatore)
+    const/4 v1, 0x1
+
+    invoke-virtual {p0}, Landroid/os/Bundle;->keySet()Ljava/util/Set;
+
+    move-result-object v2
+
+    invoke-interface {v2}, Ljava/util/Set;->iterator()Ljava/util/Iterator;
+
+    move-result-object v2
+
+    :goto_k
+    invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
+
+    move-result v3
+
+    if-eqz v3, :goto_end
+
+    invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+
+    move-result-object v3
+
+    check-cast v3, Ljava/lang/String;
+
+    if-nez v1, :cond_first
+
+    const-string v4, ", "
+
+    invoke-virtual {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    :cond_first
+    const/4 v1, 0x0
+
+    invoke-virtual {v0, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    const-string v4, "="
+
+    invoke-virtual {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {p0, v3}, Landroid/os/Bundle;->get(Ljava/lang/String;)Ljava/lang/Object;
+
+    move-result-object v4
+
+    instance-of v5, v4, [I
+
+    if-eqz v5, :cond_notintarr
+
+    check-cast v4, [I
+
+    invoke-static {v4}, Ljava/util/Arrays;->toString([I)Ljava/lang/String;
+
+    move-result-object v4
+
+    goto :goto_val
+
+    :cond_notintarr
+    instance-of v5, v4, [F
+
+    if-eqz v5, :cond_notfloatarr
+
+    check-cast v4, [F
+
+    invoke-static {v4}, Ljava/util/Arrays;->toString([F)Ljava/lang/String;
+
+    move-result-object v4
+
+    goto :goto_val
+
+    :cond_notfloatarr
+    instance-of v5, v4, [Ljava/lang/Object;
+
+    if-eqz v5, :cond_notobjarr
+
+    check-cast v4, [Ljava/lang/Object;
+
+    invoke-static {v4}, Ljava/util/Arrays;->toString([Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v4
+
+    goto :goto_val
+
+    :cond_notobjarr
+    invoke-static {v4}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;
+
+    move-result-object v4
+
+    :goto_val
+    invoke-virtual {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    goto :goto_k
+
+    :goto_end
+    const-string v1, "}]"
+
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+# Appende una riga al file eventi (Download/ntg_carinfo_events.txt). Il primo write dopo l'avvio
+# monitor (sEventFresh) sovrascrive: ogni sessione riparte pulita, poi si accumula in append.
+# Tutto in try/catchall (permesso storage negato -> no-op).
+.method static writeEvent(Ljava/lang/String;)V
+    .locals 5
+    .param p0, "line"    # Ljava/lang/String;
+
+    :try_start_0
+    sget-object v0, Lcom/spd/xhsntg/DebugLog;->sEventFile:Ljava/io/File;
+
+    if-nez v0, :cond_have
+
+    sget-object v0, Landroid/os/Environment;->DIRECTORY_DOWNLOADS:Ljava/lang/String;
+
+    invoke-static {v0}, Landroid/os/Environment;->getExternalStoragePublicDirectory(Ljava/lang/String;)Ljava/io/File;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/io/File;->exists()Z
+
+    move-result v1
+
+    if-nez v1, :cond_dir
+
+    invoke-virtual {v0}, Ljava/io/File;->mkdirs()Z
+
+    :cond_dir
+    new-instance v1, Ljava/io/File;
+
+    const-string v2, "ntg_carinfo_events.txt"
+
+    invoke-direct {v1, v0, v2}, Ljava/io/File;-><init>(Ljava/io/File;Ljava/lang/String;)V
+
+    sput-object v1, Lcom/spd/xhsntg/DebugLog;->sEventFile:Ljava/io/File;
+
+    :cond_have
+    # append = true, tranne il primo write dopo l'avvio (sovrascrive e azzera il flag)
+    const/4 v2, 0x1
+
+    sget-boolean v3, Lcom/spd/xhsntg/DebugLog;->sEventFresh:Z
+
+    if-eqz v3, :cond_app
+
+    const/4 v2, 0x0
+
+    const/4 v3, 0x0
+
+    sput-boolean v3, Lcom/spd/xhsntg/DebugLog;->sEventFresh:Z
+
+    :cond_app
+    new-instance v3, Ljava/io/FileWriter;
+
+    sget-object v4, Lcom/spd/xhsntg/DebugLog;->sEventFile:Ljava/io/File;
+
+    invoke-direct {v3, v4, v2}, Ljava/io/FileWriter;-><init>(Ljava/io/File;Z)V
+
+    invoke-virtual {v3, p0}, Ljava/io/FileWriter;->write(Ljava/lang/String;)V
+
+    invoke-virtual {v3}, Ljava/io/FileWriter;->close()V
+    :try_end_0
+    .catchall {:try_start_0 .. :try_end_0} :catch_0
+
+    return-void
+
+    :catch_0
+    move-exception v0
+
+    return-void
+.end method
+
+# Aggiorna min/max (sNum) per la chiave e ritorna " min=<min> max=<max>". Restituisce ""
+# se la mappa non e' pronta. Chiamata da probe con il valore numerico corrente.
+.method static minMaxStr(Ljava/lang/String;F)Ljava/lang/String;
+    .locals 5
+    .param p0, "key"    # Ljava/lang/String;
+    .param p1, "v"      # F
+
+    sget-object v0, Lcom/spd/xhsntg/DebugLog;->sNum:Ljava/util/concurrent/ConcurrentHashMap;
+
+    if-nez v0, :cond_have
+
+    const-string v0, ""
+
+    return-object v0
+
+    :cond_have
+    invoke-virtual {v0, p0}, Ljava/util/concurrent/ConcurrentHashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, [F
+
+    if-nez v1, :cond_upd
+
+    # prima volta: new float[]{v, v}
+    const/4 v2, 0x2
+
+    new-array v1, v2, [F
+
+    const/4 v2, 0x0
+
+    aput p1, v1, v2
+
+    const/4 v2, 0x1
+
+    aput p1, v1, v2
+
+    invoke-virtual {v0, p0, v1}, Ljava/util/concurrent/ConcurrentHashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+
+    goto :goto_fmt
+
+    :cond_upd
+    # min (idx 0)
+    const/4 v2, 0x0
+
+    aget v3, v1, v2
+
+    cmpg-float v4, p1, v3
+
+    if-gez v4, :cond_max
+
+    aput p1, v1, v2
+
+    :cond_max
+    # max (idx 1)
+    const/4 v2, 0x1
+
+    aget v3, v1, v2
+
+    cmpl-float v4, p1, v3
+
+    if-lez v4, :goto_fmt
+
+    aput p1, v1, v2
+
+    :goto_fmt
+    new-instance v2, Ljava/lang/StringBuilder;
+
+    invoke-direct {v2}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v3, " min="
+
+    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    const/4 v3, 0x0
+
+    aget v3, v1, v3
+
+    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(F)Ljava/lang/StringBuilder;
+
+    const-string v3, " max="
+
+    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    const/4 v3, 0x1
+
+    aget v3, v1, v3
+
+    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(F)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v2
+
+    return-object v2
 .end method
