@@ -18,6 +18,21 @@
 .method public abstract onUpdateConnected(Z)V
 .end method
 
+.method public abstract onUpdateHighBeam(Z)V
+.end method
+
+.method public abstract onUpdateLowBeam(Z)V
+.end method
+
+.method public abstract onUpdatePositionLight(Z)V
+.end method
+
+.method public abstract onUpdateRpm(I)V
+.end method
+
+.method public abstract onUpdateSteeringAngle(F)V
+.end method
+
 .method public abstract onUpdateMediaSource(II)V
 .end method
 

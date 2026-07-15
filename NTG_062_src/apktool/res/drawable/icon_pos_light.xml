@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Icona "luci di posizione": bulbo centrale con raggi tutt'intorno (stile "sole"),
+     distinto dai fari anabbaglianti/abbaglianti che usano la cupola con raggi laterali. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48px"
+    android:height="48px"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- bulbo centrale -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M24,17 A7,7 0 1,0 24.01,17 Z" />
+    <!-- 8 raggi radiali -->
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.5" android:pathData="M35,24 L41,24" />
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.5" android:pathData="M13,24 L7,24" />
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.5" android:pathData="M24,35 L24,41" />
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.5" android:pathData="M24,13 L24,7" />
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.5" android:pathData="M31.8,31.8 L36,36" />
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.5" android:pathData="M16.2,16.2 L12,12" />
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.5" android:pathData="M31.8,16.2 L36,12" />
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.5" android:pathData="M16.2,31.8 L12,36" />
+</vector>

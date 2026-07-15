@@ -2,7 +2,7 @@
 .super Ljava/lang/Object;
 .source "NtgLog.java"
 
-# Logger su file Download/NTG_062_log.log (mirror dei Log dell'app, distinto dal logger can-box).
+# Logger su file Download/carinfo_logcat.log (mirror dei Log dell'app, distinto dal logger can-box).
 # Scrittura su thread di background (HandlerThread). Tutti i metodi pubblici in try/catch(Throwable):
 # NtgLog NON puo' mai far crashare l'app. Vedi blueprint java/com/spd/xhsntg/NtgLog.java.
 # @since 30/06/26 Mattia Alesi
@@ -452,7 +452,7 @@
     :cond_dir_ok
     new-instance v1, Ljava/io/File;
 
-    const-string v2, "NTG_062_log.log"
+    const-string v2, "carinfo_logcat.log"
 
     invoke-direct {v1, v0, v2}, Ljava/io/File;-><init>(Ljava/io/File;Ljava/lang/String;)V
 

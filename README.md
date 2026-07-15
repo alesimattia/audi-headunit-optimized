@@ -203,12 +203,21 @@ ma è **irraggiungibile** via swipe (pagina nascosta di fabbrica).
 - Build `NTG_062_audi_it.apk`: **~566 KB** (da 10.5 MB dell'APK originale), zipallineata + firma v2/v3 con la chiave del repo.
 
 ### Diagnostica / log su file
-L'app rispecchia i propri log (oltre che su logcat) nel file **`Download/NTG_062_log.log`** — distinto
-dal dump CarInfo `ntg_carinfo_log.txt`, **sovrascritto a ogni avvio**. La scrittura passa per la classe
-`com.spd.xhsntg.NtgLog` su un **thread di background** (non rallenta l'app; protetta da `try/catch` →
-non può farla crashare). Richiede il permesso `WRITE_EXTERNAL_STORAGE`, chiesto **all'avvio** (dialog
-una-tantum al primo lancio); finché non è concesso le righe restano in buffer e vengono scritte appena
-disponibile.
+L'app scrive **tre** file di log in `Download/` (tutti protetti da `try/catch` → non possono far
+crashare l'app; richiedono `WRITE_EXTERNAL_STORAGE`, chiesto una-tantum all'avvio):
+
+| File (`Download/`) | Sorgente | Contenuto | Scrittura |
+|---|---|---|---|
+| `carinfo_logcat.log` | `com.spd.xhsntg.NtgLog` (mirror dei `Log` dell'app, su thread di background) | Log runtime dell'**applicazione**: lifecycle dell'Activity, bind/preview DVR, connessione CarInfo/sorgente media. **Non** contiene dati del veicolo. | **Sovrascritto** a ogni avvio |
+| `carinfo_readable_dedup.log` | `DebugLog` (pagina debug, indice 2) | Mappa **deduplicata** dei parametri CarInfo leggibili dal CAN-box (PULL periodico + PUSH): stato corrente per ogni `what[+arg]` + suffisso `min/max` di sessione. Dice *quali* dati sono leggibili e il loro valore/range attuale. | **Sovrascritto** ogni ciclo (~3s) |
+| `carinfo_events_append.log` | `DebugLog` (helper `writeEvent`) | Cronologia temporale **completa** degli eventi PUSH (timestamp `HH:mm:ss.SSS`), **senza dedup** → conserva i transitori (frecce/retromarcia/freni) e la loro sequenza. | **Append** (azzerato all'avvio del monitor, poi accumula) |
+
+`carinfo_logcat.log` è diagnostica dell'**applicazione** (via `NtgLog`, thread di background, nessun I/O
+sul chiamante → non rallenta l'app); gli altri due sono diagnostica del **veicolo** prodotta dalla pagina
+debug. Il **dedup** agisce solo su `carinfo_readable_dedup.log` (un valore per `what`, l'ultimo): la
+cronologia dei cambiamenti di stato **non** va persa, perché resta integrale in `carinfo_events_append.log`.
+Finché il permesso `WRITE_EXTERNAL_STORAGE` non è concesso le righe restano in buffer e vengono scritte
+appena disponibile.
 
 > **Aggiornamento sessione 2026-06-25** (oltre ai punti sopra): (a) **debloat sicuro** — rimossi `bg.png` (1.5 MB), `car.png` (orfana) e l'**isola media morta** `androidx/media`+`android/support/v4/media` (601 classi); (b) **pagina indice 3 ricostruita** — rimossa `CarKeyView` (tasti non funzionanti), aggiunta `CarSensorView` (sensori parcheggio + marcia, barre grafiche, dati da `CarInfo.ReverseAndAVM`); (c) **build+firma su Windows** validate (apktool 3.0.2, firma v2/v3 via JDK 12 con la chiave del repo).
 >

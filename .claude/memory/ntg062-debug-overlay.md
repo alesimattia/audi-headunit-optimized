@@ -9,8 +9,10 @@ Pagina diagnostica custom aggiunta al progetto (NON nell'APK originale). Classe 
 
 ## ARCHITETTURA ATTUALE — monitor continuo PULL+PUSH, 2 file (compilato 2026-07-13; test runtime in auto da fare)
 `DebugLog` è un **monitor continuo** che fonde PULL+PUSH nella STESSA `sMap` deduplicata (chiave `"NAME what=X [arg=Y]"`), riscritta in sovrascrittura ogni ciclo (bounded). Produce **due file** in `Download/`:
-- **`ntg_carinfo_log.txt`** — mappa dedup (stato corrente per what+arg). Sovrascritto ogni ciclo.
-- **`ntg_carinfo_events.txt`** — log APPEND-only degli eventi PUSH con timestamp `HH:mm:ss.SSS` (helper `writeEvent`, `FileWriter(append)`). Azzerato a ogni avvio monitor (flag `sEventFresh`: il primo write sovrascrive, poi append). Cattura la **SEQUENZA temporale** dei transitori (freccia/retro/freni) → prova semantica/polarità.
+- **`carinfo_readable_dedup.log`** — mappa dedup (stato corrente per what+arg). Sovrascritto ogni ciclo.
+- **`carinfo_events_append.log`** — log APPEND-only degli eventi PUSH con timestamp `HH:mm:ss.SSS` (helper `writeEvent`, `FileWriter(append)`). Azzerato a ogni avvio monitor (flag `sEventFresh`: il primo write sovrascrive, poi append). Cattura la **SEQUENZA temporale** dei transitori (freccia/retro/freni) → prova semantica/polarità.
+
+**Rinomina file (2026-07-15)**: i 3 log sono stati rinominati nei sorgenti — `ntg_carinfo_log.txt`→`carinfo_readable_dedup.log`, `ntg_carinfo_events.txt`→`carinfo_events_append.log`, e il logcat-mirror `NtgLog` `NTG_062_log.log`→`carinfo_logcat.log`. Effetto solo dopo ricompilazione; i dump già su disco/repo col vecchio nome sono pre-rinomina.
 
 - **PULL** (thread bg, loop `while(sRunning)` ~3s): per ogni what×arg(0..5) → `probe` → upsert in `sMap` se "plausibile" (int!=0 non-eco / float!=0 / str non vuota·NA·0 / Bundle non vuoto). Popola `sNames` (what→NAME) per il PUSH. **Bundle espansi** via helper `bundleStr` (int[]/float[]/Object[] → `Arrays.toString`, NON più `[I@hash` di `Bundle.toString`): emergono livelli radar e cataloghi `ALL_MAKE/ALL_MODEL/ALL_CANBOX` (names[]/values[]). Righe numeriche: suffisso **` min=<min> max=<max>`** via helper `minMaxStr`+mappa `sNum` (intervallo su tutta la sessione, non solo ultimo valore).
 - **PUSH** (thread binder): `CarInfoManager.init` registra **tutte le 19 classi** con `CLASS_NAME`; `onCarInfoDataChanged(what,val,unit)` inoltra OGNI evento a `DebugLog.onPush`. `onPush` **espande i Bundle** (bundleStr), aggiunge timestamp e scrive SEMPRE l'evento nel file eventi; fa dedup in `sMap` (chiave identica al PULL) **solo se il nome è noto** (in `sNames`) — un PUSH precoce con nome ignoto NON è perso (finisce nel log eventi con label `?`). Righe push marcate `push=<val> unit=<u>`.
@@ -27,7 +29,7 @@ Pagina diagnostica custom aggiunta al progetto (NON nell'APK originale). Classe 
 1. `names()` elenca ~21 nomi-classe (`com.spd.carinfo.CarInfo` + classi annidate: Instruments, ReverseAndAVM, AirCondition, Doors, Vehicles, Battery, …).
 2. Per ogni classe, reflection `getDeclaredFields()` → tiene solo i `static int` (sono i `what`).
 3. Per ogni `what` chiama `DebugLog.probe(sb, ci, name, what)`.
-4. Scrive il risultato **una volta in sovrascrittura** in `Download/ntg_carinfo_log.txt` (`writeFileOverwrite`), poi aggiorna la TextView sul main thread (mMode=1 via `View.post`).
+4. Scrive il risultato **una volta in sovrascrittura** in `Download/carinfo_readable_dedup.log` (`writeFileOverwrite`), poi aggiorna la TextView sul main thread (mMode=1 via `View.post`).
 - Flag anti-rientro `sRunning`. Vista = ScrollView nero + TextView bianca (`createView`, agganciata in `MyViewPageAdapter.<init>`).
 
 **`probe()` — lettura PULL on-demand** (non push): per ogni `what` chiama `CarInfo.get(what, 0, default)` con default-sentinella diversi per tipo e tiene la riga se ALMENO un tipo dà valore utile:

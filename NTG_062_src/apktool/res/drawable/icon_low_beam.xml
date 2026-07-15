@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Icona "fari anabbaglianti": lampada a cupola con 3 raggi inclinati verso il BASSO (simbolo standard low-beam). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48px"
+    android:height="48px"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- cupola della lampada (bulge a sinistra, lato piatto a destra) -->
+    <path
+        android:fillColor="#FF8BC34A"
+        android:pathData="M30,10 L30,38 C6,38 6,10 30,10 Z" />
+    <!-- 3 raggi inclinati verso il basso -->
+    <path android:strokeColor="#FF8BC34A" android:strokeWidth="2.5" android:pathData="M33,13 L45,18" />
+    <path android:strokeColor="#FF8BC34A" android:strokeWidth="2.5" android:pathData="M33,22 L45,27" />
+    <path android:strokeColor="#FF8BC34A" android:strokeWidth="2.5" android:pathData="M33,31 L45,36" />
+</vector>

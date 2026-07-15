@@ -2,9 +2,9 @@
 
 - [Architettura IPC / componenti esterni](ntg062-architecture-ipc.md) — l'app e un thin-client che orchestra componenti SPD esterni (carinfo, dvr, aircondition+AVM, carinfo.ui, SpdManager, navi); capacita latenti (AVM/radar parcheggio, HVAC) + inventario chiavi Settings.System
 - [NTG_062 overview](ntg062-overview.md) — cos'è l'app, app di sistema + firma Zhantang, perché la ri-firma è vincolata (Strada A/B/C)
-- [Architettura slider](ntg062-slider.md) — ViewPager/MyViewPageAdapter, mappa delle 5 pagine (porte rimossa 2026-06-29), flusso dati CarInfo, DVR
-- [Dati CarInfo](ntg062-carinfo-data.md) — dizionario what codes, push/pull AIDL, classi registrate, come sostituire il dato del mileage
-- [Overlay diagnostico dump CarInfo](ntg062-debug-overlay.md) — pagina debug custom (DebugLog/DumpTask smali); monitor CONTINUO PULL+PUSH, dedup in ConcurrentHashMap; 2 file in Download (mappa `ntg_carinfo_log.txt` + log eventi timestampato `ntg_carinfo_events.txt`); Bundle-array espansi e suffisso min/max; avvio su pagina debug, stop a onDestroy; handoff in IMPLEMENTAZIONE_DUMP_CARINFO.md
+- [Architettura slider](ntg062-slider.md) — ViewPager/MyViewPageAdapter, mappa 4 pagine, flusso dati CarInfo (catena 5 punti), pagina 1 CarMileageSpeedView ampliata 2026-07-15 (barra RPM rossa, volante-indicatore angolo ruote, 3 icone luci colorate), convenzione id public.xml/apktool
+- [Dati CarInfo](ntg062-carinfo-data.md) — dizionario what codes, push/pull AIDL, classi registrate, istogramma PUSH puri, unità ANGLE=radianti volante + rapporto sterzo 21:1, 110000 vivo vs 110001 mai notificato, come sostituire il dato del mileage
+- [Overlay diagnostico dump CarInfo](ntg062-debug-overlay.md) — pagina debug custom (DebugLog/DumpTask smali); monitor CONTINUO PULL+PUSH, dedup in ConcurrentHashMap; 2 file in Download (mappa `carinfo_readable_dedup.log` + log eventi timestampato `carinfo_events_append.log`); Bundle-array espansi e suffisso min/max; avvio su pagina debug, stop a onDestroy; handoff in IMPLEMENTAZIONE_DUMP_CARINFO.md
 - [Sistema immagini stato-porte](ntg062-cardoor-images.md) — STORICO (pagina porte rimossa 2026-06-29): trappole audi-vs-benz, getIdentifier, tipo default, src statico
 - [Schermata navigazione](ntg062-navigation.md) — widget info da broadcast AMap + avvio app via SETTING_NAVI_APP
 - [Tuning DVR](ntg062-dvr-tuning.md) — superficie AIDL/SettingInfo per migliorare qualità/FPS/apertura (Fase 2)

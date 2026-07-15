@@ -803,7 +803,7 @@
     invoke-super {p0, p1}, Landroid/app/Activity;->onCreate(Landroid/os/Bundle;)V
 
     # Modifica Mattia Alesi (Voce 4): inizializza il logger su file il prima possibile, cosi'
-    # cattura anche i log dell'avvio (NtgLog scrive su Download/NTG_062_log.log da thread bg)
+    # cattura anche i log dell'avvio (NtgLog scrive su Download/carinfo_logcat.log da thread bg)
     invoke-virtual {p0}, Lcom/spd/xhsntg/FullscreenActivity;->getApplicationContext()Landroid/content/Context;
 
     move-result-object v0
@@ -1785,6 +1785,61 @@
     invoke-virtual {v0, p1, p2}, Lcom/spd/view/MyViewPageAdapter;->updateSpeed(FI)V
 
     .line 350
+    return-void
+.end method
+
+.method public onUpdateRpm(I)V
+    .locals 1
+    .param p1, "rpm"    # I
+
+    iget-object v0, p0, Lcom/spd/xhsntg/FullscreenActivity;->m_view_page_adapter:Lcom/spd/view/MyViewPageAdapter;
+
+    invoke-virtual {v0, p1}, Lcom/spd/view/MyViewPageAdapter;->updateRpm(I)V
+
+    return-void
+.end method
+
+.method public onUpdateSteeringAngle(F)V
+    .locals 1
+    .param p1, "angle"    # F
+
+    iget-object v0, p0, Lcom/spd/xhsntg/FullscreenActivity;->m_view_page_adapter:Lcom/spd/view/MyViewPageAdapter;
+
+    invoke-virtual {v0, p1}, Lcom/spd/view/MyViewPageAdapter;->updateSteeringAngle(F)V
+
+    return-void
+.end method
+
+.method public onUpdatePositionLight(Z)V
+    .locals 1
+    .param p1, "on"    # Z
+
+    iget-object v0, p0, Lcom/spd/xhsntg/FullscreenActivity;->m_view_page_adapter:Lcom/spd/view/MyViewPageAdapter;
+
+    invoke-virtual {v0, p1}, Lcom/spd/view/MyViewPageAdapter;->updatePositionLight(Z)V
+
+    return-void
+.end method
+
+.method public onUpdateHighBeam(Z)V
+    .locals 1
+    .param p1, "on"    # Z
+
+    iget-object v0, p0, Lcom/spd/xhsntg/FullscreenActivity;->m_view_page_adapter:Lcom/spd/view/MyViewPageAdapter;
+
+    invoke-virtual {v0, p1}, Lcom/spd/view/MyViewPageAdapter;->updateHighBeam(Z)V
+
+    return-void
+.end method
+
+.method public onUpdateLowBeam(Z)V
+    .locals 1
+    .param p1, "on"    # Z
+
+    iget-object v0, p0, Lcom/spd/xhsntg/FullscreenActivity;->m_view_page_adapter:Lcom/spd/view/MyViewPageAdapter;
+
+    invoke-virtual {v0, p1}, Lcom/spd/view/MyViewPageAdapter;->updateLowBeam(Z)V
+
     return-void
 .end method
 

@@ -745,7 +745,7 @@
 
     invoke-virtual {v1, v2, v2, v2, v2}, Landroid/widget/TextView;->setPadding(IIII)V
 
-    const-string v2, "Monitor CarInfo live: aggiornamento continuo mentre la pagina e' aperta.\nAziona luci/marce/comandi per vederli comparire. Log in Download/ntg_carinfo_log.txt.\nAttendere il primo ciclo..."
+    const-string v2, "Monitor CarInfo live: aggiornamento continuo mentre la pagina e' aperta.\nAziona luci/marce/comandi per vederli comparire. Log in Download/carinfo_readable_dedup.log.\nAttendere il primo ciclo..."
 
     invoke-virtual {v1, v2}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 
@@ -788,7 +788,7 @@
     :cond_0
     new-instance v1, Ljava/io/File;
 
-    const-string v2, "ntg_carinfo_log.txt"
+    const-string v2, "carinfo_readable_dedup.log"
 
     invoke-direct {v1, v0, v2}, Ljava/io/File;-><init>(Ljava/io/File;Ljava/lang/String;)V
 
@@ -935,7 +935,7 @@
     return-object v0
 .end method
 
-# Appende una riga al file eventi (Download/ntg_carinfo_events.txt). Il primo write dopo l'avvio
+# Appende una riga al file eventi (Download/carinfo_events_append.log). Il primo write dopo l'avvio
 # monitor (sEventFresh) sovrascrive: ogni sessione riparte pulita, poi si accumula in append.
 # Tutto in try/catchall (permesso storage negato -> no-op).
 .method static writeEvent(Ljava/lang/String;)V
@@ -964,7 +964,7 @@
     :cond_dir
     new-instance v1, Ljava/io/File;
 
-    const-string v2, "ntg_carinfo_events.txt"
+    const-string v2, "carinfo_events_append.log"
 
     invoke-direct {v1, v0, v2}, Ljava/io/File;-><init>(Ljava/io/File;Ljava/lang/String;)V
 

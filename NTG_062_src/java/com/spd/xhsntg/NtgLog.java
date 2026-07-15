@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * NtgLog.smali + NtgLog$1.smali, vedi nota build in ntg062-modding-build).
  *
  * Logger che rispecchia su file i Log dell'app, OLTRE a logcat. File:
- * Download/NTG_062_log.log (distinto dal logger can-box ntg_carinfo_log.txt). Sovrascritto a
+ * Download/carinfo_logcat.log (distinto dal logger can-box carinfo_readable_dedup.log). Sovrascritto a
  * ogni avvio (apertura in troncamento). Scrittura su THREAD DI BACKGROUND (HandlerThread):
  * i call-site (anche su percorsi caldi) fanno solo Log + invio di un Message, mai I/O.
  *
@@ -38,7 +38,7 @@ import java.util.ArrayList;
  */
 public final class NtgLog {
 
-    static final String FILE_NAME = "NTG_062_log.log";
+    static final String FILE_NAME = "carinfo_logcat.log";
     static final int MSG_WRITE = 0;
     static final int MAX_PENDING = 2000;
 

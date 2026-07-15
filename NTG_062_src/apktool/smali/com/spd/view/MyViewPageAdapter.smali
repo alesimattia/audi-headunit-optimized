@@ -227,3 +227,58 @@
     .line 53
     return-void
 .end method
+
+.method public updateRpm(I)V
+    .locals 1
+    .param p1, "rpm"    # I
+
+    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_1:Lcom/spd/car/CarMileageSpeedView;
+
+    invoke-virtual {v0, p1}, Lcom/spd/car/CarMileageSpeedView;->updateRpm(I)V
+
+    return-void
+.end method
+
+.method public updateSteeringAngle(F)V
+    .locals 1
+    .param p1, "angle"    # F
+
+    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_1:Lcom/spd/car/CarMileageSpeedView;
+
+    invoke-virtual {v0, p1}, Lcom/spd/car/CarMileageSpeedView;->updateSteeringAngle(F)V
+
+    return-void
+.end method
+
+.method public updatePositionLight(Z)V
+    .locals 1
+    .param p1, "on"    # Z
+
+    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_1:Lcom/spd/car/CarMileageSpeedView;
+
+    invoke-virtual {v0, p1}, Lcom/spd/car/CarMileageSpeedView;->updatePositionLight(Z)V
+
+    return-void
+.end method
+
+.method public updateHighBeam(Z)V
+    .locals 1
+    .param p1, "on"    # Z
+
+    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_1:Lcom/spd/car/CarMileageSpeedView;
+
+    invoke-virtual {v0, p1}, Lcom/spd/car/CarMileageSpeedView;->updateHighBeam(Z)V
+
+    return-void
+.end method
+
+.method public updateLowBeam(Z)V
+    .locals 1
+    .param p1, "on"    # Z
+
+    iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_1:Lcom/spd/car/CarMileageSpeedView;
+
+    invoke-virtual {v0, p1}, Lcom/spd/car/CarMileageSpeedView;->updateLowBeam(Z)V
+
+    return-void
+.end method

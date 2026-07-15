@@ -166,6 +166,121 @@
     return-void
 .end method
 
+# Inoltra i giri motore al callback.
+.method private updateRpm(I)V
+    .locals 1
+    .param p1, "rpm"    # I
+
+    iget-object v0, p0, Lcom/spd/xhsntg/CarInfoManager;->mCallback:Lcom/spd/xhsntg/CarInfoManager$Callback;
+
+    if-eqz v0, :cond_0
+
+    iget-object v0, p0, Lcom/spd/xhsntg/CarInfoManager;->mCallback:Lcom/spd/xhsntg/CarInfoManager$Callback;
+
+    invoke-interface {v0, p1}, Lcom/spd/xhsntg/CarInfoManager$Callback;->onUpdateRpm(I)V
+
+    :cond_0
+    return-void
+.end method
+
+# Inoltra l'angolo di sterzo (valore grezzo) al callback.
+.method private updateSteeringAngle(F)V
+    .locals 1
+    .param p1, "angle"    # F
+
+    iget-object v0, p0, Lcom/spd/xhsntg/CarInfoManager;->mCallback:Lcom/spd/xhsntg/CarInfoManager$Callback;
+
+    if-eqz v0, :cond_0
+
+    iget-object v0, p0, Lcom/spd/xhsntg/CarInfoManager;->mCallback:Lcom/spd/xhsntg/CarInfoManager$Callback;
+
+    invoke-interface {v0, p1}, Lcom/spd/xhsntg/CarInfoManager$Callback;->onUpdateSteeringAngle(F)V
+
+    :cond_0
+    return-void
+.end method
+
+# Converte il valore grezzo luci di posizione (!=0 = acceso) in booleano e lo inoltra al callback.
+.method private updatePositionLight(I)V
+    .locals 2
+    .param p1, "raw"    # I
+
+    iget-object v0, p0, Lcom/spd/xhsntg/CarInfoManager;->mCallback:Lcom/spd/xhsntg/CarInfoManager$Callback;
+
+    if-eqz v0, :cond_1
+
+    iget-object v0, p0, Lcom/spd/xhsntg/CarInfoManager;->mCallback:Lcom/spd/xhsntg/CarInfoManager$Callback;
+
+    if-eqz p1, :cond_0
+
+    const/4 v1, 0x1
+
+    goto :goto_0
+
+    :cond_0
+    const/4 v1, 0x0
+
+    :goto_0
+    invoke-interface {v0, v1}, Lcom/spd/xhsntg/CarInfoManager$Callback;->onUpdatePositionLight(Z)V
+
+    :cond_1
+    return-void
+.end method
+
+# Converte il valore grezzo canale luci/abbaglianti (!=0 = acceso) in booleano e lo inoltra al callback.
+.method private updateHighBeam(I)V
+    .locals 2
+    .param p1, "raw"    # I
+
+    iget-object v0, p0, Lcom/spd/xhsntg/CarInfoManager;->mCallback:Lcom/spd/xhsntg/CarInfoManager$Callback;
+
+    if-eqz v0, :cond_1
+
+    iget-object v0, p0, Lcom/spd/xhsntg/CarInfoManager;->mCallback:Lcom/spd/xhsntg/CarInfoManager$Callback;
+
+    if-eqz p1, :cond_0
+
+    const/4 v1, 0x1
+
+    goto :goto_0
+
+    :cond_0
+    const/4 v1, 0x0
+
+    :goto_0
+    invoke-interface {v0, v1}, Lcom/spd/xhsntg/CarInfoManager$Callback;->onUpdateHighBeam(Z)V
+
+    :cond_1
+    return-void
+.end method
+
+# Converte il valore grezzo anabbaglianti (!=0 = acceso) in booleano e lo inoltra al callback.
+.method private updateLowBeam(I)V
+    .locals 2
+    .param p1, "raw"    # I
+
+    iget-object v0, p0, Lcom/spd/xhsntg/CarInfoManager;->mCallback:Lcom/spd/xhsntg/CarInfoManager$Callback;
+
+    if-eqz v0, :cond_1
+
+    iget-object v0, p0, Lcom/spd/xhsntg/CarInfoManager;->mCallback:Lcom/spd/xhsntg/CarInfoManager$Callback;
+
+    if-eqz p1, :cond_0
+
+    const/4 v1, 0x1
+
+    goto :goto_0
+
+    :cond_0
+    const/4 v1, 0x0
+
+    :goto_0
+    invoke-interface {v0, v1}, Lcom/spd/xhsntg/CarInfoManager$Callback;->onUpdateLowBeam(Z)V
+
+    :cond_1
+    return-void
+.end method
+
 .method private updateTotalMileage(II)V
     .locals 1
     .param p1, "mileage"    # I
@@ -504,6 +619,134 @@
     .local v12, "hasSource":I
     invoke-direct {p0, v11, v12}, Lcom/spd/xhsntg/CarInfoManager;->updateMediaSource(II)V
 
+    # PULL iniziale dei nuovi parametri (stato corretto all'avvio; le luci pushano solo al cambio)
+    # RPM (ENGINE_TACHOMETER 100042)
+    invoke-static {}, Lcom/spd/carinfo/CarInfo;->instance()Lcom/spd/carinfo/CarInfo;
+
+    move-result-object v5
+
+    const v6, 0x186ca
+
+    const/4 v7, 0x0
+
+    invoke-static {v7}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v8
+
+    invoke-virtual {v5, v6, v7, v8}, Lcom/spd/carinfo/CarInfo;->get(IILjava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, Ljava/lang/Integer;
+
+    invoke-virtual {v5}, Ljava/lang/Integer;->intValue()I
+
+    move-result v5
+
+    invoke-direct {p0, v5}, Lcom/spd/xhsntg/CarInfoManager;->updateRpm(I)V
+
+    # Angolo sterzo (ANGLE 140057)
+    invoke-static {}, Lcom/spd/carinfo/CarInfo;->instance()Lcom/spd/carinfo/CarInfo;
+
+    move-result-object v5
+
+    const v6, 0x22319
+
+    const/4 v7, 0x0
+
+    const/4 v8, 0x0
+
+    invoke-static {v8}, Ljava/lang/Float;->valueOf(F)Ljava/lang/Float;
+
+    move-result-object v8
+
+    invoke-virtual {v5, v6, v7, v8}, Lcom/spd/carinfo/CarInfo;->get(IILjava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, Ljava/lang/Float;
+
+    invoke-virtual {v5}, Ljava/lang/Float;->floatValue()F
+
+    move-result v5
+
+    invoke-direct {p0, v5}, Lcom/spd/xhsntg/CarInfoManager;->updateSteeringAngle(F)V
+
+    # Luci di posizione (POSITON_LIGHT 140059)
+    invoke-static {}, Lcom/spd/carinfo/CarInfo;->instance()Lcom/spd/carinfo/CarInfo;
+
+    move-result-object v5
+
+    const v6, 0x2231b
+
+    const/4 v7, 0x0
+
+    invoke-static {v7}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v8
+
+    invoke-virtual {v5, v6, v7, v8}, Lcom/spd/carinfo/CarInfo;->get(IILjava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, Ljava/lang/Integer;
+
+    invoke-virtual {v5}, Ljava/lang/Integer;->intValue()I
+
+    move-result v5
+
+    invoke-direct {p0, v5}, Lcom/spd/xhsntg/CarInfoManager;->updatePositionLight(I)V
+
+    # Canale luci / abbaglianti (HEADLAMP_HIGH_BEAMS 110000)
+    invoke-static {}, Lcom/spd/carinfo/CarInfo;->instance()Lcom/spd/carinfo/CarInfo;
+
+    move-result-object v5
+
+    const v6, 0x1adb0
+
+    const/4 v7, 0x0
+
+    invoke-static {v7}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v8
+
+    invoke-virtual {v5, v6, v7, v8}, Lcom/spd/carinfo/CarInfo;->get(IILjava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, Ljava/lang/Integer;
+
+    invoke-virtual {v5}, Ljava/lang/Integer;->intValue()I
+
+    move-result v5
+
+    invoke-direct {p0, v5}, Lcom/spd/xhsntg/CarInfoManager;->updateHighBeam(I)V
+
+    # Anabbaglianti (HEADLAMP_LOW_BEAMS 110001)
+    invoke-static {}, Lcom/spd/carinfo/CarInfo;->instance()Lcom/spd/carinfo/CarInfo;
+
+    move-result-object v5
+
+    const v6, 0x1adb1
+
+    const/4 v7, 0x0
+
+    invoke-static {v7}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+
+    move-result-object v8
+
+    invoke-virtual {v5, v6, v7, v8}, Lcom/spd/carinfo/CarInfo;->get(IILjava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v5
+
+    check-cast v5, Ljava/lang/Integer;
+
+    invoke-virtual {v5}, Ljava/lang/Integer;->intValue()I
+
+    move-result v5
+
+    invoke-direct {p0, v5}, Lcom/spd/xhsntg/CarInfoManager;->updateLowBeam(I)V
+
     .line 83
     .end local v1    # "value":I
     .end local v2    # "unit":I
@@ -528,6 +771,76 @@
     const/4 v0, 0x0
 
     sparse-switch p1, :sswitch_data_0
+
+    goto/16 :goto_6
+
+    # RPM (ENGINE_TACHOMETER 100042, Integer)
+    :sswitch_rpm
+    move-object v0, p2
+
+    check-cast v0, Ljava/lang/Integer;
+
+    invoke-virtual {v0}, Ljava/lang/Integer;->intValue()I
+
+    move-result v0
+
+    invoke-direct {p0, v0}, Lcom/spd/xhsntg/CarInfoManager;->updateRpm(I)V
+
+    goto/16 :goto_6
+
+    # Canale luci / abbaglianti (HEADLAMP_HIGH_BEAMS 110000, Integer)
+    :sswitch_high_beam
+    move-object v0, p2
+
+    check-cast v0, Ljava/lang/Integer;
+
+    invoke-virtual {v0}, Ljava/lang/Integer;->intValue()I
+
+    move-result v0
+
+    invoke-direct {p0, v0}, Lcom/spd/xhsntg/CarInfoManager;->updateHighBeam(I)V
+
+    goto/16 :goto_6
+
+    # Anabbaglianti (HEADLAMP_LOW_BEAMS 110001, Integer)
+    :sswitch_low_beam
+    move-object v0, p2
+
+    check-cast v0, Ljava/lang/Integer;
+
+    invoke-virtual {v0}, Ljava/lang/Integer;->intValue()I
+
+    move-result v0
+
+    invoke-direct {p0, v0}, Lcom/spd/xhsntg/CarInfoManager;->updateLowBeam(I)V
+
+    goto/16 :goto_6
+
+    # Angolo sterzo (ANGLE 140057, Float)
+    :sswitch_angle
+    move-object v0, p2
+
+    check-cast v0, Ljava/lang/Float;
+
+    invoke-virtual {v0}, Ljava/lang/Float;->floatValue()F
+
+    move-result v0
+
+    invoke-direct {p0, v0}, Lcom/spd/xhsntg/CarInfoManager;->updateSteeringAngle(F)V
+
+    goto/16 :goto_6
+
+    # Luci di posizione (POSITON_LIGHT 140059, Integer)
+    :sswitch_pos_light
+    move-object v0, p2
+
+    check-cast v0, Ljava/lang/Integer;
+
+    invoke-virtual {v0}, Ljava/lang/Integer;->intValue()I
+
+    move-result v0
+
+    invoke-direct {p0, v0}, Lcom/spd/xhsntg/CarInfoManager;->updatePositionLight(I)V
 
     goto/16 :goto_6
 
@@ -666,7 +979,12 @@
     .sparse-switch
         0x2716 -> :sswitch_5
         0x186ad -> :sswitch_3
+        0x186ca -> :sswitch_rpm
         0x186f5 -> :sswitch_2
+        0x1adb0 -> :sswitch_high_beam
+        0x1adb1 -> :sswitch_low_beam
+        0x22319 -> :sswitch_angle
+        0x2231b -> :sswitch_pos_light
         0x2231e -> :sswitch_1
         0x29814 -> :sswitch_0
     .end sparse-switch

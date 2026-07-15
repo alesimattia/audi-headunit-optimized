@@ -43,6 +43,9 @@
     <id name="forever" />
     <id name="icon" />
     <id name="icon_group" />
+    <id name="img_high_beam" />
+    <id name="img_low_beam" />
+    <id name="img_pos_light" />
     <id name="id_car_door_bg" />
     <id name="id_car_door_front_left" />
     <id name="id_car_door_front_right" />
@@ -76,7 +79,10 @@
     <id name="right_icon" />
     <id name="right_key" />
     <id name="right_side" />
+    <id name="rpm_bar" />
+    <id name="rpm_value" />
     <id name="speed" />
+    <id name="steering_wheel" />
     <id name="sport_esp_off" />
     <id name="start" />
     <id name="status_bar_latest_event_content" />

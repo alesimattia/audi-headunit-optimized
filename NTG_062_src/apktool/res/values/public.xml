@@ -87,6 +87,10 @@
     <public type="drawable" name="notification_template_icon_low_bg" id="0x7f0400d9" />
     <public type="drawable" name="notification_tile_bg" id="0x7f0400da" />
     <public type="drawable" name="notify_panel_notification_icon_bg" id="0x7f0400db" />
+    <public type="drawable" name="icon_pos_light" id="0x7f0400dc" />
+    <public type="drawable" name="icon_low_beam" id="0x7f0400dd" />
+    <public type="drawable" name="icon_steering_wheel" id="0x7f0400de" />
+    <public type="drawable" name="icon_high_beam" id="0x7f0400df" />
     <public type="id" name="action0" id="0x7f050000" />
     <public type="id" name="action_container" id="0x7f050001" />
     <public type="id" name="action_divider" id="0x7f050002" />
@@ -175,6 +179,12 @@
     <public type="id" name="title" id="0x7f05005a" />
     <public type="id" name="top" id="0x7f05005b" />
     <public type="id" name="ldvs_test_stub" id="0x7f05005c" />
+    <public type="id" name="img_pos_light" id="0x7f05005d" />
+    <public type="id" name="img_low_beam" id="0x7f05005e" />
+    <public type="id" name="rpm_bar" id="0x7f05005f" />
+    <public type="id" name="rpm_value" id="0x7f050060" />
+    <public type="id" name="steering_wheel" id="0x7f050061" />
+    <public type="id" name="img_high_beam" id="0x7f050062" />
     <public type="integer" name="cancel_button_image_alpha" id="0x7f060000" />
     <public type="integer" name="status_bar_notification_info_maxnum" id="0x7f060001" />
     <public type="layout" name="activity_fullscreen" id="0x7f070000" />
