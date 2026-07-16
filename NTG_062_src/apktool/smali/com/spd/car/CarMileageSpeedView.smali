@@ -8,8 +8,6 @@
 
 .field private mLowBeam:Landroid/widget/ImageView;
 
-.field private mMileage:Landroid/widget/TextView;
-
 .field private mPositionLight:Landroid/widget/ImageView;
 
 .field private mRpmBar:Landroid/widget/ProgressBar;
@@ -18,7 +16,7 @@
 
 .field private mSpeed:Landroid/widget/TextView;
 
-.field private mSteering:Landroid/widget/ImageView;
+.field private mTyreAngle:Landroid/widget/ImageView;
 
 
 # direct methods
@@ -96,17 +94,6 @@
 
     invoke-virtual {v0, v1, p0}, Landroid/view/LayoutInflater;->inflate(ILandroid/view/ViewGroup;)Landroid/view/View;
 
-    .line 40
-    const v0, 0x7f050045
-
-    invoke-virtual {p0, v0}, Lcom/spd/car/CarMileageSpeedView;->findViewById(I)Landroid/view/View;
-
-    move-result-object v0
-
-    check-cast v0, Landroid/widget/TextView;
-
-    iput-object v0, p0, Lcom/spd/car/CarMileageSpeedView;->mMileage:Landroid/widget/TextView;
-
     .line 41
     const v0, 0x7f050050
 
@@ -148,7 +135,7 @@
 
     check-cast v0, Landroid/widget/ImageView;
 
-    iput-object v0, p0, Lcom/spd/car/CarMileageSpeedView;->mSteering:Landroid/widget/ImageView;
+    iput-object v0, p0, Lcom/spd/car/CarMileageSpeedView;->mTyreAngle:Landroid/widget/ImageView;
 
     # icone stato luci
     const v0, 0x7f05005d
@@ -187,45 +174,13 @@
 
 
 # virtual methods
+# Contachilometri RIMOSSO dalla pagina (2026-07-16): metodo reso no-op. Il what 100013 viene
+# ancora instradato dalla catena CarInfo ma qui e' ignorato (evita NPE sulla view rimossa).
 .method public updateMileage(II)V
-    .locals 3
+    .locals 0
     .param p1, "value"    # I
     .param p2, "unit"    # I
 
-    .line 49
-    iget-object v0, p0, Lcom/spd/car/CarMileageSpeedView;->mMileage:Landroid/widget/TextView;
-
-    new-instance v1, Ljava/lang/StringBuilder;
-
-    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
-
-    invoke-virtual {v1, p1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
-
-    const-string v2, " "
-
-    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    const/4 v2, 0x1
-
-    if-ne p2, v2, :cond_0
-
-    const-string v2, "MILE"
-
-    goto :goto_0
-
-    :cond_0
-    const-string v2, "KM"
-
-    :goto_0
-    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-
-    move-result-object v1
-
-    invoke-virtual {v0, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
-
-    .line 50
     return-void
 .end method
 
@@ -325,7 +280,7 @@
 # La rotazione risultante e' limitata a +/-40 gradi (fondo corsa ruote).
 # NB: scala derivata, non misurata: il fondo corsa non e' stato registrato nel rilievo. Per la
 # taratura esatta serve un rilievo girando il volante fino a fondo corsa nei due sensi.
-.method public updateSteeringAngle(F)V
+.method public updateTyreAngle(F)V
     .locals 3
     .param p1, "angle"    # F
 
@@ -357,7 +312,7 @@
     move v0, v1
 
     :cond_1
-    iget-object v1, p0, Lcom/spd/car/CarMileageSpeedView;->mSteering:Landroid/widget/ImageView;
+    iget-object v1, p0, Lcom/spd/car/CarMileageSpeedView;->mTyreAngle:Landroid/widget/ImageView;
 
     invoke-virtual {v1, v0}, Landroid/widget/ImageView;->setRotation(F)V
 

@@ -30,7 +30,7 @@
 .method public abstract onUpdateRpm(I)V
 .end method
 
-.method public abstract onUpdateSteeringAngle(F)V
+.method public abstract onUpdateTyreAngle(F)V
 .end method
 
 .method public abstract onUpdateMediaSource(II)V

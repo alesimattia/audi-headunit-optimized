@@ -1,40 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout android:layout_width="match_parent" android:layout_height="match_parent"
+<!-- Ordine verticale: (1) icone luci in alto, (2) volante-indicatore, (3) velocita, (4) barra RPM in fondo. -->
+<LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent"
   xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Blocco centrale: chilometraggio, velocita, barra RPM, volante -->
-    <LinearLayout android:layout_gravity="center" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content">
+    <!-- (1) Icone stato luci in alto a sinistra (spente = alpha ridotta) -->
+    <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:padding="16.0px">
+        <ImageView android:id="@id/img_pos_light" android:layout_width="88.0px" android:layout_height="88.0px" android:alpha="0.3" android:src="@drawable/icon_pos_light" />
+        <ImageView android:id="@id/img_high_beam" android:layout_width="88.0px" android:layout_height="88.0px" android:layout_marginLeft="16.0px" android:alpha="0.3" android:src="@drawable/icon_high_beam" />
+        <ImageView android:id="@id/img_low_beam" android:layout_width="88.0px" android:layout_height="88.0px" android:layout_marginLeft="16.0px" android:alpha="0.3" android:src="@drawable/icon_low_beam" />
+    </LinearLayout>
 
-        <LinearLayout android:gravity="center" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
-            <TextView android:textSize="30.0px" android:textColor="#ffff" android:id="@id/mileage" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        </LinearLayout>
+    <!-- (2) volante + (3) velocita: centrati nello spazio residuo -->
+    <LinearLayout android:orientation="vertical" android:gravity="center" android:layout_width="match_parent" android:layout_height="0.0px" android:layout_weight="1.0">
 
-        <LinearLayout android:gravity="center" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="30.0px">
+        <ImageView android:id="@id/tyre_angle" android:layout_width="120.0px" android:layout_height="120.0px" android:layout_gravity="center_horizontal" android:src="@drawable/icon_tyre_angle" />
+
+        <LinearLayout android:gravity="center" android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24.0px">
             <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/icon_speed" />
-            <TextView android:textSize="30.0px" android:textColor="#ffff" android:id="@id/speed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0px" />
+            <TextView android:textSize="31.0px" android:textColor="#ffff" android:id="@id/speed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0px" />
         </LinearLayout>
-
-        <!-- Barra RPM dinamica: valore centrale + ProgressBar nativa rossa + indicatori 0 / 4500 -->
-        <LinearLayout android:orientation="vertical" android:layout_width="360.0px" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:layout_marginTop="40.0px">
-            <TextView android:id="@id/rpm_value" android:textSize="26.0px" android:textColor="#ffff" android:gravity="center" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="0 RPM" />
-            <ProgressBar style="@android:style/Widget.ProgressBar.Horizontal" android:id="@id/rpm_bar" android:layout_width="match_parent" android:layout_height="16.0px" android:layout_marginTop="4.0px" android:max="4500" android:progress="0" android:progressTint="#ffd50000" android:backgroundTint="#40ffffff" />
-            <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2.0px">
-                <TextView android:textSize="20.0px" android:textColor="#b3ffffff" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" />
-                <View android:layout_width="0.0px" android:layout_height="wrap_content" android:layout_weight="1.0" />
-                <TextView android:textSize="20.0px" android:textColor="#b3ffffff" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="4500" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- Volante-indicatore: centrato orizzontalmente, ruotato live via setRotation() -->
-        <ImageView android:id="@id/steering_wheel" android:layout_width="120.0px" android:layout_height="120.0px" android:layout_gravity="center_horizontal" android:layout_marginTop="30.0px" android:src="@drawable/icon_steering_wheel" />
 
     </LinearLayout>
 
-    <!-- Icone stato luci in alto a sinistra (spente = alpha ridotta) -->
-    <LinearLayout android:layout_gravity="top|left" android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:padding="16.0px">
-        <ImageView android:id="@id/img_pos_light" android:layout_width="44.0px" android:layout_height="44.0px" android:alpha="0.3" android:src="@drawable/icon_pos_light" />
-        <ImageView android:id="@id/img_high_beam" android:layout_width="44.0px" android:layout_height="44.0px" android:layout_marginLeft="16.0px" android:alpha="0.3" android:src="@drawable/icon_high_beam" />
-        <ImageView android:id="@id/img_low_beam" android:layout_width="44.0px" android:layout_height="44.0px" android:layout_marginLeft="16.0px" android:alpha="0.3" android:src="@drawable/icon_low_beam" />
+    <!-- (4) Barra RPM ancorata in fondo, quasi a filo dei bordi della view -->
+    <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="20.0px" android:layout_marginRight="20.0px" android:layout_marginBottom="16.0px">
+        <TextView android:id="@id/rpm_value" android:textSize="27.0px" android:textColor="#ffff" android:gravity="center" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="0 RPM" />
+        <ProgressBar style="@android:style/Widget.ProgressBar.Horizontal" android:id="@id/rpm_bar" android:layout_width="match_parent" android:layout_height="24.0px" android:layout_marginTop="4.0px" android:max="4500" android:progress="0" android:progressTint="#ffd50000" android:backgroundTint="#40ffffff" />
+        <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2.0px">
+            <TextView android:textSize="22.0px" android:textColor="#b3ffffff" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" />
+            <View android:layout_width="0.0px" android:layout_height="wrap_content" android:layout_weight="1.0" />
+            <TextView android:textSize="22.0px" android:textColor="#b3ffffff" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="4500" />
+        </LinearLayout>
     </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>

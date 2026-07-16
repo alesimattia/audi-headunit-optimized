@@ -3,3 +3,5 @@ NTG_062_src/apktool/build/
 
 # File macOS in qualsiasi posizione
 .DS_Store
+
+**/__pycache__/

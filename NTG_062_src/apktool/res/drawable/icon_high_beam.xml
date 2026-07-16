@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Icona "abbaglianti / canale luci 110000": lampada a cupola con 3 raggi ORIZZONTALI dritti
-     (simbolo standard high-beam). Si distingue dagli anabbaglianti che hanno i raggi verso il basso. -->
+<!-- Icona "abbaglianti / canale luci 110000": cupola + 3 raggi ORIZZONTALI dritti.
+     Tutte forme PIENE (i path solo-stroke non venivano resi su questa piattaforma). -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="48px"
     android:height="48px"
     android:viewportWidth="48"
     android:viewportHeight="48">
     <!-- cupola della lampada (bulge a sinistra, lato piatto a destra) -->
-    <path
-        android:fillColor="#FF29B6F6"
-        android:pathData="M30,10 L30,38 C6,38 6,10 30,10 Z" />
-    <!-- 3 raggi orizzontali dritti -->
-    <path android:strokeColor="#FF29B6F6" android:strokeWidth="2.5" android:pathData="M33,15 L45,15" />
-    <path android:strokeColor="#FF29B6F6" android:strokeWidth="2.5" android:pathData="M33,24 L45,24" />
-    <path android:strokeColor="#FF29B6F6" android:strokeWidth="2.5" android:pathData="M33,33 L45,33" />
+    <path android:fillColor="#FF29B6F6" android:pathData="M30,10 L30,38 C6,38 6,10 30,10 Z" />
+    <!-- 3 raggi orizzontali dritti (barre piene) -->
+    <path android:fillColor="#FF29B6F6" android:pathData="M33,13.5 L45,13.5 L45,16.5 L33,16.5 Z" />
+    <path android:fillColor="#FF29B6F6" android:pathData="M33,22.5 L45,22.5 L45,25.5 L33,25.5 Z" />
+    <path android:fillColor="#FF29B6F6" android:pathData="M33,31.5 L45,31.5 L45,34.5 L33,34.5 Z" />
 </vector>

@@ -239,13 +239,13 @@
     return-void
 .end method
 
-.method public updateSteeringAngle(F)V
+.method public updateTyreAngle(F)V
     .locals 1
     .param p1, "angle"    # F
 
     iget-object v0, p0, Lcom/spd/view/MyViewPageAdapter;->m_test_view_1:Lcom/spd/car/CarMileageSpeedView;
 
-    invoke-virtual {v0, p1}, Lcom/spd/car/CarMileageSpeedView;->updateSteeringAngle(F)V
+    invoke-virtual {v0, p1}, Lcom/spd/car/CarMileageSpeedView;->updateTyreAngle(F)V
 
     return-void
 .end method

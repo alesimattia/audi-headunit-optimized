@@ -82,7 +82,7 @@
     <id name="rpm_bar" />
     <id name="rpm_value" />
     <id name="speed" />
-    <id name="steering_wheel" />
+    <id name="tyre_angle" />
     <id name="sport_esp_off" />
     <id name="start" />
     <id name="status_bar_latest_event_content" />

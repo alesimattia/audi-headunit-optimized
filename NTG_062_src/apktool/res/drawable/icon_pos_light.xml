@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Icona "luci di posizione": bulbo centrale con raggi tutt'intorno (stile "sole"),
-     distinto dai fari anabbaglianti/abbaglianti che usano la cupola con raggi laterali. -->
+<!-- Icona "luci di posizione": bulbo centrale + raggi (stile "luce accesa"), distinta dalle
+     cupole di abbaglianti/anabbaglianti. Tutte forme PIENE (i path solo-stroke non venivano resi). -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="48px"
     android:height="48px"
     android:viewportWidth="48"
     android:viewportHeight="48">
     <!-- bulbo centrale -->
-    <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M24,17 A7,7 0 1,0 24.01,17 Z" />
-    <!-- 8 raggi radiali -->
-    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.5" android:pathData="M35,24 L41,24" />
-    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.5" android:pathData="M13,24 L7,24" />
-    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.5" android:pathData="M24,35 L24,41" />
-    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.5" android:pathData="M24,13 L24,7" />
-    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.5" android:pathData="M31.8,31.8 L36,36" />
-    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.5" android:pathData="M16.2,16.2 L12,12" />
-    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.5" android:pathData="M31.8,16.2 L36,12" />
-    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.5" android:pathData="M16.2,31.8 L12,36" />
+    <path android:fillColor="#FFFFFFFF" android:pathData="M24,17 A7,7 0 1,0 24.01,17 Z" />
+    <!-- 4 raggi ortogonali (barre piene) -->
+    <path android:fillColor="#FFFFFFFF" android:pathData="M33,22.5 L44,22.5 L44,25.5 L33,25.5 Z" />
+    <path android:fillColor="#FFFFFFFF" android:pathData="M4,22.5 L15,22.5 L15,25.5 L4,25.5 Z" />
+    <path android:fillColor="#FFFFFFFF" android:pathData="M22.5,4 L25.5,4 L25.5,15 L22.5,15 Z" />
+    <path android:fillColor="#FFFFFFFF" android:pathData="M22.5,33 L25.5,33 L25.5,44 L22.5,44 Z" />
 </vector>

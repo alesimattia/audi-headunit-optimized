@@ -184,7 +184,7 @@
 .end method
 
 # Inoltra l'angolo di sterzo (valore grezzo) al callback.
-.method private updateSteeringAngle(F)V
+.method private updateTyreAngle(F)V
     .locals 1
     .param p1, "angle"    # F
 
@@ -194,7 +194,7 @@
 
     iget-object v0, p0, Lcom/spd/xhsntg/CarInfoManager;->mCallback:Lcom/spd/xhsntg/CarInfoManager$Callback;
 
-    invoke-interface {v0, p1}, Lcom/spd/xhsntg/CarInfoManager$Callback;->onUpdateSteeringAngle(F)V
+    invoke-interface {v0, p1}, Lcom/spd/xhsntg/CarInfoManager$Callback;->onUpdateTyreAngle(F)V
 
     :cond_0
     return-void
@@ -670,7 +670,7 @@
 
     move-result v5
 
-    invoke-direct {p0, v5}, Lcom/spd/xhsntg/CarInfoManager;->updateSteeringAngle(F)V
+    invoke-direct {p0, v5}, Lcom/spd/xhsntg/CarInfoManager;->updateTyreAngle(F)V
 
     # Luci di posizione (POSITON_LIGHT 140059)
     invoke-static {}, Lcom/spd/carinfo/CarInfo;->instance()Lcom/spd/carinfo/CarInfo;
@@ -826,7 +826,7 @@
 
     move-result v0
 
-    invoke-direct {p0, v0}, Lcom/spd/xhsntg/CarInfoManager;->updateSteeringAngle(F)V
+    invoke-direct {p0, v0}, Lcom/spd/xhsntg/CarInfoManager;->updateTyreAngle(F)V
 
     goto/16 :goto_6
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Indicatore ANGOLO RUOTE (non volante): due pneumatici paralleli (visti dall'alto) uniti da
+     un giunto/asse centrale. La view ruota l'insieme via setRotation() dell'angolo ruota reale:
+     dritto = pneumatici verticali, in sterzata l'asse si inclina a sinistra/destra.
+     Forme piene (i path solo-stroke non venivano resi su questa piattaforma). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48px"
+    android:height="48px"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- giunto / asse che lega i due pneumatici -->
+    <path android:fillColor="#FFFFFFFF" android:pathData="M12,21 L36,21 L36,27 L12,27 Z" />
+    <!-- pneumatico sinistro (pillola verticale) -->
+    <path android:fillColor="#FFFFFFFF" android:pathData="M7,13 Q7,8 12,8 Q17,8 17,13 L17,35 Q17,40 12,40 Q7,40 7,35 Z" />
+    <!-- pneumatico destro (pillola verticale) -->
+    <path android:fillColor="#FFFFFFFF" android:pathData="M31,13 Q31,8 36,8 Q41,8 41,13 L41,35 Q41,40 36,40 Q31,40 31,35 Z" />
+</vector>

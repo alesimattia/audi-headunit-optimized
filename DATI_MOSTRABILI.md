@@ -273,6 +273,28 @@ su dati certi (vedi §2.2). Target: Audi A5 coupé, testata `com.spd.xhsntg`.
 > Il monitor PULL+PUSH è **già installato** (vedi
 > [IMPLEMENTAZIONE_DUMP_CARINFO.md](IMPLEMENTAZIONE_DUMP_CARINFO.md)). Non serve ricompilare.
 
+**Stato attuale (quadro di partenza, dal rilievo in movimento `elementi rilevati=363`).** La
+colonna "Verdetto" è ciò che questo rilievo mirato deve confermare o smentire:
+
+| Dato | `what` | Nel rilievo | Verdetto |
+|---|---|---|---|
+| Temperatura **impostata** (setpoint) | 30006 | value=22.0 | ✅ leggibile — ma è ciò che imposti tu, **non un sensore** |
+| Ventola (0–9) | 30004 | 9 | ✅ leggibile |
+| Distribuzione aria (bocchette) | 30003 | 80 (range 80–128) | ✅ leggibile (bitmask da decodificare) |
+| Clima ON/OFF | 30000 | 1 | ✅ leggibile |
+| Doppia zona | 30057 | 2 | ✅ leggibile |
+| Sync zone | 30040 | push=0 | ✅ leggibile |
+| Modalità HVAC | 100278 | mode=2 | ✅ leggibile |
+| **Temperatura ESTERNA** | 30023 | **0.0** | ❌ **morta** |
+| **Temperatura ABITACOLO** (`INNER_TEMPERATURE`) | 30028 | **assente** | ❌ quasi certamente morta (da confermare con PULL mirata) |
+| PM2.5 interno/esterno | 30060/30061 | 0 | ❌ morta |
+| AC / AUTO / ricircolo / ECO / defrost | 30001/2/5/18/10… | assenti | ❓ 0 nel rilievo → da verificare toggolando i comandi |
+
+**Conseguenza:** senza sensori ambientali (né esterna né abitacolo), un dashboard clima può
+mostrare solo **setpoint e stato dei comandi** — rispecchia il pannello clima fisico, non fornisce
+misure. Il "calcolato/combinato" si limita al **decoding del bitmask bocchette** (WIND_MODE) e alla
+composizione L/R della doppia zona.
+
 ### 7.1 Cosa un dashboard clima può contenere concretamente
 - **Setpoint** grande (es. 22.0 °C); se doppia zona, sinistra/destra separate *(da verificare:
   nel rilievo solo la zona guida dava 22.0)*;

@@ -1799,13 +1799,13 @@
     return-void
 .end method
 
-.method public onUpdateSteeringAngle(F)V
+.method public onUpdateTyreAngle(F)V
     .locals 1
     .param p1, "angle"    # F
 
     iget-object v0, p0, Lcom/spd/xhsntg/FullscreenActivity;->m_view_page_adapter:Lcom/spd/view/MyViewPageAdapter;
 
-    invoke-virtual {v0, p1}, Lcom/spd/view/MyViewPageAdapter;->updateSteeringAngle(F)V
+    invoke-virtual {v0, p1}, Lcom/spd/view/MyViewPageAdapter;->updateTyreAngle(F)V
 
     return-void
 .end method
